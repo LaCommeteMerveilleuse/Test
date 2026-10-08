@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BlackPhage — Faire reculer les limites du traitable</title>
+  <meta name="description" content="BlackPhage conçoit une nouvelle classe de médicaments : des protéines sur mesure, conçues par l'intelligence artificielle, pour agir précisément là où la maladie se trouve.">
+  <meta name="theme-color" content="#05060a">
+  <meta property="og:title" content="BlackPhage — Faire reculer les limites du traitable">
+  <meta property="og:description" content="Des protéines conçues sur mesure, pour une action ciblée dans leur environnement biologique.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/main.js"></script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="veil" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a class="brand" href="#top" aria-label="BlackPhage — accueil">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16 2 28 9v14L16 30 4 23V9z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="16" cy="16" r="5.2" fill="currentColor"/>
+        <path d="M16 21.2V30M16 2v8.8" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+      <span>BLACKPHAGE</span>
+    </a>
+    <nav class="nav__links" aria-label="Navigation principale">
+      <a href="#mission">Mission</a>
+      <a href="#plateforme">Plateforme</a>
+      <a href="#smart-binders">Smart Binders</a>
+      <a href="#approche">Approche</a>
+      <a class="btn btn--ghost btn--sm" href="#contact">Nous contacter</a>
+    </nav>
+    <button class="nav__burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" data-pose="hero">
+      <div class="container hero__inner">
+        <p class="eyebrow reveal">Une nouvelle classe de médicaments</p>
+        <h1 class="display reveal">
+          Des protéines conçues<br>sur mesure, pour agir<br>
+          <span class="accent" data-cycle="là où la maladie se cache.|au cœur de la cible.|au bon endroit, au bon moment.">là où la maladie se cache.</span>
+        </h1>
+        <p class="lead reveal">
+          BlackPhage conçoit automatiquement des protéines thérapeutiques grâce à l'intelligence artificielle —
+          pensées pour reconnaître leur cible et s'activer dans leur environnement biologique.
+        </p>
+        <div class="hero__cta reveal">
+          <a class="btn btn--primary" href="#plateforme">Découvrir la plateforme <span aria-hidden="true">→</span></a>
+          <a class="btn btn--ghost" href="#mission">Notre mission</a>
+        </div>
+      </div>
+      <div class="hero__foot container">
+        <span class="mono">Unlock deeper scientific insight</span>
+        <span class="scroll-cue" aria-hidden="true"><i></i></span>
+        <span class="mono">Surface moléculaire · rendu temps réel</span>
+      </div>
+    </section>
+
+    <!-- MISSION -->
+    <section class="mission" id="mission" data-pose="mission">
+      <div class="container">
+        <p class="eyebrow reveal">Notre mission</p>
+        <h2 class="statement reveal">Faire reculer les limites du&nbsp;<em>traitable</em>.</h2>
+        <div class="mission__grid">
+          <p class="big reveal">La maladie exploite les mécanismes du vivant. <strong>Notre ambition&nbsp;: retourner ces mécanismes contre elle.</strong></p>
+          <p class="body reveal">
+            Chaque pathologie a ses failles. Nous voulons les trouver, les comprendre, puis concevoir
+            la molécule capable de s'y engouffrer. Notre cap est clair&nbsp;: transformer une faiblesse
+            de la maladie en possibilité de traitement — et ouvrir la voie à des thérapies pour celles
+            qui, aujourd'hui, restent hors de portée.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRAMMABLE -->
+    <section class="programme" data-pose="programme">
+      <div class="container programme__inner">
+        <div class="programme__head">
+          <p class="eyebrow reveal">La thérapie, rendue programmable</p>
+          <h2 class="h2 reveal">Identifier. Concevoir.<br>Contrôler.</h2>
+          <p class="body reveal">
+            Nous voulons faire de la conception thérapeutique un processus programmable&nbsp;:
+            de la vulnérabilité biologique à la molécule sur mesure, jusqu'au contrôle de son action
+            selon la cible, le tissu et le microenvironnement.
+          </p>
+        </div>
+        <ol class="steps">
+          <li class="step reveal">
+            <span class="step__n mono">01</span>
+            <h3>Identifier la faille</h3>
+            <p>Repérer la vulnérabilité biologique sur laquelle la maladie repose.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__n mono">02</span>
+            <h3>Concevoir sur mesure</h3>
+            <p>Générer une protéine capable de reconnaître, verrouiller ou perturber le mécanisme pathologique.</p>
+          </li>
+          <li class="step reveal">
+            <span class="step__n mono">03</span>
+            <h3>Déclencher au bon endroit</h3>
+            <p>Viser une activité qui s'enclenche dans les conditions recherchées — et seulement là.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PLATFORM -->
+    <section class="platform" id="plateforme" data-pose="platform">
+      <div class="container">
+        <div class="platform__head">
+          <p class="eyebrow reveal">La plateforme BlackPhage</p>
+          <h2 class="h2 reveal">L'IA qui dessine<br>des protéines.</h2>
+          <p class="body reveal">
+            Notre plateforme réunit intelligence artificielle, modélisation structurale et scoring d'affinité
+            pour concevoir des protéines adaptées à une cible — et à un usage — précis.
+            Son architecture modulaire explore des milliers de possibilités là où l'approche classique en teste quelques-unes.
+          </p>
+        </div>
+
+        <div class="pillars">
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="6"/><circle cx="10" cy="12" r="3"/><circle cx="38" cy="12" r="3"/><circle cx="10" cy="36" r="3"/><circle cx="38" cy="36" r="3"/><path d="M13 13.5 19.5 20M35 13.5 28.5 20M13 34.5l6.5-6.5M35 34.5 28.5 28"/></svg>
+            </div>
+            <h3>Intelligence artificielle</h3>
+            <p>Des modèles génératifs qui proposent de nouvelles séquences et apprennent de chaque résultat.</p>
+          </article>
+          <article class="card reveal">
+            <div class="card__icon" aria-hidden="true">
+              <sv
