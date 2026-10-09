@@ -67,7 +67,7 @@ Un double-clic sur `index.html` ne fonctionne pas : le navigateur bloque le char
 ## Technique
 
 - `assets/js/shop.js` regroupe données, moteur de recherche, panier (stocké dans le navigateur) et affichage des flacons.
-- `assets/js/bg.js` dessine le fond de l'accueil avec three.js : une petite molécule et une protéine qui se génère autour d'elle par diffusion (bruit, puis squelette, puis hélices), en boucle. Les données viennent de `assets/data/pocket.json`, produit par `tools/build_background.py`. Sans WebGL, une image fixe prend le relais.
+- `assets/js/bg.js` dessine le fond de l'accueil avec three.js : une surface de protéine bleue qui ondule doucement (données dans `assets/data/surface.json`). Sans WebGL, une image fixe prend le relais.
 - Les flacons de `assets/img/vials/` sont des rendus de synthèse (verre, liquide, étiquette au nom de la cible). Un fichier par produit, plus `custom-fr.webp` et `custom-en.webp`. Pour un nouveau produit, ajoutez un rendu du même nom que son identifiant.
 - Polices Inter et Montserrat hébergées dans le dépôt (licence SIL OFL), three.js sous licence MIT.
 - Texte du site sans tiret long, point-virgule ni deux-points, comme demandé.
