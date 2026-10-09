@@ -1,107 +1,206 @@
-// BlackPhage - fond de la page d'accueil : une surface organique bleu et blanc, qui ondule doucement
-// et dérive pendant le défilement. Rendu three.js. Sans WebGL, une image fixe prend le relais (voir site.css).
+// BlackPhage - fond de la page d'accueil : une petite molécule, et autour d'elle une protéine qui se génère
+// par diffusion. Un nuage de points bruités se condense, le squelette apparaît, puis les hélices se forment.
+// La scène boucle doucement et dérive pendant le défilement. Sans WebGL, une image fixe prend le relais.
 import * as THREE from 'three';
+import { Cartoon, makeCartoonMaterial } from './cartoon.js';
 
 const root = document.documentElement;
+const BASE = root.dataset.base || '';
 const canvas = document.getElementById('bg');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function webgl2() { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } }
-if (!canvas || !webgl2()) { root.classList.add('no-webgl'); } else { start().catch(() => root.classList.add('no-webgl')); }
+if (!canvas || !webgl2()) root.classList.add('no-webgl'); else start().catch(() => root.classList.add('no-webgl'));
 
-const NOISE = `
-vec4 bp_permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
-vec4 bp_inv(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
-float bp_noise(vec3 v){
-  const vec2 C = vec2(1.0/6.0, 1.0/3.0); const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
-  vec3 i = floor(v + dot(v, C.yyy)); vec3 x0 = v - i + dot(i, C.xxx);
-  vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g; vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
-  vec3 x1 = x0 - i1 + C.xxx; vec3 x2 = x0 - i2 + 2.0 * C.xxx; vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
-  i = mod(i, 289.0);
-  vec4 p = bp_permute(bp_permute(bp_permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
-  float n_ = 1.0/7.0; vec3 ns = n_ * D.wyz - D.xzx;
-  vec4 j = p - 49.0 * floor(p * ns.z * ns.z); vec4 x_ = floor(j * ns.z); vec4 y_ = floor(j - 7.0 * x_);
-  vec4 x = x_ * ns.x + ns.yyyy; vec4 y = y_ * ns.x + ns.yyyy; vec4 h = 1.0 - abs(x) - abs(y);
-  vec4 b0 = vec4(x.xy, y.xy); vec4 b1 = vec4(x.zw, y.zw);
-  vec4 s0 = floor(b0)*2.0 + 1.0; vec4 s1 = floor(b1)*2.0 + 1.0; vec4 sh = -step(h, vec4(0.0));
-  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy; vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
-  vec3 p0 = vec3(a0.xy, h.x); vec3 p1 = vec3(a0.zw, h.y); vec3 p2 = vec3(a1.xy, h.z); vec3 p3 = vec3(a1.zw, h.w);
-  vec4 norm = bp_inv(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
-  p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
-  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0); m = m * m;
-  return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
-}`;
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const gauss = (r) => Math.sqrt(-2 * Math.log(Math.max(r(), 1e-9))) * Math.cos(2 * Math.PI * r());
 
-const VERT = `
-attribute vec3 aNormal;
-attribute float aAo;
-uniform float uTime;
-varying vec3 vN; varying vec3 vV; varying float vAo;
-${NOISE}
-float wave(vec3 q){ float t = uTime; return bp_noise(q * 1.5 + vec3(0.0, t * 0.12, t * 0.08)) * 0.7 + bp_noise(q * 3.2 - vec3(t * 0.15, 0.0, t * 0.1)) * 0.3; }
+// cycle de 20 secondes : génération, repos, retour au bruit
+const CYCLE = { gen: 8.0, hold: 7.5, back: 3.2 };
+function progressAt(time) {
+  if (reduce) return 1;
+  const u = time % (CYCLE.gen + CYCLE.hold + CYCLE.back);
+  if (u < CYCLE.gen) return ease(u / CYCLE.gen);
+  if (u < CYCLE.gen + CYCLE.hold) return 1;
+  return 1 - ease((u - CYCLE.gen - CYCLE.hold) / CYCLE.back);
+}
+
+const ELEMENT = { C: { c: '#10205f', r: 0.62 }, N: { c: '#2f56d9', r: 0.62 }, O: { c: '#7fa6ff', r: 0.62 }, S: { c: '#f2b134', r: 0.85 } };
+
+const ATOM_VERT = `
+varying vec3 vN; varying vec3 vV; varying vec3 vC;
 void main(){
-  vec3 n = normalize(aNormal);
-  float e = 0.04; float d0 = wave(position);
-  vec3 g = vec3(wave(position + vec3(e,0.,0.)) - d0, wave(position + vec3(0.,e,0.)) - d0, wave(position + vec3(0.,0.,e)) - d0) / e;
-  vec3 p = position + n * d0 * 0.030;
-  n = normalize(n - 0.07 * (g - dot(g, n) * n));
-  vec4 mv = modelViewMatrix * vec4(p, 1.0);
-  vV = mv.xyz; vN = normalize(normalMatrix * n); vAo = aAo;
+  vec4 mv = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+  vV = mv.xyz; vN = normalize(normalMatrix * mat3(instanceMatrix) * normal);
+  #ifdef USE_INSTANCING_COLOR
+  vC = instanceColor;
+  #else
+  vC = vec3(1.0);
+  #endif
   gl_Position = projectionMatrix * mv;
 }`;
-
-const FRAG = `
-varying vec3 vN; varying vec3 vV; varying float vAo;
+const ATOM_FRAG = `
+varying vec3 vN; varying vec3 vV; varying vec3 vC;
+uniform float uAlpha;
 void main(){
   vec3 N = normalize(vN); vec3 V = normalize(-vV);
   if (dot(N, V) < 0.0) N = -N;
-  vec3 L1 = normalize(vec3(0.5, 0.7, 0.6)); vec3 L2 = normalize(vec3(-0.7, -0.2, 0.4));
-  float key = clamp(dot(N, L1) * 0.5 + 0.5, 0.0, 1.0);
-  float fill = clamp(dot(N, L2) * 0.5 + 0.5, 0.0, 1.0);
-  float ao = pow(clamp(vAo, 0.0, 1.0), 2.4);
-  float fres = pow(1.0 - max(dot(N, V), 0.0), 2.2);
-
-  // couleurs en lumière linéaire (la conversion finale les éclaircit)
-  vec3 white = vec3(0.93, 0.95, 1.00);
-  vec3 sky   = vec3(0.30, 0.47, 0.92);
-  vec3 blue  = vec3(0.017, 0.07, 0.56);
-  vec3 deep  = vec3(0.004, 0.012, 0.20);
-
-  float light = key * 0.55 + ao * 0.60;
-  vec3 col = mix(blue, white, smoothstep(0.42, 0.95, light));
-  col = mix(col, sky, fres * 0.40 * (1.0 - smoothstep(0.5, 1.0, light)));
-  col = mix(deep, col, smoothstep(0.02, 0.45, ao + fill * 0.20));
-  float spec = pow(max(dot(N, normalize(L1 + V)), 0.0), 60.0) * 0.55;
-  col += vec3(spec);
-  float fog = smoothstep(7.4, 11.0, -vV.z);
-  col = mix(col, vec3(1.0), fog * 0.30);
-  gl_FragColor = vec4(col, 1.0);
+  vec3 L1 = normalize(vec3(0.45, 0.65, 0.62)); vec3 L2 = normalize(vec3(-0.75, -0.10, 0.35));
+  float d1 = clamp((dot(N, L1) + 0.35) / 1.35, 0.0, 1.0); float d2 = clamp(dot(N, L2) * 0.5 + 0.5, 0.0, 1.0);
+  vec3 amb = mix(vec3(0.12, 0.12, 0.2), vec3(0.45, 0.52, 0.72), N.y * 0.5 + 0.5);
+  vec3 lit = vC * (amb * 0.6 + vec3(1.0, 0.97, 0.94) * d1 * 1.1 + vec3(0.55, 0.62, 0.85) * d2 * 0.2);
+  lit += vec3(pow(max(dot(N, normalize(L1 + V)), 0.0), 60.0) * 0.5);
+  lit += vec3(0.5, 0.6, 1.0) * pow(1.0 - max(dot(N, V), 0.0), 2.6) * 0.2;
+  lit = 1.0 - exp(-lit * 1.35);
+  gl_FragColor = vec4(lit, uAlpha);
   #include <colorspace_fragment>
 }`;
-
-const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const POINT_VERT = `
+attribute float aSize; uniform float uPx;
+void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = max(1.5, aSize * uPx); gl_Position = projectionMatrix * mv; }`;
+const POINT_FRAG = `
+uniform float uAlpha; uniform float uMix;
+void main(){
+  float r = length(gl_PointCoord - 0.5) * 2.0; if (r > 1.0) discard;
+  float a = smoothstep(1.0, 0.2, r) * uAlpha;
+  vec3 c = mix(vec3(0.62, 0.72, 0.97), vec3(0.18, 0.34, 0.90), uMix);
+  gl_FragColor = vec4(c, a);
+}`;
 
 async function start() {
-  const data = await (await fetch('assets/data/surface.json')).json();
-  const pos = new Float32Array(b64(data.position).buffer);
-  const nor = new Int8Array(b64(data.normal).buffer);
-  const ao = b64(data.ao);
-  const idx = new Uint16Array(b64(data.index).buffer);
+  const data = await (await fetch(`${BASE}assets/data/pocket.json`)).json();
+  const n = data.n;
+  const P0 = Float32Array.from(data.ca.flat());
+  const O0 = Float32Array.from(data.o.flat());
+  const ss = Uint8Array.from(data.ss);
+  const P = new Float32Array(P0);
+  const O = new Float32Array(O0);
+  const amt = new Float32Array(n).fill(1);
+  const col = new Float32Array(n * 3);
+  const c0 = new THREE.Color(0.006, 0.025, 0.26);
+  const c1 = new THREE.Color(0.10, 0.26, 0.86);
+  const tmpc = new THREE.Color();
+  for (let i = 0; i < n; i++) {
+    const w = 0.5 + 0.5 * Math.sin(data.t[i] * Math.PI * 6 - 0.8);          // alternance par hélice
+    tmpc.copy(c0).lerp(c1, 0.18 + 0.7 * w);
+    col[i * 3] = tmpc.r; col[i * 3 + 1] = tmpc.g; col[i * 3 + 2] = tmpc.b;
+  }
 
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  geo.setAttribute('aNormal', new THREE.BufferAttribute(nor, 3, true));
-  geo.setAttribute('aAo', new THREE.BufferAttribute(ao, 1, true));
-  geo.setIndex(new THREE.BufferAttribute(idx, 1));
-  geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1.6);
-
-  const uniforms = { uTime: { value: 0 } };
-  const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide }));
-  mesh.frustumCulled = false;
-  const pivot = new THREE.Group();
-  pivot.add(mesh);
   const scene = new THREE.Scene();
+  const pivot = new THREE.Group();
   scene.add(pivot);
+
+  // protéine
+  const cartoon = new Cartoon(n, makeCartoonMaterial());
+  cartoon.mesh.material.uniforms.uFog.value.set(1e3, 1e4);
+  pivot.add(cartoon.mesh);
+
+  // molécule en boules et bâtons
+  const lig = data.ligand;
+  const atomMat = new THREE.ShaderMaterial({ uniforms: { uAlpha: { value: 1 } }, vertexShader: ATOM_VERT, fragmentShader: ATOM_FRAG });
+  const atoms = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 28, 20), atomMat, lig.el.length);
+  const m4 = new THREE.Matrix4();
+  const colr = new THREE.Color();
+  lig.el.forEach((e, i) => {
+    const d = ELEMENT[e] || ELEMENT.C;
+    m4.makeScale(d.r, d.r, d.r).setPosition(...lig.xyz[i]);
+    atoms.setMatrixAt(i, m4);
+    atoms.setColorAt(i, colr.set(d.c).convertSRGBToLinear());
+  });
+  atoms.frustumCulled = false;
+  const bondList = [];
+  lig.bonds.forEach(([a, b, order]) => {
+    const pa = new THREE.Vector3(...lig.xyz[a]);
+    const pb = new THREE.Vector3(...lig.xyz[b]);
+    const dir = pb.clone().sub(pa);
+    const side = new THREE.Vector3().crossVectors(dir, new THREE.Vector3(0.3, 0.9, 0.2)).normalize().multiplyScalar(0.2);
+    const offsets = order >= 2 ? [side.clone(), side.clone().negate()] : [new THREE.Vector3()];
+    offsets.forEach((o) => bondList.push([pa.clone().add(o), pb.clone().add(o), a, b]));
+  });
+  const bonds = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 14, 1, true), atomMat, bondList.length);
+  const up = new THREE.Vector3(0, 1, 0);
+  const q = new THREE.Quaternion();
+  bondList.forEach(([pa, pb, a, b], i) => {
+    const mid = pa.clone().add(pb).multiplyScalar(0.5);
+    const dir = pb.clone().sub(pa);
+    const len = dir.length();
+    q.setFromUnitVectors(up, dir.normalize());
+    m4.compose(mid, q, new THREE.Vector3(0.2, len, 0.2));
+    bonds.setMatrixAt(i, m4);
+    bonds.setColorAt(i, colr.set('#3a4a8a').convertSRGBToLinear());
+  });
+  bonds.frustumCulled = false;
+  pivot.add(atoms, bonds);
+
+  // nuage de bruit
+  const AMB = 140;
+  const pp = new Float32Array((n + AMB) * 3);
+  const sizes = new Float32Array(n + AMB);
+  const rand = rng(77);
+  const rnd = new Float32Array(n * 3).map(() => gauss(rand));
+  const noiseO = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const x = gauss(rand); const y = gauss(rand); const z = gauss(rand); const l = Math.hypot(x, y, z) || 1; noiseO[i * 3] = x / l; noiseO[i * 3 + 1] = y / l; noiseO[i * 3 + 2] = z / l; }
+  const hash = new Float32Array(n).map(() => rand());
+  const ambDir = new Float32Array(AMB * 3);
+  const ambR = new Float32Array(AMB);
+  for (let j = 0; j < AMB; j++) { const x = gauss(rand); const y = gauss(rand); const z = gauss(rand); const l = Math.hypot(x, y, z) || 1; ambDir[j * 3] = x / l; ambDir[j * 3 + 1] = y / l; ambDir[j * 3 + 2] = z / l; ambR[j] = 0.3 + 0.7 * Math.cbrt(rand()); sizes[n + j] = 0.9 + 0.8 * rand(); }
+  for (let i = 0; i < n; i++) sizes[i] = 2.1;
+  const pg = new THREE.BufferGeometry();
+  pg.setAttribute('position', new THREE.BufferAttribute(pp, 3).setUsage(THREE.DynamicDrawUsage));
+  pg.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+  const pointMat = new THREE.ShaderMaterial({ uniforms: { uPx: { value: 1 }, uAlpha: { value: 1 }, uMix: { value: 0 } }, vertexShader: POINT_VERT, fragmentShader: POINT_FRAG, transparent: true, depthWrite: false });
+  const points = new THREE.Points(pg, pointMat);
+  points.frustumCulled = false;
+  pivot.add(points);
+  const nph = [rand() * 6.28, rand() * 6.28, rand() * 6.28];
+  const nsp = [0.9 + rand() * 0.6, 1.3 + rand() * 0.8, 1.9 + rand];
+  nsp[2] = 1.9 + rand();
+  const ndir = new Float32Array(9).map(() => gauss(rand));
+
+  function diffuse(g, time) {
+    let cx = 0; let cy = 0; let cz = 0;
+    for (let i = 0; i < n; i++) { cx += P0[i * 3]; cy += P0[i * 3 + 1]; cz += P0[i * 3 + 2]; }
+    cx /= n; cy /= n; cz /= n;
+    const e1 = ease(clamp01((g - 0.14) / 0.78));
+    const S = 0.28 + 0.72 * e1;
+    const sigma = (1 - e1) * 11;
+    const AMP = [1, 0.65, 0.4];
+    for (let i = 0; i < n; i++) {
+      const f = i / n;
+      let nx = 0; let ny = 0; let nz = 0;
+      for (let h = 0; h < 3; h++) {
+        const sv = Math.sin(6.2832 * (h + 1) * f * 0.9 + nph[h] + nsp[h] * time) * AMP[h];
+        nx += ndir[h * 3] * sv; ny += ndir[h * 3 + 1] * sv; nz += ndir[h * 3 + 2] * sv;
+      }
+      P[i * 3] = cx + (P0[i * 3] - cx) * S + nx * sigma;
+      P[i * 3 + 1] = cy + (P0[i * 3 + 1] - cy) * S + ny * sigma;
+      P[i * 3 + 2] = cz + (P0[i * 3 + 2] - cz) * S + nz * sigma;
+      const a = smooth(0.50 + 0.22 * hash[i], 0.76 + 0.18 * hash[i], g);
+      amt[i] = a;
+      const ox = noiseO[i * 3] * (1 - a) + O0[i * 3] * a;
+      const oy = noiseO[i * 3 + 1] * (1 - a) + O0[i * 3 + 1] * a;
+      const oz = noiseO[i * 3 + 2] * (1 - a) + O0[i * 3 + 2] * a;
+      const l = Math.hypot(ox, oy, oz) || 1;
+      O[i * 3] = ox / l; O[i * 3 + 1] = oy / l; O[i * 3 + 2] = oz / l;
+    }
+    const sc = 22 * Math.pow(1 - smooth(0, 0.95, g), 1.3);
+    for (let i = 0; i < n; i++) {
+      const fl = 1 + 0.10 * Math.sin(time * 5 + i * 1.7);
+      pp[i * 3] = P0[i * 3] + rnd[i * 3] * sc * fl;
+      pp[i * 3 + 1] = P0[i * 3 + 1] + rnd[i * 3 + 1] * sc * fl;
+      pp[i * 3 + 2] = P0[i * 3 + 2] + rnd[i * 3 + 2] * sc * fl;
+    }
+    const ra = 18 + 36 * (1 - smooth(0, 0.9, g));
+    for (let j = 0; j < AMB; j++) {
+      const rr = ra * ambR[j] * (1 + 0.08 * Math.sin(time * 2 + j));
+      const p = (n + j) * 3;
+      pp[p] = cx + ambDir[j * 3] * rr; pp[p + 1] = cy + ambDir[j * 3 + 1] * rr; pp[p + 2] = cz + ambDir[j * 3 + 2] * rr;
+    }
+    pg.attributes.position.needsUpdate = true;
+  }
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0xffffff, 0);
@@ -124,26 +223,42 @@ async function start() {
   const clock = new THREE.Clock();
   let visible = !document.hidden;
   document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
+  let lastG = -1;
 
   function frame() {
     requestAnimationFrame(frame);
     if (!visible) return;
     const dt = Math.min(clock.getDelta(), 0.25);
-    const t = clock.elapsedTime * (reduce ? 0.15 : 1);
+    const time = clock.elapsedTime;
     const max = Math.max(1, document.documentElement.scrollHeight - H);
-    const target = Math.min(1, scrollY / max);
-    cur.p += (target - cur.p) * (1 - Math.exp(-dt * 4));
+    cur.p += (Math.min(1, scrollY / max) - cur.p) * (1 - Math.exp(-dt * 4));
     const p = cur.p;
 
     const small = W < 820;
-    const size = (small ? 0.62 : 0.75) * halfH * 1.18;                    // rayon en unités monde
     const halfW = halfH * W / H;
-    const ox = (small ? 0.2 : 0.66 - 0.55 * p) * halfW;
-    const oy = (small ? 0.26 - 0.5 * p : 0.06 - 0.30 * p) * halfH;
-    pivot.scale.setScalar(size);
-    pivot.position.set(ox, oy, 0);
-    pivot.rotation.set(0.35 + p * 0.9 + mouse.y * 0.12, -0.55 + p * 2.6 + t * 0.045 + mouse.x * 0.18, 0.12 - p * 0.5);
-    uniforms.uTime.value = t;
+    const s = (small ? 0.5 : 0.8) * halfH / data.radius * 1.0;
+    pivot.scale.setScalar(s);
+    pivot.position.set((small ? 0.18 : 0.52 - 0.5 * p) * halfW, (small ? 0.30 - 0.5 * p : 0.04 - 0.28 * p) * halfH, 0);
+    pivot.rotation.set(0.38 + p * 0.7 + mouse.y * 0.12, -0.5 + p * 2.2 + (reduce ? 0 : time * 0.05) + mouse.x * 0.2, 0.1 - p * 0.4);
+
+    const g = progressAt(time);
+    if (g !== lastG) {
+      lastG = g;
+      if (g >= 1) {
+        P.set(P0); O.set(O0); amt.fill(1);
+        points.visible = false;
+        cartoon.mesh.material.uniforms.uAlpha.value = 1;
+      } else {
+        P.set(P0);
+        diffuse(g, time);
+        points.visible = true;
+        pointMat.uniforms.uAlpha.value = 1 - smooth(0.55, 0.97, g);
+        pointMat.uniforms.uMix.value = smooth(0.15, 0.9, g);
+        cartoon.mesh.material.uniforms.uAlpha.value = smooth(0.10, 0.34, g);
+      }
+      cartoon.update(P, O, ss, amt, col);
+    } else if (g < 1) { diffuse(g, time); cartoon.update(P, O, ss, amt, col); }
+    pointMat.uniforms.uPx.value = (renderer.domElement.height / (2 * halfH)) * s;
     renderer.render(scene, camera);
   }
   root.classList.add('webgl-ready');
