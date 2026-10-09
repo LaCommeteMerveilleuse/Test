@@ -189,10 +189,18 @@ export function createProtein({ resolution = 104, seed = 11 } = {}) {
   const pos = src.getAttribute('position').array.slice(0, count * 3);
   const nor = src.getAttribute('normal').array.slice(0, count * 3);
   const col = src.getAttribute('color').array.slice(0, count * 3);
+  // The accumulated palette is washed out towards white; renormalise and push
+  // the saturation back up so the surface reads like an electrostatic map.
+  const SAT = 1.55;
   for (let i = 0; i < count; i++) {
-    const r = col[i * 3], g = col[i * 3 + 1], b = col[i * 3 + 2];
-    const m = Math.max(r, g, b, 1e-5);
-    col[i * 3] = r / m; col[i * 3 + 1] = g / m; col[i * 3 + 2] = b / m;
+    const i3 = i * 3;
+    const m = Math.max(col[i3], col[i3 + 1], col[i3 + 2], 1e-5);
+    const r = col[i3] / m, g = col[i3 + 1] / m, b = col[i3 + 2] / m;
+    const lum = 0.3 * r + 0.6 * g + 0.1 * b;
+    const DIM = 0.72;
+    col[i3] = Math.min(1, Math.max(0, lum + (r - lum) * SAT)) * DIM;
+    col[i3 + 1] = Math.min(1, Math.max(0, lum + (g - lum) * SAT)) * DIM;
+    col[i3 + 2] = Math.min(1, Math.max(0, lum + (b - lum) * SAT)) * DIM;
   }
   geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3));
   geometry.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
@@ -227,16 +235,16 @@ export function createProtein({ resolution = 104, seed = 11 } = {}) {
 
   const material = new THREE.MeshPhysicalMaterial({
     vertexColors: true,
-    roughness: 0.42,
+    roughness: 0.46,
     metalness: 0.0,
-    clearcoat: 0.6,
-    clearcoatRoughness: 0.35,
-    sheen: 1.0,
-    sheenRoughness: 0.5,
+    clearcoat: 0.45,
+    clearcoatRoughness: 0.4,
+    sheen: 0.45,
+    sheenRoughness: 0.6,
     sheenColor: new THREE.Color('#9fb4ff'),
-    iridescence: 0.35,
+    iridescence: 0.25,
     iridescenceIOR: 1.3,
-    envMapIntensity: 1.0,
+    envMapIntensity: 0.5,
   });
 
   material.onBeforeCompile = (shader) => {
@@ -248,7 +256,6 @@ uniform float uTime;
 uniform float uAmp;
 uniform vec3 uPocket;
 uniform float uOpen;
-varying vec3 vObjPos;
 varying float vPocket;
 ${NOISE_GLSL}
 float bp_wave(vec3 p){
@@ -257,27 +264,28 @@ float bp_wave(vec3 p){
           + bp_snoise(p * 3.4 - vec3(t * 0.28, 0.0, t * 0.2)) * 0.35;
   // slow breathing over the whole molecule
   w += sin(t * 0.6 + p.y * 2.0) * 0.25;
-  // the binding site "opens": a gentle concave hinge motion around the pocket
-  float d = distance(p, uPocket);
-  float k = exp(-d * d * 9.0);
-  w -= k * (0.6 + 1.6 * uOpen) * (0.75 + 0.25 * sin(t * 1.4));
   return w;
+}
+// Depth of the binding cleft at p: shallow when closed, open under acidity.
+float bp_cleft(vec3 p){
+  float d = distance(p, uPocket);
+  float k = exp(-d * d * 7.0);
+  return k * (0.025 + 0.075 * uOpen) * (0.92 + 0.08 * sin(uTime * 1.4));
 }`)
       .replace('#include <beginnormal_vertex>', `
 float bpE = 0.03;
-float bpD0 = bp_wave(position);
+float bpD0 = bp_wave(position) * uAmp - bp_cleft(position);
 vec3 bpG = vec3(
-  bp_wave(position + vec3(bpE, 0.0, 0.0)) - bpD0,
-  bp_wave(position + vec3(0.0, bpE, 0.0)) - bpD0,
-  bp_wave(position + vec3(0.0, 0.0, bpE)) - bpD0) / bpE;
+  (bp_wave(position + vec3(bpE, 0.0, 0.0)) * uAmp - bp_cleft(position + vec3(bpE, 0.0, 0.0))) - bpD0,
+  (bp_wave(position + vec3(0.0, bpE, 0.0)) * uAmp - bp_cleft(position + vec3(0.0, bpE, 0.0))) - bpD0,
+  (bp_wave(position + vec3(0.0, 0.0, bpE)) * uAmp - bp_cleft(position + vec3(0.0, 0.0, bpE))) - bpD0) / bpE;
 vec3 objectNormal = normalize(normal);
-objectNormal = normalize(objectNormal - uAmp * (bpG - dot(bpG, objectNormal) * objectNormal));
+objectNormal = normalize(objectNormal - (bpG - dot(bpG, objectNormal) * objectNormal));
 #ifdef USE_TANGENT
   vec3 objectTangent = vec3( tangent.xyz );
 #endif`)
       .replace('#include <begin_vertex>', `
-vec3 transformed = position + normal * uAmp * bpD0;
-vObjPos = position;
+vec3 transformed = position + normal * bpD0;
 float bpPd = distance(position, uPocket);
 vPocket = exp(-bpPd * bpPd * 7.0);`);
 
@@ -286,17 +294,67 @@ vPocket = exp(-bpPd * bpPd * 7.0);`);
 uniform float uTime;
 uniform float uOpen;
 uniform vec3 uPocketColor;
-varying vec3 vObjPos;
 varying float vPocket;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-float bpPulse = 0.55 + 0.45 * sin(uTime * 1.8);
-float bpRing = smoothstep(0.25, 0.9, vPocket) ;
-totalEmissiveRadiance += uPocketColor * bpRing * (0.15 + 0.95 * uOpen) * (0.6 + 0.4 * bpPulse);
-diffuseColor.rgb = mix(diffuseColor.rgb, uPocketColor, bpRing * 0.35 * uOpen);`);
+float bpPulse = 0.65 + 0.35 * sin(uTime * 1.7);
+float bpCore = smoothstep(0.35, 0.95, vPocket);
+float bpRim = max(0.0, smoothstep(0.30, 0.62, vPocket) - bpCore);
+// the cavity darkens as it opens; its edge picks up the binding-site colour
+diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.02, 0.07, 0.08), bpCore * (0.45 + 0.45 * uOpen));
+totalEmissiveRadiance += uPocketColor * bpRim * (0.25 + 1.6 * uOpen) * bpPulse;`);
   };
 
   const mesh = new THREE.Mesh(geometry, material);
   mesh.frustumCulled = false;
 
-  return { mesh, uniforms, pocket };
+  // --- binding-site marker: a ring on the surface plus a soft halo.
+  const site = new THREE.Group();
+  const normal = pocket.clone().normalize();
+  site.position.copy(normal).multiplyScalar(pocket.length() * 0.97);
+  site.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
+
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: uniforms.uPocketColor.value,
+    transparent: true,
+    opacity: 0.9,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+  });
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.012, 12, 72), ringMat);
+  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.006, 10, 60), ringMat.clone());
+  ring2.material.opacity = 0.55;
+
+  // radial halo sprite
+  const halo = document.createElement('canvas');
+  halo.width = halo.height = 128;
+  const hctx = halo.getContext('2d');
+  const hg = hctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  hg.addColorStop(0, 'rgba(56, 242, 208, 0.85)');
+  hg.addColorStop(0.35, 'rgba(56, 242, 208, 0.28)');
+  hg.addColorStop(1, 'rgba(56, 242, 208, 0)');
+  hctx.fillStyle = hg;
+  hctx.fillRect(0, 0, 128, 128);
+  const haloTex = new THREE.CanvasTexture(halo);
+  haloTex.colorSpace = THREE.SRGBColorSpace;
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: haloTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.9,
+  }));
+  glow.scale.setScalar(1.1);
+
+  site.add(ring, ring2);
+  mesh.add(site, glow);
+  glow.position.copy(site.position);
+
+  function updateSite(open, t) {
+    const pulse = 0.72 + 0.28 * Math.sin(t * 1.7);
+    const k = 0.25 + 0.75 * open;
+    site.scale.setScalar(0.55 + 0.65 * open);
+    ring.material.opacity = (0.12 + 0.42 * open) * pulse;
+    ring2.material.opacity = (0.07 + 0.3 * open) * pulse;
+    ring2.rotation.z = t * 0.5;
+    glow.scale.setScalar((0.75 + 0.75 * open) * (0.96 + 0.04 * Math.sin(t * 2.1)));
+    glow.material.opacity = (0.08 + 0.5 * open) * pulse * k;
+  }
+
+  return { mesh, uniforms, pocket, updateSite };
 }

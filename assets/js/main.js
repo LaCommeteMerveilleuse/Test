@@ -19,7 +19,6 @@ function webglAvailable() {
 const state = {
   open: 0.3,          // current binding-site exposure (driven by pH)
   openTarget: 0.3,
-  scroll: 0,
   mouseX: 0,
   mouseY: 0,
 };
@@ -28,7 +27,7 @@ if (webglAvailable()) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 0.9;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
@@ -39,18 +38,20 @@ if (webglAvailable()) {
   camera.position.set(0, 0, 6.2);
 
   // Coloured rim lights for a premium, cinematic read on a dark background.
-  const key = new THREE.DirectionalLight('#ffffff', 1.4);
+  const key = new THREE.DirectionalLight('#ffffff', 0.95);
   key.position.set(3, 4, 5);
-  const rimA = new THREE.DirectionalLight('#6d7bff', 2.2);
+  const rimA = new THREE.DirectionalLight('#6d7bff', 1.7);
   rimA.position.set(-5, 2, -3);
-  const rimB = new THREE.DirectionalLight('#ff5a8a', 1.4);
+  const rimB = new THREE.DirectionalLight('#ff5a8a', 1.1);
   rimB.position.set(4, -3, -4);
-  scene.add(key, rimA, rimB, new THREE.AmbientLight('#20203a', 0.6));
+  scene.add(key, rimA, rimB, new THREE.AmbientLight('#20203a', 0.35));
 
   const pivot = new THREE.Group();
   scene.add(pivot);
 
-  const { mesh, uniforms } = createProtein({ resolution: window.innerWidth < 700 ? 84 : 104 });
+  const { mesh, uniforms, pocket, updateSite } = createProtein({ resolution: window.innerWidth < 700 ? 84 : 104 });
+  // Heading that brings the binding site round to face the camera.
+  const faceOn = -Math.atan2(pocket.x, pocket.z);
   pivot.add(mesh);
 
   // Floating particles — "solvent" around the molecule.
@@ -71,15 +72,17 @@ if (webglAvailable()) {
   }));
   scene.add(particles);
 
-  // Scroll choreography: where the molecule sits for each section.
+  // Scroll choreography. `o` keeps the molecule from fighting with the text:
+  // it only comes forward on the sections that are about the molecule itself.
   const poses = {
-    hero:     { x: 0.95, y: 0.0, s: 1.05, rx: 0.0 },
-    mission:  { x: 0.0,  y: 0.0, s: 0.75, rx: 0.4 },
-    programme:{ x: -1.25, y: 0.0, s: 0.8, rx: 0.8 },
-    platform: { x: 1.25, y: 0.05, s: 0.85, rx: 1.2 },
-    binders:  { x: 1.05, y: 0.0, s: 1.0, rx: 1.4 },
-    journey:  { x: -1.3, y: 0.0, s: 0.7, rx: 1.9 },
-    future:   { x: 0.0, y: 0.1, s: 0.9, rx: 2.4 },
+    hero:     { x: 1.25, y: 0.00, s: 1.05, rx: 0.0, o: 1.00 },
+    mission:  { x: 1.30, y: 0.05, s: 0.70, rx: 0.4, o: 0.34 },
+    programme:{ x: -1.70, y: 0.10, s: 0.55, rx: 0.8, o: 0.12 },
+    platform: { x: 1.45, y: 0.05, s: 0.70, rx: 1.2, o: 0.20 },
+    binders:  { x: 1.25, y: 0.00, s: 1.05, rx: faceOn, o: 1.00 },
+    journey:  { x: 1.70, y: 0.10, s: 0.60, rx: 1.9, o: 0.10 },
+    future:   { x: -1.55, y: 0.05, s: 0.65, rx: 2.4, o: 0.18 },
+    cta:      { x: 0.00, y: 0.05, s: 0.95, rx: 2.8, o: 0.55 },
   };
   const target = { ...poses.hero };
   const current = { ...poses.hero };
@@ -122,19 +125,23 @@ if (webglAvailable()) {
     const k = 1 - Math.pow(0.04, dt);
     const mob = isMobile();
     current.x += ((mob ? 0 : target.x) - current.x) * k;
-    current.y += ((mob ? 0.55 : target.y) - current.y) * k;
-    current.s += ((mob ? target.s * 0.8 : target.s) - current.s) * k;
+    current.y += ((mob ? 0.42 : target.y) - current.y) * k;
+    current.s += ((mob ? target.s * 0.75 : target.s) - current.s) * k;
     current.rx += (target.rx - current.rx) * k;
+    current.o += ((mob ? Math.min(target.o, 0.35) : target.o) - current.o) * k;
+    canvas.style.opacity = current.o.toFixed(3);
 
     state.open += (state.openTarget - state.open) * (1 - Math.pow(0.08, dt));
 
     uniforms.uTime.value = t * speed;
     uniforms.uOpen.value = state.open;
+    updateSite(state.open, t * speed);
 
     pivot.position.set(current.x, current.y, 0);
     pivot.scale.setScalar(current.s);
-    mesh.rotation.y = t * 0.08 * speed + current.rx + state.mouseX * 0.25;
-    mesh.rotation.x = Math.sin(t * 0.15) * 0.12 * speed + state.mouseY * 0.15;
+    // A slow sway rather than a full spin: the binding site stays readable.
+    mesh.rotation.y = current.rx + Math.sin(t * 0.11 * speed) * 0.3 + state.mouseX * 0.25;
+    mesh.rotation.x = Math.sin(t * 0.15 * speed) * 0.1 + state.mouseY * 0.15;
     particles.rotation.y = t * 0.012 * speed;
     particles.rotation.x = t * 0.006 * speed;
 
@@ -152,17 +159,24 @@ if (ph) {
   const phValue = document.getElementById('ph-value');
   const phState = document.getElementById('ph-state');
   const phBar = document.getElementById('ph-exposure');
+  const phPct = document.getElementById('ph-pct');
   const update = () => {
     const v = parseFloat(ph.value);
-    // Illustrative model: exposure rises as the environment acidifies.
-    const exposure = 1 / (1 + Math.exp((v - 6.8) * 6));
+    // Illustrative model only: exposure rises as the environment acidifies.
+    const exposure = 1 / (1 + Math.exp((v - 6.6) * 5));
     state.openTarget = exposure;
     phValue.textContent = v.toFixed(1);
-    phBar.style.setProperty('--x', `${Math.round(exposure * 100)}%`);
+    const pct = Math.round(exposure * 100);
+    phBar.style.setProperty('--x', `${pct}%`);
+    if (phPct) phPct.textContent = `${pct} %`;
     phState.textContent = exposure > 0.6
-      ? 'Site de liaison exposé — interaction recherchée'
-      : exposure > 0.3 ? 'Transition conformationnelle' : 'Site de liaison masqué — veille';
-    ph.style.setProperty('--fill', `${((v - ph.min) / (ph.max - ph.min)) * 100}%`);
+      ? 'Site de liaison exposé — interaction recherchée dans ces conditions.'
+      : exposure > 0.3
+        ? 'Transition conformationnelle — le site commence à s’ouvrir.'
+        : 'Site de liaison masqué — la protéine reste en veille.';
+    const min = parseFloat(ph.min);
+    const max = parseFloat(ph.max);
+    ph.style.setProperty('--fill', `${((v - min) / (max - min)) * 100}%`);
   };
   ph.addEventListener('input', update);
   update();
@@ -210,4 +224,20 @@ if (cycle && !reduceMotion) {
   }, 2600);
 }
 
-document.getElementById('year').textContent = new Date().getFullYear();
+/* ---------------------------------------------------------------- sector filters */
+const chips = [...document.querySelectorAll('.chip[data-filter]')];
+if (chips.length) {
+  const cards = [...document.querySelectorAll('#sectors-grid .sector')];
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const f = chip.dataset.filter;
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+    cards.forEach((card) => {
+      const show = f === 'all' || card.dataset.kind === f;
+      card.hidden = !show;
+      if (show) card.classList.add('is-in');
+    });
+  }));
+}
+
+const yearEl = document.getElementById('year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();
