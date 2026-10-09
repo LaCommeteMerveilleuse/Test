@@ -70,11 +70,11 @@
           </div>
         </div>
         <div class="hero__stage" data-stage="hero" aria-hidden="true">
-          <img class="poster" src="assets/img/protein-hero.webp" alt="" width="536" height="563" loading="lazy" decoding="async">
+          <img class="poster" src="assets/img/protein-hero.webp" alt="" width="490" height="465" loading="lazy" decoding="async">
         </div>
       </div>
       <div class="container hero__foot">
-        <p class="caption">Surface moléculaire réelle de l'adénylate kinase (PDB&nbsp;4AKE&nbsp;/&nbsp;1AKE), animée à titre d'illustration.</p>
+        <p class="caption">Illustration&nbsp;: une protéine générée par diffusion (en rose) prend en pince sa cible (surface&nbsp;; adénylate kinase, PDB&nbsp;4AKE, prise comme exemple).</p>
         <span class="scroll-cue" aria-hidden="true"><i></i></span>
       </div>
     </section>
@@ -134,9 +134,10 @@
           <p class="eyebrow reveal">Smart Binders</p>
           <h2 class="h2 reveal">Une protéine qui attend son&nbsp;signal.</h2>
           <p class="lead reveal">
-            Un Smart Binder est un composé <strong>activable</strong>&nbsp;: son site de liaison est conçu pour
-            rester discret en circulation, puis devenir accessible lorsque le microenvironnement change —
-            par exemple lorsque le pH baisse dans un tissu inflammatoire ou tumoral.
+            Un Smart Binder est une protéine <strong>générée sur mesure</strong> pour prendre sa cible en pince&nbsp;:
+            deux domaines de liaison, placés de part et d'autre de la cible, reliés par un lieur souple.
+            Notre ambition&nbsp;: que cette capacité ne s'exprime que dans le microenvironnement visé — par exemple
+            un milieu plus acide — et qu'elle reste en veille ailleurs.
           </p>
           <p class="body reveal">
             Notre rôle&nbsp;: fournir les outils bio-informatiques pour concevoir, comparer et optimiser cette
@@ -150,51 +151,56 @@
               <span class="sb-step__n">1</span>
               <div>
                 <h3>En circulation <small>pH 7,4</small></h3>
-                <p>Dans le sang, le milieu est neutre. Peu d'histidines sont protonées&nbsp;: la protéine reste
-                  repliée et son site de liaison est <strong>masqué</strong>.</p>
+                <p>Dans le sang, les histidines d'interface sont presque toutes neutres. Les molécules
+                  <strong>s'auto-associent de façon réversible</strong>&nbsp;: leurs faces de liaison sont
+                  enfouies dans l'assemblage, la cible n'est pas reconnue.</p>
               </div>
             </li>
             <li class="sb-step" data-ph="6.5" tabindex="0">
               <span class="sb-step__n">2</span>
               <div>
                 <h3>Dans un tissu acide <small>pH ≈ 6,5</small></h3>
-                <p>Le microenvironnement s'acidifie. Les histidines captent un proton et se chargent
-                  positivement&nbsp;: les forces électrostatiques locales changent.</p>
+                <p>Les histidines captent des protons et se chargent positivement. Ces charges se repoussent&nbsp;:
+                  l'assemblage se <strong>dissocie</strong> et libère des monomères.</p>
               </div>
             </li>
             <li class="sb-step" data-ph="5.3" tabindex="0">
               <span class="sb-step__n">3</span>
               <div>
-                <h3>Site accessible <small>pH &lt; 6</small></h3>
-                <p>Ce changement peut déclencher un mouvement de charnière. Le site de liaison devient
-                  <strong>accessible</strong>&nbsp;: l'interaction avec la cible devient possible.</p>
+                <h3>Cible reconnue <small>pH &lt; 6</small></h3>
+                <p>Le monomère déploie ses deux domaines de part et d'autre de la cible. Chacun se loge dans une
+                  poche, le lieur flexible fait le pont&nbsp;: la cible est <strong>prise en pince</strong>.</p>
               </div>
             </li>
           </ol>
 
           <figure class="chartfig reveal">
             <svg id="chart" viewBox="0 0 480 204" role="img"
-                 aria-label="Courbe de la charge nette de la protéine en fonction du pH, calculée à partir de sa séquence."></svg>
+                 aria-label="Courbe de la fraction d'histidines protonées en fonction du pH, avec le pKa choisi à 6,5."></svg>
             <figcaption>
-              <strong>Charge nette de la protéine selon le pH.</strong>
-              Calcul d'Henderson–Hasselbalch à partir de la séquence (214&nbsp;résidus). À pH&nbsp;7,4 on retrouve
-              −4&nbsp;e, la charge du modèle atomique. Seules les histidines (pKa&nbsp;choisi&nbsp;: 6,5) changent
-              sensiblement d'état entre pH&nbsp;5 et 8.
+              <strong>Fraction d'histidines protonées selon le pH.</strong>
+              Calcul d'Henderson–Hasselbalch pour un pKa de 6,5 (environ 6 pour l'acide aminé libre, souvent entre
+              5,5 et 7 dans une protéine). C'est le seul calcul de la démonstration&nbsp;: il sert de déclencheur
+              supposé de l'assemblage.
             </figcaption>
           </figure>
 
           <aside class="sb-note reveal">
-            <h3>Ce que cette démonstration montre — et ce qu'elle ne montre pas</h3>
+            <h3>Ce que cette illustration montre — et ne montre pas</h3>
             <p>
-              La structure est celle de l'<strong>adénylate kinase d'<i>E.&nbsp;coli</i></strong>, une enzyme dont le
-              mouvement de charnière entre deux conformations est bien documenté (modèles atomiques dérivés des
-              entrées PDB&nbsp;4AKE, ouverte, et 1AKE, fermée). La surface, le potentiel électrostatique, la charge
-              nette et les résidus du site sont calculés à partir de ces coordonnées.
+              La <strong>cible</strong> (surface) est une structure réelle&nbsp;: l'adénylate kinase d'<i>E.&nbsp;coli</i>,
+              prise comme exemple (entrée PDB&nbsp;4AKE). La <strong>protéine rose</strong> est un binder
+              <em>idéalisé</em>&nbsp;: deux domaines construits par script à partir d'hélices&nbsp;α et de
+              feuillets&nbsp;β de géométrie standard, reliés par un lieur. Son placement sur la cible est une
+              recherche géométrique de complémentarité de forme — <strong>pas un docking validé</strong>.
             </p>
             <p>
-              Ce qui n'est <em>pas</em> démontré&nbsp;: que le pH pilote cette charnière. C'est précisément le
-              principe que BlackPhage cherche à concevoir. <strong>L'adaptation au pH et l'efficacité biologique
-              restent à démontrer.</strong>
+              L'animation de <strong>génération par diffusion</strong> met en scène le principe — partir du bruit
+              et laisser la structure émerger — mais n'exécute aucun modèle.
+            </p>
+            <p>
+              Ce qui n'est pas démontré&nbsp;: que le pH commande l'auto-association de molécules conçues, puis leur
+              fixation à une cible. <strong>L'adaptation au pH et l'efficacité biologique restent à démontrer.</strong>
             </p>
           </aside>
         </div>
@@ -202,35 +208,41 @@
         <aside class="sb__side" aria-label="Démonstration interactive">
           <div class="sb-stage">
             <div class="sb-stage__fit" data-stage="viewer">
-              <img class="poster" src="assets/img/protein-viewer.webp" alt="" width="385" height="420" loading="lazy" decoding="async">
-            </div>
-            <div class="hud hud--top">
-              <span class="hud__label">Surface colorée par</span>
-              <div class="seg" role="group" aria-label="Mode de coloration">
-                <button type="button" data-mode="elec" aria-pressed="true">Électrostatique</button>
-                <button type="button" data-mode="hyd" aria-pressed="false">Hydrophobie</button>
-                <button type="button" data-mode="dom" aria-pressed="false">Domaines</button>
-              </div>
+              <img class="poster" src="assets/img/protein-viewer.webp" alt="" width="453" height="434" loading="lazy" decoding="async">
             </div>
 
-            <div class="site-tag" id="site-tag" aria-hidden="true">
-              <i class="site-tag__dot"></i><i class="site-tag__line"></i>
-              <span class="site-tag__text">Site de liaison</span>
+            <div class="hud hud--top">
+              <div class="seg" role="group" aria-label="Surface de la cible">
+                <button type="button" data-mode="neutral" aria-pressed="true">Cible neutre</button>
+                <button type="button" data-mode="elec" aria-pressed="false" data-needs-3d>Électrostatique</button>
+              </div>
+              <button type="button" class="pill" id="replay" data-needs-3d>
+                <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 6.5A5 5 0 0 0 4 5M3 9.5A5 5 0 0 0 12 11M4 2v3h3M12 14v-3H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Rejouer la génération
+              </button>
             </div>
+
+            <div class="gen" id="gen" hidden>
+              <span class="gen__label" id="gen-label">Génération par diffusion</span>
+              <i class="gen__track"><i id="gen-bar"></i></i>
+              <span class="gen__note">Illustration du processus — aucun modèle n'est exécuté</span>
+            </div>
+
+            <div class="tag" data-tag="a" data-dir="dl"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Domaine A</span></div>
+            <div class="tag" data-tag="b" data-dir="dr"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Domaine B</span></div>
+            <div class="tag" data-tag="target" data-dir="dr"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Protéine cible</span></div>
+            <div class="tag" data-tag="cluster" data-dir="dl"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Assemblage · sites masqués</span></div>
 
             <div class="hud hud--bottom">
-              <div class="legend" data-legend="elec">
+              <div class="legend">
+                <span><i class="sw sw--d1"></i>Domaine A</span>
+                <span><i class="sw sw--d2"></i>Domaine B</span>
+                <span><i class="sw sw--link"></i>Lieur</span>
+                <span><i class="sw sw--target"></i>Cible</span>
+              </div>
+              <div class="legend" data-legend="elec" hidden>
                 <span>− négatif</span><i class="bar bar--elec"></i><span>positif +</span>
               </div>
-              <div class="legend" data-legend="hyd" hidden>
-                <span>hydrophile</span><i class="bar bar--hyd"></i><span>hydrophobe</span>
-              </div>
-              <div class="legend" data-legend="dom" hidden>
-                <span><i class="sw sw--core"></i>Cœur</span>
-                <span><i class="sw sw--nmp"></i>NMP</span>
-                <span><i class="sw sw--lid"></i>LID</span>
-              </div>
-              <span class="legend legend--site"><i class="sw sw--site"></i>Région accessible à l'ouverture</span>
               <div class="scale"><i id="scalebar"></i><span id="scalebar-label">2 nm</span></div>
             </div>
           </div>
@@ -261,19 +273,14 @@
                 <span class="sub" id="m-his-sub"></span>
               </div>
               <div>
-                <dt>Charge nette calculée</dt>
-                <dd id="m-charge">−4,0&nbsp;e</dd>
-                <span class="sub">Henderson–Hasselbalch</span>
+                <dt>État de la protéine</dt>
+                <dd id="m-state" data-state="closed">Auto-associée</dd>
+                <span class="sub" id="m-state-sub">sites de liaison masqués</span>
               </div>
               <div>
-                <dt>Fermeture du domaine LID</dt>
-                <dd id="m-lid">48°</dd>
-                <span class="sub" id="m-lid-sub"></span>
-              </div>
-              <div>
-                <dt>Site de liaison</dt>
-                <dd id="m-site" data-state="closed">Masqué</dd>
-                <span class="sub" id="m-site-sub">charnière fermée</span>
+                <dt>Sites liés à la cible</dt>
+                <dd id="m-sites" data-state="closed">0&nbsp;/&nbsp;2</dd>
+                <span class="sub" id="m-sites-sub">cible non reconnue</span>
               </div>
             </dl>
           </div>
@@ -441,7 +448,7 @@
       </p>
       <div class="footer__bottom">
         <span>© <span id="year">2026</span> BlackPhage</span>
-        <span>Structure illustrée : adénylate kinase d'<i>E.&nbsp;coli</i>, d'après les entrées PDB 4AKE (Müller et al., 1996) et 1AKE (Müller &amp; Schulz, 1992). Rendu : three.js. Police : Inter.</span>
+        <span>Cible illustrée : adénylate kinase d'<i>E.&nbsp;coli</i>, d'après l'entrée PDB 4AKE (Müller et al., 1996). Protéine générée : illustration idéalisée. Rendu : three.js. Police : Inter.</span>
       </div>
     </div>
   </footer>

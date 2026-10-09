@@ -8,7 +8,6 @@
  "vertices": 46000,
  "triangles": 91996,
  "radius": 36.519,
- "residualScale": 0.000187312512309671,
  "potentialScale": 2.0,
  "domains": [
   {
@@ -177,32 +176,20 @@
    "item": 4,
    "dtype": "int8"
   },
-  "residual": {
-   "offset": 736000,
-   "count": 46000,
-   "item": 4,
-   "dtype": "int16"
-  },
-  "weights": {
-   "offset": 1104000,
-   "count": 46000,
-   "item": 4,
-   "dtype": "uint8"
-  },
   "scalars": {
-   "offset": 1288000,
+   "offset": 736000,
    "count": 46000,
    "item": 4,
    "dtype": "uint8"
   },
   "potential": {
-   "offset": 1472000,
+   "offset": 920000,
    "count": 46000,
    "item": 4,
    "dtype": "int8"
   },
   "index": {
-   "offset": 1656000,
+   "offset": 1104000,
    "count": 91996,
    "item": 3,
    "dtype": "uint32"
