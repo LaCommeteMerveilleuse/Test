@@ -164,7 +164,7 @@ export function markSvg() {
 /** Photo de synthèse du flacon. Les cibles personnalisées utilisent le flacon générique. */
 export function vial(p) {
   const file = p.id ? `${BASE}assets/img/vials/${p.id}.webp` : `${BASE}assets/img/vials/custom-${LANG}.webp`;
-  return `<img class="vialimg" src="${file}" alt="${esc(p.name)}" width="300" height="428" loading="lazy" decoding="async">`;
+  return `<img class="vialimg" src="${file}" alt="${esc(p.name)}" width="200" height="420" loading="lazy" decoding="async">`;
 }
 
 export function availabilityTag(p) {
