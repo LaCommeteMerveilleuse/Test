@@ -1,0 +1,211 @@
+{
+ "source": {
+  "protein": "Adénylate kinase (Escherichia coli)",
+  "open": "PDB 4AKE",
+  "closed": "PDB 1AKE",
+  "note": "Modèles tout-atome distribués avec les données de test de MDAnalysis"
+ },
+ "vertices": 46000,
+ "triangles": 91996,
+ "radius": 36.519,
+ "residualScale": 0.000187312512309671,
+ "potentialScale": 2.0,
+ "domains": [
+  {
+   "name": "CORE",
+   "residues": "1–29, 60–121, 160–214",
+   "axis": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "angle": 0.0,
+   "angleDeg": 0.0,
+   "pivot": [
+    3.1263,
+    -6.71075,
+    -12.63957
+   ],
+   "shift": 0.0
+  },
+  {
+   "name": "NMP",
+   "residues": [
+    30,
+    59
+   ],
+   "axis": [
+    -0.91804,
+    -0.22399,
+    0.32714
+   ],
+   "angle": 0.772701,
+   "angleDeg": 44.3,
+   "pivot": [
+    0.7942,
+    7.34507,
+    -9.55996
+   ],
+   "shift": 1.8683
+  },
+  {
+   "name": "LID",
+   "residues": [
+    122,
+    159
+   ],
+   "axis": [
+    0.41999,
+    -0.24061,
+    -0.87505
+   ],
+   "angle": 0.935951,
+   "angleDeg": 53.6,
+   "pivot": [
+    12.9454,
+    -10.63512,
+    -6.84771
+   ],
+   "shift": 1.55
+  }
+ ],
+ "anchor": 21515,
+ "histidines": [
+  {
+   "residue": 126,
+   "centroid": [
+    -10.4209,
+    -21.89775,
+    11.46283
+   ]
+  },
+  {
+   "residue": 134,
+   "centroid": [
+    -1.1711,
+    -8.63475,
+    17.92263
+   ]
+  },
+  {
+   "residue": 172,
+   "centroid": [
+    11.3939,
+    2.90005,
+    7.54903
+   ]
+  }
+ ],
+ "composition": {
+  "A": 19,
+  "C": 1,
+  "D": 17,
+  "E": 18,
+  "F": 5,
+  "G": 20,
+  "H": 3,
+  "I": 14,
+  "K": 18,
+  "L": 16,
+  "M": 6,
+  "N": 4,
+  "P": 10,
+  "Q": 8,
+  "R": 13,
+  "S": 5,
+  "T": 11,
+  "V": 19,
+  "Y": 7
+ },
+ "residues": 214,
+ "heavyAtoms": 1656,
+ "massDa": 23586.0,
+ "netChargeNeutralHis": -4.0,
+ "surface": {
+  "openArea": 8528,
+  "closedArea": 8351,
+  "openVolume": 27668,
+  "closedVolume": 27924
+ },
+ "quality": {
+  "coreRmsd": 1.95,
+  "meanResidual": 1.94,
+  "meanErrorToClosedSurface": 0.57,
+  "p95ErrorToClosedSurface": 1.69
+ },
+ "siteResidues": [
+  9,
+  14,
+  15,
+  18,
+  28,
+  30,
+  33,
+  36,
+  47,
+  53,
+  54,
+  56,
+  58,
+  84,
+  85,
+  89,
+  95,
+  123,
+  131,
+  132,
+  156,
+  157,
+  158,
+  163,
+  167,
+  170,
+  176,
+  202,
+  210
+ ],
+ "buffers": {
+  "position": {
+   "offset": 0,
+   "count": 46000,
+   "item": 3,
+   "dtype": "float32"
+  },
+  "normal": {
+   "offset": 552000,
+   "count": 46000,
+   "item": 4,
+   "dtype": "int8"
+  },
+  "residual": {
+   "offset": 736000,
+   "count": 46000,
+   "item": 4,
+   "dtype": "int16"
+  },
+  "weights": {
+   "offset": 1104000,
+   "count": 46000,
+   "item": 4,
+   "dtype": "uint8"
+  },
+  "scalars": {
+   "offset": 1288000,
+   "count": 46000,
+   "item": 4,
+   "dtype": "uint8"
+  },
+  "potential": {
+   "offset": 1472000,
+   "count": 46000,
+   "item": 4,
+   "dtype": "int8"
+  },
+  "index": {
+   "offset": 1656000,
+   "count": 91996,
+   "item": 3,
+   "dtype": "uint32"
+  }
+ }
+}

@@ -1,243 +1,173 @@
-// BlackPhage — scene, scroll choreography and UI interactions.
+// BlackPhage — 3D scene. The molecule is positioned from the layout: each `[data-stage]` element
+// tells the scene where, how large and in which orientation to draw it while that element is on screen.
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { createProtein } from './protein.js';
+import { loadMolecule } from './molecule.js';
+import { initViewer } from './viewer.js';
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root = document.documentElement;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const canvas = document.getElementById('scene');
+const stages = [...document.querySelectorAll('[data-stage]')];
 
-function webglAvailable() {
-  try {
-    const c = document.createElement('canvas');
-    return !!(window.WebGL2RenderingContext && c.getContext('webgl2'));
-  } catch (e) {
-    return false;
-  }
+function webgl2() {
+  try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; }
 }
 
-/* ---------------------------------------------------------------- 3D scene */
-const state = {
-  open: 0.3,          // current binding-site exposure (driven by pH)
-  openTarget: 0.3,
-  mouseX: 0,
-  mouseY: 0,
+// Orientation and behaviour of the molecule for each kind of stage.
+const PRESETS = {
+  hero: { euler: [0.32, -0.9, 0.08], spin: 0.05, fill: 1.3, hinge: 'auto' },
+  careers: { euler: [-0.2, 0.7, -0.1], spin: 0.04, fill: 1.3, hinge: 'auto' },
+  viewer: { face: true, spin: 0, fill: 1.2, hinge: 'ph' },
 };
 
-if (webglAvailable()) {
+if (!stages.length) {
+  // nothing to draw
+} else if (!webgl2()) {
+  root.classList.add('no-webgl');
+  // keep the interactive readouts alive without 3D
+  fetch('assets/data/adk.json').then((r) => r.json())
+    .then((meta) => initViewer({ meta, setMode() {} }))
+    .catch(() => {});
+} else {
+  start().catch((err) => { console.error(err); root.classList.add('no-webgl'); });
+}
+
+async function start() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.9;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.setClearColor(0x000000, 0);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 700 ? 1.75 : 2));
 
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const FOV = 28;
+  const DIST = 9;
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 60);
+  camera.position.set(0, 0, DIST);
+  const halfH = DIST * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
 
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-  camera.position.set(0, 0, 6.2);
-
-  // Coloured rim lights for a premium, cinematic read on a dark background.
-  const key = new THREE.DirectionalLight('#ffffff', 0.95);
-  key.position.set(3, 4, 5);
-  const rimA = new THREE.DirectionalLight('#6d7bff', 1.7);
-  rimA.position.set(-5, 2, -3);
-  const rimB = new THREE.DirectionalLight('#ff5a8a', 1.1);
-  rimB.position.set(4, -3, -4);
-  scene.add(key, rimA, rimB, new THREE.AmbientLight('#20203a', 0.35));
-
+  const mol = await loadMolecule('assets/data/adk');
   const pivot = new THREE.Group();
+  pivot.add(mol.object);
   scene.add(pivot);
 
-  const { mesh, uniforms, pocket, updateSite } = createProtein({ resolution: window.innerWidth < 700 ? 84 : 104 });
-  // Heading that brings the binding site round to face the camera.
-  const faceOn = -Math.atan2(pocket.x, pocket.z);
-  pivot.add(mesh);
+  const viewer = initViewer(mol);   // binds the pH controls when the page has them
 
-  // Floating particles — "solvent" around the molecule.
-  const pCount = 420;
-  const pGeo = new THREE.BufferGeometry();
-  const pPos = new Float32Array(pCount * 3);
-  for (let i = 0; i < pCount; i++) {
-    const r = 1.6 + Math.random() * 3.2;
-    const th = Math.random() * Math.PI * 2;
-    const ph = Math.acos(Math.random() * 2 - 1);
-    pPos[i * 3] = r * Math.sin(ph) * Math.cos(th);
-    pPos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
-    pPos[i * 3 + 2] = r * Math.cos(ph);
-  }
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    color: '#9fb0ff', size: 0.018, transparent: true, opacity: 0.55, depthWrite: false, sizeAttenuation: true,
-  }));
-  scene.add(particles);
+  // orientation that brings the binding region face-on (open conformation)
+  const faceQ = new THREE.Quaternion()
+    .setFromUnitVectors(mol.anchorNormal, new THREE.Vector3(0, 0, 1))
+    .multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0.1, -0.35, 0)));
+  const yAxis = new THREE.Vector3(0, 1, 0);
 
-  // Scroll choreography. `o` keeps the molecule from fighting with the text:
-  // it only comes forward on the sections that are about the molecule itself.
-  const poses = {
-    hero:     { x: 1.25, y: 0.00, s: 1.05, rx: 0.0, o: 1.00 },
-    mission:  { x: 1.30, y: 0.05, s: 0.70, rx: 0.4, o: 0.34 },
-    programme:{ x: -1.70, y: 0.10, s: 0.55, rx: 0.8, o: 0.12 },
-    platform: { x: 1.45, y: 0.05, s: 0.70, rx: 1.2, o: 0.20 },
-    binders:  { x: 1.25, y: 0.00, s: 1.05, rx: faceOn, o: 1.00 },
-    journey:  { x: 1.70, y: 0.10, s: 0.60, rx: 1.9, o: 0.10 },
-    future:   { x: -1.55, y: 0.05, s: 0.65, rx: 2.4, o: 0.18 },
-    cta:      { x: 0.00, y: 0.05, s: 0.95, rx: 2.8, o: 0.55 },
-  };
-  const target = { ...poses.hero };
-  const current = { ...poses.hero };
-  const isMobile = () => window.innerWidth < 900;
-
-  const sections = [...document.querySelectorAll('[data-pose]')];
-  const poseObserver = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) Object.assign(target, poses[e.target.dataset.pose] || poses.hero);
-    });
-  }, { threshold: 0.35 });
-  sections.forEach((s) => poseObserver.observe(s));
-
-  function resize() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  window.addEventListener('pointermove', (e) => {
-    state.mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-    state.mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+  const cur = { x: 0, y: 0, s: 0.001, opacity: 0, closing: 0.3 };
+  const mouse = { x: 0, y: 0 };
+  addEventListener('pointermove', (e) => {
+    mouse.x = (e.clientX / innerWidth) * 2 - 1;
+    mouse.y = (e.clientY / innerHeight) * 2 - 1;
   }, { passive: true });
 
+  let W = 0;
+  let H = 0;
+  function resize() {
+    W = innerWidth; H = innerHeight;
+    renderer.setSize(W, H, false);
+    camera.aspect = W / H;
+    camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  const qTarget = new THREE.Quaternion();
+  const qSpin = new THREE.Quaternion();
+  const qMouse = new THREE.Quaternion();
+  const euler = new THREE.Euler();
+  const tmp = new THREE.Vector3();
   const clock = new THREE.Clock();
-  let visible = true;
-  document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
+  let hidden = document.hidden;
+  document.addEventListener('visibilitychange', () => { hidden = document.hidden; });
+
+  /** The stage that covers most of the viewport right now, with its visible fraction. */
+  function activeStage() {
+    let best = null;
+    let bestArea = 0;
+    for (const el of stages) {
+      const r = el.getBoundingClientRect();
+      const w = Math.max(0, Math.min(r.right, W) - Math.max(r.left, 0));
+      const h = Math.max(0, Math.min(r.bottom, H) - Math.max(r.top, 0));
+      const area = w * h;
+      if (area > bestArea) { bestArea = area; best = { el, r, vis: area / Math.max(1, r.width * r.height) }; }
+    }
+    return best;
+  }
+
+  root.classList.add('webgl-ready');
 
   function frame() {
     requestAnimationFrame(frame);
-    if (!visible) return;
-    const dt = Math.min(clock.getDelta(), 0.05);
-    const t = clock.elapsedTime;
-    const speed = reduceMotion ? 0.15 : 1;
+    if (hidden) return;
+    const raw = clock.getDelta();
+    const dt = Math.min(raw, 0.05);          // animation step
+    const ui = Math.min(raw, 0.25);          // layout-following step: stays correct on slow GPUs
+    const t = clock.elapsedTime * (reduceMotion ? 0.2 : 1);
+    const k = 1 - Math.exp(-ui * 5.5);
 
-    const k = 1 - Math.pow(0.04, dt);
-    const mob = isMobile();
-    current.x += ((mob ? 0 : target.x) - current.x) * k;
-    current.y += ((mob ? 0.42 : target.y) - current.y) * k;
-    current.s += ((mob ? target.s * 0.75 : target.s) - current.s) * k;
-    current.rx += (target.rx - current.rx) * k;
-    current.o += ((mob ? Math.min(target.o, 0.35) : target.o) - current.o) * k;
-    canvas.style.opacity = current.o.toFixed(3);
+    const st = activeStage();
+    const preset = st ? PRESETS[st.el.dataset.stage] || PRESETS.hero : null;
 
-    state.open += (state.openTarget - state.open) * (1 - Math.pow(0.08, dt));
+    let target = { x: cur.x, y: cur.y, s: cur.s, opacity: 0 };
+    if (st) {
+      const { r } = st;
+      const small = W < 700 ? 0.84 : 1;
+      const px = (Math.min(r.width, r.height) / 2) * preset.fill * small;
+      target = {
+        x: (((r.left + r.width / 2) - W / 2) / (H / 2)) * halfH,
+        y: (-((r.top + r.height / 2) - H / 2) / (H / 2)) * halfH,
+        s: (px / (H / 2)) * halfH,
+        opacity: Math.min(1, st.vis * 1.8),
+      };
+    }
 
-    uniforms.uTime.value = t * speed;
-    uniforms.uOpen.value = state.open;
-    updateSite(state.open, t * speed);
+    // orientation target (slow spin + a little pointer parallax)
+    if (preset) {
+      if (preset.face) qTarget.copy(faceQ);
+      else qTarget.setFromEuler(euler.set(...preset.euler));
+      qTarget.premultiply(qSpin.setFromAxisAngle(yAxis, t * preset.spin));
+      qTarget.premultiply(qMouse.setFromEuler(euler.set(mouse.y * 0.10, mouse.x * 0.18, 0)));
+    }
 
-    pivot.position.set(current.x, current.y, 0);
-    pivot.scale.setScalar(current.s);
-    // A slow sway rather than a full spin: the binding site stays readable.
-    mesh.rotation.y = current.rx + Math.sin(t * 0.11 * speed) * 0.3 + state.mouseX * 0.25;
-    mesh.rotation.x = Math.sin(t * 0.15 * speed) * 0.1 + state.mouseY * 0.15;
-    particles.rotation.y = t * 0.012 * speed;
-    particles.rotation.x = t * 0.006 * speed;
+    // hinge: driven by the pH when the viewer is on screen, otherwise a slow, shallow breathing motion
+    const u = preset && preset.hinge === 'ph' && viewer ? viewer.closing : 0.30 + 0.22 * Math.sin(t * 0.32);
 
+    // first appearance: snap to the layout, then fade in
+    if (cur.opacity < 0.01 && target.opacity > 0) {
+      cur.x = target.x; cur.y = target.y; cur.s = target.s; cur.closing = u;
+      if (preset) pivot.quaternion.copy(qTarget);
+    }
+    cur.x += (target.x - cur.x) * k;
+    cur.y += (target.y - cur.y) * k;
+    cur.s += (target.s - cur.s) * k;
+    cur.opacity += (target.opacity - cur.opacity) * (1 - Math.exp(-ui * 5));
+    cur.closing += (u - cur.closing) * (1 - Math.exp(-ui * 4));
+    if (preset) pivot.quaternion.slerp(qTarget, 1 - Math.exp(-ui * 3));
+
+    mol.setClosing(cur.closing);
+    mol.setProtonation(viewer ? viewer.protonation : 0.1);
+    mol.update(t, dt);
+
+    pivot.position.set(cur.x, cur.y, 0);
+    pivot.scale.setScalar(cur.s);
+    pivot.updateMatrixWorld(true);
+    canvas.style.opacity = cur.opacity.toFixed(3);
     renderer.render(scene, camera);
+
+    // overlays that depend on the 3D state (binding-site label, scale bar)
+    if (viewer && st && st.el.dataset.stage === 'viewer') {
+      const pxPerAngstrom = ((H / 2) / halfH) * cur.s * mol.unit;
+      mol.vertexLocal(mol.anchor, tmp);
+      mol.object.localToWorld(tmp);
+      const toCam = camera.position.clone().sub(tmp).normalize();
+      const nWorld = mol.anchorNormal.clone().applyQuaternion(pivot.quaternion);
+      tmp.project(camera);
+      viewer.overlay(null, (tmp.x * 0.5 + 0.5) * W, (-tmp.y * 0.5 + 0.5) * H, nWorld.dot(toCam), pxPerAngstrom);
+    }
   }
   frame();
-  document.documentElement.classList.add('webgl-ready');
-} else {
-  document.documentElement.classList.add('no-webgl');
 }
-
-/* ---------------------------------------------------------------- pH slider */
-const ph = document.getElementById('ph');
-if (ph) {
-  const phValue = document.getElementById('ph-value');
-  const phState = document.getElementById('ph-state');
-  const phBar = document.getElementById('ph-exposure');
-  const phPct = document.getElementById('ph-pct');
-  const update = () => {
-    const v = parseFloat(ph.value);
-    // Illustrative model only: exposure rises as the environment acidifies.
-    const exposure = 1 / (1 + Math.exp((v - 6.6) * 5));
-    state.openTarget = exposure;
-    phValue.textContent = v.toFixed(1);
-    const pct = Math.round(exposure * 100);
-    phBar.style.setProperty('--x', `${pct}%`);
-    if (phPct) phPct.textContent = `${pct} %`;
-    phState.textContent = exposure > 0.6
-      ? 'Site de liaison exposé — interaction recherchée dans ces conditions.'
-      : exposure > 0.3
-        ? 'Transition conformationnelle — le site commence à s’ouvrir.'
-        : 'Site de liaison masqué — la protéine reste en veille.';
-    const min = parseFloat(ph.min);
-    const max = parseFloat(ph.max);
-    ph.style.setProperty('--fill', `${((v - min) / (max - min)) * 100}%`);
-  };
-  ph.addEventListener('input', update);
-  update();
-}
-
-/* ---------------------------------------------------------------- reveal */
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach((e) => {
-    if (e.isIntersecting) {
-      e.target.classList.add('is-in');
-      revealObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
-
-/* ---------------------------------------------------------------- nav */
-const nav = document.querySelector('.nav');
-const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 24);
-window.addEventListener('scroll', onScroll, { passive: true });
-onScroll();
-
-const burger = document.querySelector('.nav__burger');
-burger?.addEventListener('click', () => {
-  const open = nav.classList.toggle('is-open');
-  burger.setAttribute('aria-expanded', String(open));
-});
-document.querySelectorAll('.nav__links a').forEach((a) => a.addEventListener('click', () => {
-  nav.classList.remove('is-open');
-  burger?.setAttribute('aria-expanded', 'false');
-}));
-
-/* ---------------------------------------------------------------- headline word cycle */
-const cycle = document.querySelector('[data-cycle]');
-if (cycle && !reduceMotion) {
-  const words = cycle.dataset.cycle.split('|');
-  let i = 0;
-  setInterval(() => {
-    i = (i + 1) % words.length;
-    cycle.classList.add('is-out');
-    setTimeout(() => {
-      cycle.textContent = words[i];
-      cycle.classList.remove('is-out');
-    }, 380);
-  }, 2600);
-}
-
-/* ---------------------------------------------------------------- sector filters */
-const chips = [...document.querySelectorAll('.chip[data-filter]')];
-if (chips.length) {
-  const cards = [...document.querySelectorAll('#sectors-grid .sector')];
-  chips.forEach((chip) => chip.addEventListener('click', () => {
-    const f = chip.dataset.filter;
-    chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
-    cards.forEach((card) => {
-      const show = f === 'all' || card.dataset.kind === f;
-      card.hidden = !show;
-      if (show) card.classList.add('is-in');
-    });
-  }));
-}
-
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
