@@ -1,0 +1,1073 @@
+{
+ "_note": "Catalogue d'exemple. Remplacez les produits, prix et disponibilités par les vôtres. Le champ optionnel stockRestant (nombre) affiche un message de rareté uniquement s'il est renseigné.",
+ "categories": [
+  {
+   "id": "immunite",
+   "label": "Immunité"
+  },
+  {
+   "id": "cancer",
+   "label": "Cancer"
+  },
+  {
+   "id": "inflammation",
+   "label": "Inflammation"
+  },
+  {
+   "id": "metabolisme",
+   "label": "Métabolisme"
+  },
+  {
+   "id": "outils",
+   "label": "Outils de laboratoire"
+  }
+ ],
+ "products": [
+  {
+   "id": "tnf-alpha",
+   "name": "Smart Binder TNF alpha",
+   "target": "TNF alpha",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître TNF alpha avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 290
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 750
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2180
+    }
+   ],
+   "availability": "commande",
+   "keywords": [
+    "tnf",
+    "tnf-a",
+    "tnf alpha",
+    "facteur de necrose tumorale",
+    "tumor necrosis factor"
+   ],
+   "featured": true
+  },
+  {
+   "id": "il-6",
+   "name": "Smart Binder IL-6",
+   "target": "IL-6",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître IL-6 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 290
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 750
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2180
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il6",
+    "interleukine 6",
+    "interleukine-6"
+   ],
+   "featured": true
+  },
+  {
+   "id": "il-17a",
+   "name": "Smart Binder IL-17A",
+   "target": "IL-17A",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître IL-17A avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 320
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 830
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2400
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il17",
+    "il-17",
+    "interleukine 17"
+   ],
+   "featured": false
+  },
+  {
+   "id": "il-1-beta",
+   "name": "Smart Binder IL-1 bêta",
+   "target": "IL-1 bêta",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître IL-1 bêta avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 310
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 810
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2320
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il1b",
+    "il-1b",
+    "interleukine 1"
+   ],
+   "featured": false
+  },
+  {
+   "id": "il-23",
+   "name": "Smart Binder IL-23",
+   "target": "IL-23",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître IL-23 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 340
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 880
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2550
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il23",
+    "interleukine 23"
+   ],
+   "featured": false
+  },
+  {
+   "id": "tgf-beta",
+   "name": "Smart Binder TGF bêta",
+   "target": "TGF bêta",
+   "category": "inflammation",
+   "summary": "Une molécule conçue pour reconnaître TGF bêta avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur l'inflammation",
+    "Tests de dosage au laboratoire",
+    "Contrôle de vos expériences"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 330
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 860
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2480
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "tgfb",
+    "tgf-b",
+    "tgf beta"
+   ],
+   "featured": false
+  },
+  {
+   "id": "ifn-gamma",
+   "name": "Smart Binder IFN gamma",
+   "target": "IFN gamma",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître IFN gamma avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 300
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 780
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2250
+    }
+   ],
+   "availability": "commande",
+   "keywords": [
+    "ifng",
+    "interferon gamma",
+    "interferon"
+   ],
+   "featured": false
+  },
+  {
+   "id": "il-2",
+   "name": "Smart Binder IL-2",
+   "target": "IL-2",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître IL-2 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 290
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 750
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2180
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il2",
+    "interleukine 2"
+   ],
+   "featured": false
+  },
+  {
+   "id": "il-4",
+   "name": "Smart Binder IL-4",
+   "target": "IL-4",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître IL-4 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 290
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 750
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2180
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il4",
+    "interleukine 4"
+   ],
+   "featured": false
+  },
+  {
+   "id": "il-10",
+   "name": "Smart Binder IL-10",
+   "target": "IL-10",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître IL-10 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 290
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 750
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2180
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "il10",
+    "interleukine 10"
+   ],
+   "featured": false
+  },
+  {
+   "id": "cd3",
+   "name": "Smart Binder CD3",
+   "target": "CD3",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître CD3 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 360
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 940
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2700
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "cd-3",
+    "lymphocyte t"
+   ],
+   "featured": false
+  },
+  {
+   "id": "cd19",
+   "name": "Smart Binder CD19",
+   "target": "CD19",
+   "category": "immunite",
+   "summary": "Une molécule conçue pour reconnaître CD19 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Études sur les défenses de l'organisme",
+    "Suivi de vos expériences",
+    "Contrôle qualité de vos lots"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 360
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 940
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2700
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "cd-19",
+    "lymphocyte b"
+   ],
+   "featured": false
+  },
+  {
+   "id": "cd20",
+   "name": "Smart Binder CD20",
+   "target": "CD20",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître CD20 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 380
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 990
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2850
+    }
+   ],
+   "availability": "commande",
+   "keywords": [
+    "cd-20",
+    "ms4a1"
+   ],
+   "featured": true
+  },
+  {
+   "id": "pd-1",
+   "name": "Smart Binder PD-1",
+   "target": "PD-1",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître PD-1 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 390
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1010
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2920
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "pd1",
+    "pdcd1",
+    "cd279"
+   ],
+   "featured": false
+  },
+  {
+   "id": "pd-l1",
+   "name": "Smart Binder PD-L1",
+   "target": "PD-L1",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître PD-L1 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 390
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1010
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2920
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "pdl1",
+    "pd l1",
+    "cd274"
+   ],
+   "featured": true
+  },
+  {
+   "id": "ctla-4",
+   "name": "Smart Binder CTLA-4",
+   "target": "CTLA-4",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître CTLA-4 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 380
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 990
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2850
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "ctla4",
+    "cd152"
+   ],
+   "featured": false
+  },
+  {
+   "id": "her2",
+   "name": "Smart Binder HER2",
+   "target": "HER2",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître HER2 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 420
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1090
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 3150
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "her-2",
+    "erbb2",
+    "neu"
+   ],
+   "featured": true
+  },
+  {
+   "id": "egfr",
+   "name": "Smart Binder EGFR",
+   "target": "EGFR",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître EGFR avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 420
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1090
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 3150
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "her1",
+    "erbb1",
+    "recepteur du facteur de croissance epidermique"
+   ],
+   "featured": false
+  },
+  {
+   "id": "vegf-a",
+   "name": "Smart Binder VEGF-A",
+   "target": "VEGF-A",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître VEGF-A avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 340
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 880
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2550
+    }
+   ],
+   "availability": "commande",
+   "keywords": [
+    "vegf",
+    "vegfa",
+    "facteur de croissance endothelial"
+   ],
+   "featured": true
+  },
+  {
+   "id": "cd47",
+   "name": "Smart Binder CD47",
+   "target": "CD47",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître CD47 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 390
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1010
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2920
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "cd-47",
+    "iap"
+   ],
+   "featured": false
+  },
+  {
+   "id": "bcma",
+   "name": "Smart Binder BCMA",
+   "target": "BCMA",
+   "category": "cancer",
+   "summary": "Une molécule conçue pour reconnaître BCMA avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur les cellules tumorales",
+    "Comparaison de vos échantillons",
+    "Validation de vos protocoles"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 410
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1070
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 3080
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "tnfrsf17",
+    "cd269"
+   ],
+   "featured": false
+  },
+  {
+   "id": "insuline",
+   "name": "Smart Binder Insuline",
+   "target": "Insuline",
+   "category": "metabolisme",
+   "summary": "Une molécule conçue pour reconnaître Insuline avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur le métabolisme",
+    "Suivi de vos échantillons",
+    "Validation de vos méthodes"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 300
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 780
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 2250
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "insulin",
+    "ins"
+   ],
+   "featured": false
+  },
+  {
+   "id": "pcsk9",
+   "name": "Smart Binder PCSK9",
+   "target": "PCSK9",
+   "category": "metabolisme",
+   "summary": "Une molécule conçue pour reconnaître PCSK9 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur le métabolisme",
+    "Suivi de vos échantillons",
+    "Validation de vos méthodes"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 400
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1040
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 3000
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "pcsk-9",
+    "cholesterol"
+   ],
+   "featured": false
+  },
+  {
+   "id": "glp-1r",
+   "name": "Smart Binder Récepteur GLP-1",
+   "target": "Récepteur GLP-1",
+   "category": "metabolisme",
+   "summary": "Une molécule conçue pour reconnaître Récepteur GLP-1 avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Recherche sur le métabolisme",
+    "Suivi de vos échantillons",
+    "Validation de vos méthodes"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 420
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 1090
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 3150
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "glp1",
+    "glp-1",
+    "glp1r",
+    "recepteur glp 1"
+   ],
+   "featured": false
+  },
+  {
+   "id": "albumine",
+   "name": "Smart Binder Albumine sérique",
+   "target": "Albumine sérique",
+   "category": "outils",
+   "summary": "Une molécule conçue pour reconnaître Albumine sérique avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Marquage et détection",
+    "Purification de vos échantillons",
+    "Contrôle de vos manipulations"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 220
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 570
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 1650
+    }
+   ],
+   "availability": "commande",
+   "keywords": [
+    "albumin",
+    "bsa",
+    "hsa",
+    "serum albumin"
+   ],
+   "featured": false
+  },
+  {
+   "id": "gfp",
+   "name": "Smart Binder GFP",
+   "target": "GFP",
+   "category": "outils",
+   "summary": "Une molécule conçue pour reconnaître GFP avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Marquage et détection",
+    "Purification de vos échantillons",
+    "Contrôle de vos manipulations"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 220
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 570
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 1650
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "green fluorescent protein",
+    "proteine fluorescente verte",
+    "fluorescence"
+   ],
+   "featured": false
+  },
+  {
+   "id": "his-tag",
+   "name": "Smart Binder Étiquette His",
+   "target": "Étiquette His",
+   "category": "outils",
+   "summary": "Une molécule conçue pour reconnaître Étiquette His avec précision. Prête à l'emploi pour vos expériences.",
+   "uses": [
+    "Marquage et détection",
+    "Purification de vos échantillons",
+    "Contrôle de vos manipulations"
+   ],
+   "formats": [
+    {
+     "id": "decouverte",
+     "label": "Découverte",
+     "detail": "10 µg",
+     "price": 220
+    },
+    {
+     "id": "standard",
+     "label": "Standard",
+     "detail": "100 µg",
+     "price": 570
+    },
+    {
+     "id": "grand",
+     "label": "Grand format",
+     "detail": "1 mg",
+     "price": 1650
+    }
+   ],
+   "availability": "stock",
+   "keywords": [
+    "histag",
+    "his tag",
+    "polyhistidine",
+    "6xhis"
+   ],
+   "featured": false
+  }
+ ]
+}

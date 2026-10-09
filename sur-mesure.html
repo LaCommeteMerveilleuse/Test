@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demander une cible | BlackPhage</title>
+  <meta name="description" content="Votre cible n est pas au catalogue ? Décrivez votre besoin, nous créons votre Smart Binder sur mesure.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="assets/js/chrome.js"></script>
+  <script type="module" src="assets/js/sur-mesure.js"></script>
+</head>
+<body data-page="sur-mesure">
+  <div id="site-header"></div>
+  <main>
+
+    <section class="pagehead">
+      <div class="container">
+        <p class="eyebrow">Sur mesure</p>
+        <h1>Une nouvelle cible ? Nous nous en occupons.</h1>
+        <p class="lead">Dites-nous ce que vous cherchez en trois petites étapes. Vous recevez une proposition claire, sans engagement.</p>
+      </div>
+    </section>
+    <section class="tight">
+      <div class="container grid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr);align-items:start" id="customgrid">
+        <div>
+          <form id="customform" class="form card" style="padding:clamp(20px,3vw,32px)" novalidate>
+            <div class="stepper" id="stepper" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+            <p class="muted" id="step-label" aria-live="polite"></p>
+
+            <div data-step class="form">
+              <div class="field">
+                <label for="cible">Quelle cible vous intéresse ?</label>
+                <input id="cible" name="cible" placeholder="Un nom, un code ou une description" autocomplete="off">
+                <span class="hint">Un simple nom suffit, nous ferons le reste.</span>
+                <span class="err" id="err-cible"></span>
+              </div>
+              <div class="note" id="exists" hidden></div>
+              <div><button type="button" class="btn btn--primary btn--lg" data-next>Continuer</button></div>
+            </div>
+
+            <div data-step class="form" hidden>
+              <fieldset class="field" style="border:0;padding:0;margin:0">
+                <legend>Pour quel usage ?</legend>
+                <div class="choices" style="margin-top:10px">
+                  <label class="choice"><input type="radio" name="usage" value="Recherche en laboratoire" checked><span>Recherche en laboratoire</span></label>
+                  <label class="choice"><input type="radio" name="usage" value="Développement d'un produit"><span>Développement d'un produit</span></label>
+                  <label class="choice"><input type="radio" name="usage" value="Je ne sais pas encore"><span>Je ne sais pas encore</span></label>
+                </div>
+              </fieldset>
+              <div class="row2">
+                <div class="field"><label for="quantite">Quantité souhaitée</label><select id="quantite" name="quantite"><option>Petite quantité</option><option selected>Quantité standard</option><option>Grande quantité</option></select></div>
+                <div class="field"><label for="delai">Échéance</label><select id="delai" name="delai"><option>Dès que possible</option><option selected>Dans le mois</option><option>Pas de date précise</option></select></div>
+              </div>
+              <div class="buyrow"><button type="button" class="btn btn--ghost" data-back>Retour</button><button type="button" class="btn btn--primary btn--lg" data-next>Continuer</button></div>
+            </div>
+
+            <div data-step class="form" hidden>
+              <div class="row2">
+                <div class="field"><label for="nom">Votre nom</label><input id="nom" name="nom" autocomplete="name"><span class="err" id="err-nom"></span></div>
+                <div class="field"><label for="email">Votre e-mail</label><input id="email" name="email" type="email" autocomplete="email"><span class="err" id="err-email"></span></div>
+              </div>
+              <div class="field"><label for="org">Votre organisation (facultatif)</label><input id="org" name="org" autocomplete="organization"></div>
+              <div class="field"><label for="msg">Autre chose à nous dire (facultatif)</label><textarea id="msg" name="msg"></textarea></div>
+              <div class="buyrow"><button type="button" class="btn btn--ghost" data-back>Retour</button><button type="submit" class="btn btn--primary btn--lg">Envoyer ma demande</button></div>
+            </div>
+          </form>
+
+          <div class="sent" id="sent" hidden style="margin-top:24px">
+            <h2 style="font-size:1.4rem">Votre demande est prête</h2>
+            <p>Votre messagerie va s'ouvrir avec le message déjà rempli. Si rien ne s'ouvre, copiez le texte ci-dessous et envoyez-le à <strong id="sent-to"></strong>.</p>
+            <textarea id="sent-text" class="select" readonly aria-label="Texte de votre demande" style="width:100%;border-radius:12px"></textarea>
+            <div class="buyrow"><a id="sent-mail" class="btn btn--primary" href="#">Ouvrir ma messagerie</a><button id="sent-copy" class="btn btn--ghost" type="button">Copier le texte</button></div>
+          </div>
+        </div>
+
+        <aside class="card glass" style="padding:clamp(22px,3vw,32px);display:grid;gap:16px">
+          <h2 style="font-size:1.3rem">Ce que vous obtenez</h2>
+          <ul class="ticks">
+            <li>Une proposition claire sous <span data-shop="responseTime">2 jours ouvrés</span></li>
+            <li>Un interlocuteur dédié du début à la fin</li>
+            <li>Aucun engagement avant votre accord</li>
+            <li>Un premier échange offert pour cadrer votre besoin</li>
+          </ul>
+          <p class="note"><span data-shop="research"></span></p>
+          <p>Vous préférez regarder d'abord ? <a class="link" href="catalogue.html">Parcourir le catalogue</a></p>
+        </aside>
+      </div>
+      <style>@media (max-width: 900px) { #customgrid { grid-template-columns: 1fr !important; } }</style>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

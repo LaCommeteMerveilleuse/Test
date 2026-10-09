@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ma commande | BlackPhage</title>
+  <meta name="description" content="Vérifiez votre sélection et demandez votre devis.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="assets/js/chrome.js"></script>
+  <script type="module" src="assets/js/panier.js"></script>
+</head>
+<body data-page="panier">
+  <div id="site-header"></div>
+  <main>
+
+    <section class="pagehead">
+      <div class="container">
+        <p class="eyebrow">Ma commande</p>
+        <h1>Votre sélection.</h1>
+        <p class="lead">Vérifiez vos articles puis demandez votre devis. Vous ne payez rien avant d'avoir donné votre accord.</p>
+      </div>
+    </section>
+    <section class="tight">
+      <div class="container">
+        <div class="empty" id="empty-cart" hidden>
+          <h2 style="font-size:1.6rem">Votre commande est vide</h2>
+          <p>Parcourez le catalogue ou demandez une cible sur mesure.</p>
+          <div class="buyrow" style="justify-content:center"><a class="btn btn--primary btn--lg" href="catalogue.html">Voir le catalogue</a><a class="btn btn--ghost btn--lg" href="sur-mesure.html">Demander une cible</a></div>
+        </div>
+        <div class="cartgrid" id="cartwrap" hidden>
+          <div>
+            <div class="cartlist" id="cartlist"></div>
+            <p style="margin-top:18px"><button id="clear-cart" class="x link" type="button" style="background:none;border-top:0;border-left:0;border-right:0">Vider ma commande</button></p>
+          </div>
+          <aside class="card summary">
+            <h2 style="font-size:1.2rem">Récapitulatif</h2>
+            <dl>
+              <div><dt>Articles</dt><dd id="nb"></dd></div>
+              <div><dt>Sous-total</dt><dd id="subtotal"></dd></div>
+              <div><dt>Livraison</dt><dd>Précisée dans le devis</dd></div>
+            </dl>
+            <div class="total" style="display:flex;justify-content:space-between"><span>Total estimé</span><span id="total"></span></div>
+            <form id="orderform" class="form" novalidate>
+              <div class="field"><label for="nom">Votre nom</label><input id="nom" name="nom" autocomplete="name" required><span class="err" id="err-nom"></span></div>
+              <div class="field"><label for="email">Votre e-mail</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="err-email"></span></div>
+              <div class="field"><label for="org">Votre organisation (facultatif)</label><input id="org" name="org" autocomplete="organization"></div>
+              <div class="field"><label for="msg">Un message pour l'équipe (facultatif)</label><textarea id="msg" name="msg" style="min-height:90px"></textarea></div>
+              <button class="btn btn--primary btn--lg btn--block" type="submit">Demander mon devis</button>
+              <p class="muted" style="font-size:.88rem">Aucun paiement maintenant. Réponse sous <span data-shop="responseTime">2 jours ouvrés</span>.</p>
+            </form>
+          </aside>
+        </div>
+        <div class="sent" id="sent" hidden style="margin-top:28px">
+          <h2 style="font-size:1.4rem">Votre demande est prête</h2>
+          <p>Votre messagerie va s'ouvrir avec le message déjà rempli. Si rien ne s'ouvre, copiez le texte ci-dessous et envoyez-le à <strong id="sent-to"></strong>.</p>
+          <textarea id="sent-text" class="select" readonly aria-label="Texte de votre demande" style="width:100%;border-radius:12px"></textarea>
+          <div class="buyrow"><a id="sent-mail" class="btn btn--primary" href="#">Ouvrir ma messagerie</a><button id="sent-copy" class="btn btn--ghost" type="button">Copier le texte</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

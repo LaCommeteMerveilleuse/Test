@@ -3,454 +3,123 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BlackPhage — Des protéines conçues pour agir là où la maladie se trouve</title>
-  <meta name="description" content="BlackPhage conçoit par intelligence artificielle des protéines sur mesure — les Smart Binders — pensées pour ne s'activer que dans l'environnement biologique visé.">
-  <meta name="theme-color" content="#05070c">
-  <meta property="og:title" content="BlackPhage — Faire reculer les limites du traitable">
-  <meta property="og:description" content="Des protéines conçues sur mesure, pour une action ciblée dans leur environnement biologique.">
+  <title>BlackPhage</title>
+  <meta name="description" content="Trouvez le Smart Binder de votre cible dans le catalogue BlackPhage, ou faites-le créer sur mesure.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="BlackPhage">
+  <meta property="og:description" content="Le Smart Binder de votre cible, prêt à commander ou créé pour vous.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/data/adk.bin" as="fetch" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script type="importmap">
-    { "imports": { "three": "./assets/vendor/three/three.module.min.js" } }
-  </script>
+  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three/three.module.min.js" } }</script>
   <script>document.documentElement.classList.add('js')</script>
-  <script type="module" src="assets/js/ui.js"></script>
-  <script type="module" src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/chrome.js"></script>
+  <script type="module" src="assets/js/home.js"></script>
+  <script type="module" src="assets/js/bg.js"></script>
 </head>
-<body>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-logo" viewBox="0 0 32 32">
-      <path d="M16 2.5 27.5 9v14L16 29.5 4.5 23V9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="4.6" fill="currentColor"/>
-      <path d="M16 20.6v8.9M16 2.5v8.9" stroke="currentColor" stroke-width="1.5"/>
-    </symbol>
-  </svg>
-
-  <canvas id="scene" aria-hidden="true"></canvas>
-  <div class="backdrop" aria-hidden="true"></div>
-
-  <header class="nav">
-    <a class="brand" href="#top" aria-label="BlackPhage — accueil">
-      <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
-      <span>BLACKPHAGE</span>
-    </a>
-    <nav class="nav__links" aria-label="Navigation principale">
-      <a href="#mission">Mission</a>
-      <a href="#smart-binders">Smart Binders</a>
-      <a href="#plateforme">Plateforme</a>
-      <a href="#applications">Applications</a>
-      <a href="careers.html">Carrières</a>
-      <a class="btn btn--line btn--sm" href="#contact">Nous contacter</a>
-    </nav>
-    <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
-  </header>
+<body class="has-bg" data-page="accueil">
+  <canvas id="bg" class="bgcanvas" aria-hidden="true"></canvas>
+  <div class="bg-veil" aria-hidden="true"></div>
+  <div id="site-header"></div>
 
   <main>
-    <!-- ================================================================ HERO -->
-    <section class="hero" id="top">
+    <section class="hero">
       <div class="container hero__grid">
-        <div class="hero__copy">
-          <p class="eyebrow reveal">Une nouvelle classe de médicaments</p>
-          <h1 class="display reveal">
-            <span class="dim">Des protéines conçues pour agir</span>
-            là&nbsp;où la maladie se&nbsp;trouve.
-          </h1>
-          <p class="lead reveal">
-            BlackPhage associe intelligence artificielle et modélisation structurale pour dessiner des
-            protéines sur mesure&nbsp;: des <strong>Smart Binders</strong>, pensés pour ne s'activer que
-            dans l'environnement biologique visé.
-          </p>
-          <div class="hero__cta reveal">
-            <a class="btn btn--primary" href="#smart-binders">Découvrir les Smart Binders <svg class="ico"><use href="#i-arrow"/></svg></a>
-            <a class="btn btn--line" href="careers.html">Rejoindre l'équipe</a>
+        <div>
+          <p class="eyebrow">Smart Binders sur mesure</p>
+          <h1>Le Smart Binder de votre cible.</h1>
+          <p class="lead">Choisissez-le dans notre catalogue ou faites-le créer pour vous. Notre équipe vous accompagne de la première question jusqu'à la livraison.</p>
+
+          <form id="home-search" class="search" role="search" autocomplete="off">
+            <div class="search__box">
+              <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input id="home-q" type="search" placeholder="Cherchez une cible, ex. TNF" aria-label="Rechercher une cible" role="combobox" aria-expanded="false" aria-controls="home-suggest" aria-autocomplete="list">
+              <button class="btn btn--primary" type="submit">Voir le catalogue</button>
+            </div>
+            <div id="home-suggest" class="suggest" role="listbox" hidden></div>
+          </form>
+
+          <div class="hero__cta">
+            <span class="muted">Essayez</span>
+            <div class="chips">
+              <button class="chip" type="button" data-try="TNF">TNF</button>
+              <button class="chip" type="button" data-try="PD-L1">PD-L1</button>
+              <button class="chip" type="button" data-try="HER2">HER2</button>
+              <button class="chip" type="button" data-try="IL-6">IL-6</button>
+            </div>
           </div>
+          <ul class="trust">
+            <li><span>Réponse sous <span data-shop="responseTime">2 jours ouvrés</span></span></li>
+            <li><span>Livraison suivie en <span data-shop="delivery">3 à 7 jours ouvrés</span></span></li>
+            <li><span>Conseil gratuit avant achat</span></li>
+          </ul>
         </div>
-        <div class="hero__stage" data-stage="hero" aria-hidden="true">
-          <img class="poster" src="assets/img/protein-hero.webp" alt="" width="490" height="465" loading="lazy" decoding="async">
+        <div class="hero__shot">
+          <img src="assets/img/produits-blackphage.webp" alt="Brochure, coffret et flacons BlackPhage" width="958" height="539">
         </div>
-      </div>
-      <div class="container hero__foot">
-        <p class="caption">Illustration&nbsp;: une protéine générée par diffusion (en rose) prend en pince sa cible (surface&nbsp;; adénylate kinase, PDB&nbsp;4AKE, prise comme exemple).</p>
-        <span class="scroll-cue" aria-hidden="true"><i></i></span>
       </div>
     </section>
 
-    <!-- ============================================================ MISSION -->
-    <section class="mission" id="mission">
+    <section class="tight">
       <div class="container">
-        <div class="split">
-          <div class="split__a">
-            <p class="eyebrow reveal">Notre mission</p>
-            <h2 class="statement reveal">Faire reculer les limites du&nbsp;traitable.</h2>
-          </div>
-          <div class="split__b">
-            <p class="big reveal">
-              La maladie exploite les mécanismes du vivant.
-              <span>Notre ambition&nbsp;: les retourner contre elle.</span>
-            </p>
-            <p class="body reveal">
-              BlackPhage veut rendre la conception thérapeutique <strong>programmable</strong>&nbsp;: trouver la
-              faille biologique d'une maladie, dessiner la molécule qui s'y emboîte, puis chercher à contrôler
-              où et quand elle agit — selon la cible, le tissu et son microenvironnement.
-            </p>
-          </div>
+        <div class="head reveal"><p class="eyebrow">Pour commencer</p><h2>Deux façons d'obtenir votre Smart Binder.</h2></div>
+        <div class="grid grid--2">
+          <article class="card glass way reveal">
+            <span class="num">1</span>
+            <h3>Ma cible est dans le catalogue</h3>
+            <p>Comparez les formats, voyez le prix tout de suite et ajoutez votre choix à votre commande en quelques clics.</p>
+            <a class="btn btn--primary" href="catalogue.html">Parcourir le catalogue</a>
+          </article>
+          <article class="card glass way reveal">
+            <span class="num">2</span>
+            <h3>Ma cible n'y est pas encore</h3>
+            <p>Décrivez votre besoin en trois petites étapes. Nous revenons vers vous avec une proposition claire, sans engagement.</p>
+            <a class="btn btn--ghost" href="sur-mesure.html">Demander une cible</a>
+          </article>
         </div>
+      </div>
+    </section>
 
-        <ol class="triptych">
-          <li class="reveal">
-            <span class="num">01</span>
-            <h3>Identifier</h3>
-            <p>Repérer la vulnérabilité biologique sur laquelle la maladie s'appuie.</p>
-          </li>
-          <li class="reveal">
-            <span class="num">02</span>
-            <h3>Concevoir</h3>
-            <p>Générer une protéine sur mesure, capable de reconnaître, verrouiller ou perturber ce mécanisme.</p>
-          </li>
-          <li class="reveal">
-            <span class="num">03</span>
-            <h3>Contrôler</h3>
-            <p>Chercher à déclencher son activité dans les conditions recherchées — et pas ailleurs.</p>
-          </li>
+    <section class="tight">
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Notre sélection</p><h2>Une sélection pour démarrer.</h2></div>
+        <div class="grid grid--products" id="featured"></div>
+        <p style="margin-top:28px"><a class="link" href="catalogue.html">Voir tout le catalogue</a></p>
+      </div>
+    </section>
+
+    <section class="tight" id="quotes" hidden>
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Ils nous font confiance</p><h2>Ce que disent nos clients.</h2></div>
+        <div class="quotes" id="quotes-list"></div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Simple</p><h2>De la recherche à la livraison en trois étapes.</h2></div>
+        <ol class="steps">
+          <li class="reveal"><h3>Cherchez ou décrivez</h3><p>Trouvez votre cible dans le catalogue ou décrivez-la en quelques lignes.</p></li>
+          <li class="reveal"><h3>Recevez un devis clair</h3><p>Nous vérifions votre demande et vous envoyons un devis, sans mauvaise surprise.</p></li>
+          <li class="reveal"><h3>Réceptionnez votre commande</h3><p>Livraison suivie, et un expert reste disponible si vous avez une question.</p></li>
         </ol>
-
-        <p class="closing reveal">
-          Nous construisons une intelligence de conception biologique qui apprend de chaque expérience,
-          améliore chaque génération de molécules et ouvre de nouvelles voies face aux maladies
-          aujourd'hui difficiles à traiter.
-          <strong>Notre cap&nbsp;: transformer une faiblesse de la maladie en possibilité de traitement.</strong>
-        </p>
       </div>
     </section>
 
-    <!-- ===================================================== SMART BINDERS -->
-    <section class="sb" id="smart-binders">
-      <div class="container sb__grid">
-        <div class="sb__intro">
-          <p class="eyebrow reveal">Smart Binders</p>
-          <h2 class="h2 reveal">Une protéine qui attend son&nbsp;signal.</h2>
-          <p class="lead reveal">
-            Un Smart Binder est une protéine <strong>générée sur mesure</strong> pour prendre sa cible en pince&nbsp;:
-            deux domaines de liaison, placés de part et d'autre de la cible, reliés par un lieur souple.
-            Notre ambition&nbsp;: que cette capacité ne s'exprime que dans le microenvironnement visé — par exemple
-            un milieu plus acide — et qu'elle reste en veille ailleurs.
-          </p>
-          <p class="body reveal">
-            Notre rôle&nbsp;: fournir les outils bio-informatiques pour concevoir, comparer et optimiser cette
-            nouvelle classe d'actifs, de la géométrie à l'estimation d'affinité.
-          </p>
-        </div>
-
-        <div class="sb__story">
-          <ol class="sb-steps">
-            <li class="sb-step is-active" data-ph="7.4" tabindex="0">
-              <span class="sb-step__n">1</span>
-              <div>
-                <h3>En circulation <small>pH 7,4</small></h3>
-                <p>Dans le sang, les histidines d'interface sont presque toutes neutres. Les molécules
-                  <strong>s'auto-associent de façon réversible</strong>&nbsp;: leurs faces de liaison sont
-                  enfouies dans l'assemblage, la cible n'est pas reconnue.</p>
-              </div>
-            </li>
-            <li class="sb-step" data-ph="6.5" tabindex="0">
-              <span class="sb-step__n">2</span>
-              <div>
-                <h3>Dans un tissu acide <small>pH ≈ 6,5</small></h3>
-                <p>Les histidines captent des protons et se chargent positivement. Ces charges se repoussent&nbsp;:
-                  l'assemblage se <strong>dissocie</strong> et libère des monomères.</p>
-              </div>
-            </li>
-            <li class="sb-step" data-ph="5.3" tabindex="0">
-              <span class="sb-step__n">3</span>
-              <div>
-                <h3>Cible reconnue <small>pH &lt; 6</small></h3>
-                <p>Le monomère déploie ses deux domaines de part et d'autre de la cible. Chacun se loge dans une
-                  poche, le lieur flexible fait le pont&nbsp;: la cible est <strong>prise en pince</strong>.</p>
-              </div>
-            </li>
-          </ol>
-
-          <figure class="chartfig reveal">
-            <svg id="chart" viewBox="0 0 480 204" role="img"
-                 aria-label="Courbe de la fraction d'histidines protonées en fonction du pH, avec le pKa choisi à 6,5."></svg>
-            <figcaption>
-              <strong>Fraction d'histidines protonées selon le pH.</strong>
-              Calcul d'Henderson–Hasselbalch pour un pKa de 6,5 (environ 6 pour l'acide aminé libre, souvent entre
-              5,5 et 7 dans une protéine). C'est le seul calcul de la démonstration&nbsp;: il sert de déclencheur
-              supposé de l'assemblage.
-            </figcaption>
-          </figure>
-
-          <aside class="sb-note reveal">
-            <h3>Ce que cette illustration montre — et ne montre pas</h3>
-            <p>
-              La <strong>cible</strong> (surface) est une structure réelle&nbsp;: l'adénylate kinase d'<i>E.&nbsp;coli</i>,
-              prise comme exemple (entrée PDB&nbsp;4AKE). La <strong>protéine rose</strong> est un binder
-              <em>idéalisé</em>&nbsp;: deux domaines construits par script à partir d'hélices&nbsp;α et de
-              feuillets&nbsp;β de géométrie standard, reliés par un lieur. Son placement sur la cible est une
-              recherche géométrique de complémentarité de forme — <strong>pas un docking validé</strong>.
-            </p>
-            <p>
-              L'animation de <strong>génération par diffusion</strong> met en scène le principe — partir du bruit
-              et laisser la structure émerger — mais n'exécute aucun modèle.
-            </p>
-            <p>
-              Ce qui n'est pas démontré&nbsp;: que le pH commande l'auto-association de molécules conçues, puis leur
-              fixation à une cible. <strong>L'adaptation au pH et l'efficacité biologique restent à démontrer.</strong>
-            </p>
-          </aside>
-        </div>
-
-        <aside class="sb__side" aria-label="Démonstration interactive">
-          <div class="sb-stage">
-            <div class="sb-stage__fit" data-stage="viewer">
-              <img class="poster" src="assets/img/protein-viewer.webp" alt="" width="453" height="434" loading="lazy" decoding="async">
-            </div>
-
-            <div class="hud hud--top">
-              <div class="seg" role="group" aria-label="Surface de la cible">
-                <button type="button" data-mode="neutral" aria-pressed="true">Cible neutre</button>
-                <button type="button" data-mode="elec" aria-pressed="false" data-needs-3d>Électrostatique</button>
-              </div>
-              <button type="button" class="pill" id="replay" data-needs-3d>
-                <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 6.5A5 5 0 0 0 4 5M3 9.5A5 5 0 0 0 12 11M4 2v3h3M12 14v-3H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Rejouer la génération
-              </button>
-            </div>
-
-            <div class="gen" id="gen" hidden>
-              <span class="gen__label" id="gen-label">Génération par diffusion</span>
-              <i class="gen__track"><i id="gen-bar"></i></i>
-              <span class="gen__note">Illustration du processus — aucun modèle n'est exécuté</span>
-            </div>
-
-            <div class="tag" data-tag="a" data-dir="dl"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Domaine A</span></div>
-            <div class="tag" data-tag="b" data-dir="dr"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Domaine B</span></div>
-            <div class="tag" data-tag="target" data-dir="dr"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Protéine cible</span></div>
-            <div class="tag" data-tag="cluster" data-dir="dl"><i class="tag__dot"></i><i class="tag__line"></i><span class="tag__text">Assemblage · sites masqués</span></div>
-
-            <div class="hud hud--bottom">
-              <div class="legend">
-                <span><i class="sw sw--d1"></i>Domaine A</span>
-                <span><i class="sw sw--d2"></i>Domaine B</span>
-                <span><i class="sw sw--link"></i>Lieur</span>
-                <span><i class="sw sw--target"></i>Cible</span>
-              </div>
-              <div class="legend" data-legend="elec" hidden>
-                <span>− négatif</span><i class="bar bar--elec"></i><span>positif +</span>
-              </div>
-              <div class="scale"><i id="scalebar"></i><span id="scalebar-label">2 nm</span></div>
-            </div>
-          </div>
-
-          <div class="dock">
-            <div class="dock__head">
-              <label for="ph" class="dock__label">pH du milieu</label>
-              <output id="ph-value" class="ph-big" for="ph">7,4</output>
-            </div>
-            <div class="ph">
-              <div class="ph__zones" aria-hidden="true">
-                <i class="z z--endosome" style="--l:0%;--w:50%"></i>
-                <i class="z z--tissue" style="--l:50%;--w:13.33%"></i>
-                <i class="z z--blood" style="--l:78.33%;--w:3.33%"></i>
-              </div>
-              <input id="ph" type="range" min="5" max="8" step="0.05" value="7.4" aria-label="pH du milieu">
-            </div>
-            <div class="ph__names" aria-hidden="true">
-              <span style="--c:25%">Endosome</span>
-              <span style="--c:56.7%">Tissu tumoral<br>ou inflammatoire</span>
-              <span style="--c:80%">Sang</span>
-            </div>
-
-            <dl class="metrics">
-              <div>
-                <dt>Histidines protonées</dt>
-                <dd id="m-his">11&nbsp;%</dd>
-                <span class="sub" id="m-his-sub"></span>
-              </div>
-              <div>
-                <dt>État de la protéine</dt>
-                <dd id="m-state" data-state="closed">Auto-associée</dd>
-                <span class="sub" id="m-state-sub">sites de liaison masqués</span>
-              </div>
-              <div>
-                <dt>Sites liés à la cible</dt>
-                <dd id="m-sites" data-state="closed">0&nbsp;/&nbsp;2</dd>
-                <span class="sub" id="m-sites-sub">cible non reconnue</span>
-              </div>
-            </dl>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- ============================================================ PLATEFORME -->
-    <section class="platform" id="plateforme">
+    <section class="tight">
       <div class="container">
-        <div class="head">
-          <p class="eyebrow reveal">La plateforme</p>
-          <h2 class="h2 reveal">De la conception à l'évaluation, un parcours&nbsp;traçable.</h2>
-          <p class="lead reveal">
-            Notre plateforme associe <strong>intelligence artificielle</strong>, <strong>modélisation
-            structurale</strong> et <strong>scoring d'affinité</strong> pour concevoir des protéines adaptées
-            à une cible et à un usage précis. Son architecture modulaire permet d'explorer plusieurs surfaces
-            de liaison, d'ajuster les charnières et d'évaluer différentes conformations.
-          </p>
-        </div>
-
-        <ol class="pipeline">
-          <li class="reveal"><span class="num">01</span><h3>Géométrie</h3>
-            <p>Choix de la cible, des surfaces de liaison et des charnières à explorer.</p></li>
-          <li class="reveal"><span class="num">02</span><h3>Repliement prédit</h3>
-            <p>Structure tridimensionnelle attendue de chaque proposition.</p></li>
-          <li class="reveal"><span class="num">03</span><h3>Compatibilité avec la cible</h3>
-            <p>Ajustement à l'interface visée, évalué sur plusieurs conformations.</p></li>
-          <li class="reveal"><span class="num">04</span><h3>Affinité estimée</h3>
-            <p>Score exploratoire, utilisé pour classer les candidats entre eux.</p></li>
-          <li class="reveal"><span class="num">05</span><h3>Validation expérimentale</h3>
-            <p>Seules les constructions les plus prometteuses passent au laboratoire.</p></li>
-        </ol>
-        <p class="loop reveal">
-          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 6.5A5 5 0 0 0 4 5M3 9.5A5 5 0 0 0 12 11M4 2v3h3M12 14v-3H9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Chaque résultat expérimental revient enrichir la génération suivante.
-        </p>
-
-        <div class="principles">
-          <article class="reveal">
-            <h3>Personnalisable</h3>
-            <p>Une conception adaptée à chaque cible et à chaque usage&nbsp;: surfaces de liaison, charnières et
-              domaines se recombinent pour tester plusieurs hypothèses.</p>
-          </article>
-          <article class="reveal">
-            <h3>Structurée</h3>
-            <p>Chaque proposition est évaluée de la même façon et reste traçable — de sa géométrie jusqu'à son
-              estimation d'affinité.</p>
-          </article>
-          <article class="reveal">
-            <h3>Contextuelle</h3>
-            <p>Un objectif de sélectivité selon le microenvironnement, notamment le pH.
-              <strong>L'adaptation au pH et l'efficacité biologique restent à démontrer.</strong></p>
-          </article>
-        </div>
-        <p class="footnote reveal">Les scores d'affinité sont des estimations exploratoires&nbsp;: ils servent à sélectionner, pas à conclure.</p>
-      </div>
-    </section>
-
-    <!-- ========================================================= APPLICATIONS -->
-    <section class="apps" id="applications">
-      <div class="container">
-        <div class="head">
-          <p class="eyebrow reveal">Applications &amp; marchés</p>
-          <h2 class="h2 reveal">Un même principe, des marchés complémentaires.</h2>
-          <p class="lead reveal">
-            Une protéine dont l'accroche dépend de son environnement est utile bien au-delà de la clinique.
-            Le laboratoire et la bioproduction offrent une validation plus rapide&nbsp;; la clinique reste
-            l'ambition de long terme.
-          </p>
-        </div>
-
-        <div class="tabs reveal" data-tabs>
-          <div class="tabs__list" role="tablist" aria-label="Secteurs">
-            <button role="tab" id="tab-lab" aria-controls="panel-lab" aria-selected="true">Laboratoire &amp; industrie</button>
-            <button role="tab" id="tab-clin" aria-controls="panel-clin" aria-selected="false" tabindex="-1">Clinique &amp; diagnostic</button>
+        <div class="banner reveal">
+          <div>
+            <h2>Une question avant de commander ?</h2>
+            <p style="margin-top:12px;max-width:46ch">Écrivez-nous. Le conseil est gratuit et sans engagement, et nous répondons sous <span data-shop="responseTime">2 jours ouvrés</span>.</p>
           </div>
-
-          <div role="tabpanel" id="panel-lab" aria-labelledby="tab-lab">
-            <ul class="uses">
-              <li><div><h3>Réactifs d'affinité sur mesure</h3>
-                <p>Des liants spécifiés à la demande, comme alternative aux anticorps en recherche et en diagnostic.</p></div>
-                <span class="tag tag--near">Court terme</span></li>
-              <li><div><h3>Purification par affinité à élution douce</h3>
-                <p>Capture à pH neutre, relargage en milieu légèrement acide&nbsp;: sans conditions agressives pour les protéines fragiles.</p></div>
-                <span class="tag tag--near">Court terme</span></li>
-              <li><div><h3>Outils de validation de cibles</h3>
-                <p>Sondes conçues à la demande pour interroger ou bloquer une protéine d'intérêt.</p></div>
-                <span class="tag tag--near">Court terme</span></li>
-              <li><div><h3>Conception à façon pour partenaires</h3>
-                <p>Projets sur cible client, collaborations académiques, licences sur les constructions issues du pipeline.</p></div>
-                <span class="tag tag--near">Court terme</span></li>
-              <li><div><h3>Biocapteurs et dosages conditionnels</h3>
-                <p>Un signal qui dépend du milieu, pour suivre un procédé de bioproduction ou une mesure.</p></div>
-                <span class="tag tag--mid">Moyen terme</span></li>
-            </ul>
-          </div>
-
-          <div role="tabpanel" id="panel-clin" aria-labelledby="tab-clin" hidden>
-            <ul class="uses">
-              <li><div><h3>Imagerie moléculaire et théranostique</h3>
-                <p>Des liants compacts, adaptés au marquage et à la lecture d'un signal localisé.</p></div>
-                <span class="tag tag--mid">Moyen terme</span></li>
-              <li><div><h3>Oncologie</h3>
-                <p>Le milieu tumoral est souvent plus acide que les tissus sains&nbsp;: un terrain d'étude naturel pour une activation conditionnelle.</p></div>
-                <span class="tag tag--far">Long terme</span></li>
-              <li><div><h3>Maladies inflammatoires et auto-immunes</h3>
-                <p>Les foyers inflammatoires modifient localement la chimie du tissu.</p></div>
-                <span class="tag tag--far">Long terme</span></li>
-              <li><div><h3>Administration locale</h3>
-                <p>Œil, peau, muqueuses&nbsp;: des milieux aux pH particuliers, accessibles directement.</p></div>
-                <span class="tag tag--far">Long terme</span></li>
-              <li><div><h3>Maladies rares et cibles difficiles</h3>
-                <p>Des cibles hors de portée des approches classiques, où la conception sur mesure fait la différence.</p></div>
-                <span class="tag tag--far">Long terme</span></li>
-            </ul>
-          </div>
-        </div>
-        <p class="footnote reveal">
-          Horizons indicatifs. Ces secteurs décrivent des usages visés&nbsp;: aucun candidat BlackPhage n'est à
-          ce jour évalué chez l'humain, ni autorisé.
-        </p>
-      </div>
-    </section>
-
-    <!-- ================================================================ CTA -->
-    <section class="cta" id="contact">
-      <div class="container">
-        <p class="eyebrow reveal">At BlackPhage, we are building that future</p>
-        <h2 class="statement reveal">
-          Comprendre le vivant.<br>Concevoir l'intervention.<br><span class="accent">Reprendre le contrôle.</span>
-        </h2>
-        <div class="cta__row reveal">
-          <a class="btn btn--primary" href="mailto:contact@blackphage.com">contact@blackphage.com</a>
-          <a class="btn btn--line" href="careers.html">Travailler avec nous <svg class="ico"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary btn--lg" href="a-propos.html#contact">Parler à l'équipe</a>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div>
-          <a class="brand" href="#top"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg><span>BLACKPHAGE</span></a>
-          <p class="footer__tag">Faire reculer les limites du traitable.</p>
-        </div>
-        <nav class="footer__links" aria-label="Pied de page">
-          <a href="#mission">Mission</a>
-          <a href="#smart-binders">Smart Binders</a>
-          <a href="#plateforme">Plateforme</a>
-          <a href="#applications">Applications</a>
-          <a href="careers.html">Carrières</a>
-        </nav>
-        <div class="footer__links">
-          <a href="mailto:contact@blackphage.com">contact@blackphage.com</a>
-          <a href="mailto:partnerships@blackphage.com">partnerships@blackphage.com</a>
-        </div>
-      </div>
-      <p class="disclaimer">
-        BlackPhage est une société de recherche. Les travaux présentés relèvent de la conception assistée par
-        ordinateur et de l'évaluation exploratoire. L'adaptation au pH et l'efficacité biologique des
-        constructions décrites restent à démontrer. Aucun produit BlackPhage n'est autorisé ni disponible, et rien
-        sur ce site ne constitue un conseil médical ni une promesse de résultat thérapeutique.
-      </p>
-      <div class="footer__bottom">
-        <span>© <span id="year">2026</span> BlackPhage</span>
-        <span>Cible illustrée : adénylate kinase d'<i>E.&nbsp;coli</i>, d'après l'entrée PDB 4AKE (Müller et al., 1996). Protéine générée : illustration idéalisée. Rendu : three.js. Police : Inter.</span>
-      </div>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
 </body>
 </html>

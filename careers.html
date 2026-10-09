@@ -3,229 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Carrières — BlackPhage</title>
-  <meta name="description" content="Work with us. BlackPhage recrute pour construire les outils de conception des Smart Binders : IA, modélisation structurale, biologie des protéines, ingénierie logicielle.">
-  <meta name="theme-color" content="#05070c">
-  <meta property="og:title" content="Carrières — BlackPhage">
-  <meta property="og:description" content="Rejoignez ceux qui rendent la conception thérapeutique programmable.">
-  <meta property="og:type" content="website">
+  <title>Carrières | BlackPhage</title>
+  <meta name="description" content="Rejoignez l équipe BlackPhage.">
+  <meta name="theme-color" content="#ffffff">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/data/adk.bin" as="fetch" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script type="importmap">
-    { "imports": { "three": "./assets/vendor/three/three.module.min.js" } }
-  </script>
+  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
   <script>document.documentElement.classList.add('js')</script>
-  <script type="module" src="assets/js/ui.js"></script>
-  <script type="module" src="assets/js/main.js"></script>
+  <script type="module" src="assets/js/chrome.js"></script>
 </head>
-<body>
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="i-arrow" viewBox="0 0 16 16"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-logo" viewBox="0 0 32 32">
-      <path d="M16 2.5 27.5 9v14L16 29.5 4.5 23V9z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="16" cy="16" r="4.6" fill="currentColor"/>
-      <path d="M16 20.6v8.9M16 2.5v8.9" stroke="currentColor" stroke-width="1.5"/>
-    </symbol>
-  </svg>
-
-  <canvas id="scene" aria-hidden="true"></canvas>
-  <div class="backdrop" aria-hidden="true"></div>
-
-  <header class="nav">
-    <a class="brand" href="index.html" aria-label="BlackPhage — accueil">
-      <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
-      <span>BLACKPHAGE</span>
-    </a>
-    <nav class="nav__links" aria-label="Navigation principale">
-      <a href="index.html#mission">Mission</a>
-      <a href="index.html#smart-binders">Smart Binders</a>
-      <a href="index.html#plateforme">Plateforme</a>
-      <a href="index.html#applications">Applications</a>
-      <a href="careers.html" aria-current="page">Carrières</a>
-      <a class="btn btn--line btn--sm" href="#candidater">Candidater</a>
-    </nav>
-    <button class="nav__burger" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
-  </header>
-
+<body data-page="carrieres">
+  <div id="site-header"></div>
   <main>
-    <!-- ================================================================ HERO -->
-    <section class="hero">
-      <div class="container hero__grid">
-        <div class="hero__copy">
-          <p class="eyebrow reveal">Carrières · Work with us</p>
-          <h1 class="display reveal">
-            <span class="dim">Rejoignez ceux qui rendent</span>
-            la conception thérapeutique programmable.
-          </h1>
-          <p class="lead reveal">
-            Une petite équipe pluridisciplinaire, des problèmes ouverts, et une exigence&nbsp;: ne dire que ce
-            que nous savons démontrer.
-          </p>
-          <div class="hero__cta reveal">
-            <a class="btn btn--primary" href="#postes">Voir les postes <svg class="ico"><use href="#i-arrow"/></svg></a>
-            <a class="btn btn--line" href="#candidater">Candidature spontanée</a>
-          </div>
-        </div>
-        <div class="hero__stage" data-stage="careers" aria-hidden="true">
-          <img class="poster" src="assets/img/protein-careers.webp" alt="" width="480" height="405" loading="lazy" decoding="async">
-        </div>
-      </div>
-      <div class="container hero__foot">
-        <p class="caption">Illustration&nbsp;: une protéine générée par diffusion (en rose) prend en pince sa cible (surface&nbsp;; adénylate kinase, PDB&nbsp;4AKE, prise comme exemple).</p>
-        <span class="scroll-cue" aria-hidden="true"><i></i></span>
+
+    <section class="pagehead">
+      <div class="container">
+        <p class="eyebrow">Carrières</p>
+        <h1>Rejoignez l'équipe BlackPhage.</h1>
+        <p class="lead">Nous construisons une nouvelle façon d'obtenir des Smart Binders. Si vous aimez les défis concrets, parlons-en.</p>
       </div>
     </section>
-
-    <!-- =============================================================== VALEURS -->
-    <section id="equipe">
+    <section class="tight">
       <div class="container">
-        <div class="head">
-          <p class="eyebrow reveal">Notre façon de travailler</p>
-          <h2 class="h2 reveal">Une petite équipe, des questions ouvertes.</h2>
-          <p class="lead reveal">
-            Chez BlackPhage, les modèles, la structure et la biologie se parlent tous les jours — c'est la seule
-            façon de faire progresser une plateforme de conception.
-          </p>
-        </div>
-        <ol class="values">
-          <li class="reveal"><span class="num">01</span>
-            <h3>La rigueur avant l'effet</h3>
-            <p>Un bon score n'est pas un résultat. Nous distinguons ce qui est prédit, ce qui est mesuré et ce qui reste à démontrer.</p></li>
-          <li class="reveal"><span class="num">02</span>
-            <h3>Tout est traçable</h3>
-            <p>Chaque construction garde son historique&nbsp;: hypothèses, versions de modèle, décisions. On doit pouvoir rejouer un choix six mois plus tard.</p></li>
-          <li class="reveal"><span class="num">03</span>
-            <h3>Deux cultures, une équipe</h3>
-            <p>Les ingénieurs lisent de la biologie, les biologistes ouvrent les notebooks. Le va-et-vient est le travail.</p></li>
-          <li class="reveal"><span class="num">04</span>
-            <h3>Les cibles difficiles</h3>
-            <p>Nous choisissons des problèmes que personne ne sait encore aborder proprement. C'est plus lent, et bien plus intéressant.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ================================================================ POSTES -->
-    <!-- NOTE: the roles below are placeholders — replace with the real openings before publishing. -->
-    <section id="postes">
-      <div class="container">
-        <div class="head">
-          <p class="eyebrow reveal">Postes ouverts</p>
-          <h2 class="h2 reveal">Nous recrutons.</h2>
-          <p class="lead reveal">
-            Les intitulés comptent moins que ce que vous savez faire. Si un poste vous ressemble à 70&nbsp;%,
-            écrivez-nous&nbsp;: nous préférons en discuter.
-          </p>
-        </div>
-        <ul class="jobs reveal">
-          <li>
-            <div>
-              <div class="meta"><span>R&amp;D</span><span>Temps plein</span></div>
-              <h3>Ingénieur·e en apprentissage automatique — conception de protéines</h3>
-              <p>Entraîner et évaluer les modèles génératifs qui proposent nos séquences, et construire les boucles d'évaluation qui les départagent.</p>
-            </div>
-            <a href="mailto:careers@blackphage.com?subject=Candidature%20%E2%80%94%20Apprentissage%20automatique">Postuler <svg class="ico"><use href="#i-arrow"/></svg></a>
-          </li>
-          <li>
-            <div>
-              <div class="meta"><span>R&amp;D</span><span>Temps plein</span></div>
-              <h3>Biologiste structural·e — modélisation moléculaire</h3>
-              <p>Modéliser le repliement et les interfaces de liaison, et juger la plausibilité structurale de ce que la plateforme propose.</p>
-            </div>
-            <a href="mailto:careers@blackphage.com?subject=Candidature%20%E2%80%94%20Biologie%20structurale">Postuler <svg class="ico"><use href="#i-arrow"/></svg></a>
-          </li>
-          <li>
-            <div>
-              <div class="meta"><span>Laboratoire</span><span>Temps plein</span></div>
-              <h3>Ingénieur·e protéines — laboratoire</h3>
-              <p>Produire, purifier et caractériser les constructions sélectionnées&nbsp;; mesurer leur affinité et confronter les prédictions à la réalité.</p>
-            </div>
-            <a href="mailto:careers@blackphage.com?subject=Candidature%20%E2%80%94%20Ing%C3%A9nierie%20des%20prot%C3%A9ines">Postuler <svg class="ico"><use href="#i-arrow"/></svg></a>
-          </li>
-          <li>
-            <div>
-              <div class="meta"><span>Plateforme</span><span>Temps plein</span></div>
-              <h3>Ingénieur·e logiciel — plateforme et données</h3>
-              <p>Faire tenir l'ensemble&nbsp;: pipelines de calcul, traçabilité des exécutions, outils internes utilisés chaque jour par l'équipe.</p>
-            </div>
-            <a href="mailto:careers@blackphage.com?subject=Candidature%20%E2%80%94%20Ing%C3%A9nierie%20logicielle">Postuler <svg class="ico"><use href="#i-arrow"/></svg></a>
-          </li>
-          <li>
-            <div>
-              <div class="meta"><span>R&amp;D</span><span>Stage · thèse CIFRE</span></div>
-              <h3>Scoring d'affinité — stage ou thèse</h3>
-              <p>Travailler sur l'estimation d'affinité et sa calibration&nbsp;: ce que nos scores prédisent réellement, et comment le vérifier.</p>
-            </div>
-            <a href="mailto:careers@blackphage.com?subject=Candidature%20%E2%80%94%20Scoring%20d%E2%80%99affinit%C3%A9">Postuler <svg class="ico"><use href="#i-arrow"/></svg></a>
-          </li>
+        <ul class="grid grid--3 values">
+          <li class="reveal"><h3>Une équipe à taille humaine</h3><p>Des décisions rapides et des idées qui comptent.</p></li>
+          <li class="reveal"><h3>Un impact concret</h3><p>Votre travail aide directement des équipes de recherche à avancer.</p></li>
+          <li class="reveal"><h3>Un cadre qui vous fait grandir</h3><p>Vous apprenez chaque semaine, avec des collègues qui partagent.</p></li>
         </ul>
       </div>
     </section>
-
-    <!-- ============================================================== PROCESSUS -->
-    <section>
+    <section class="tight">
       <div class="container">
-        <div class="head">
-          <p class="eyebrow reveal">Comment ça se passe</p>
-          <h2 class="h2 reveal">Trois étapes, des échanges directs.</h2>
-        </div>
-        <ol class="process">
-          <li class="reveal"><span class="num">01</span><h3>Un premier échange</h3>
-            <p>Vous présentez votre parcours et ce qui vous attire&nbsp;; nous présentons la plateforme et ses limites.</p></li>
-          <li class="reveal"><span class="num">02</span><h3>Une discussion technique</h3>
-            <p>Sur un sujet proche du poste, avec les personnes avec qui vous travailleriez.</p></li>
-          <li class="reveal"><span class="num">03</span><h3>Une rencontre avec l'équipe</h3>
-            <p>Pour vous faire une idée concrète du quotidien, des outils et des questions ouvertes.</p></li>
-        </ol>
+        <div class="head"><p class="eyebrow">Postes ouverts</p><h2>Nous recrutons.</h2></div>
+        <ul class="jobs"><li class="reveal"><div><div class="meta"><span>Boutique</span><span>Temps plein</span></div><h3>Responsable relation client</h3><p>Accompagner nos clients de leur première question jusqu'à la livraison.</p></div><a class="btn btn--ghost" href="mailto:careers@blackphage.com?subject=Candidature%20Relation%20client">Postuler</a></li><li class="reveal"><div><div class="meta"><span>Laboratoire</span><span>Temps plein</span></div><h3>Ingénieur·e protéines</h3><p>Préparer, contrôler et expédier nos Smart Binders avec soin.</p></div><a class="btn btn--ghost" href="mailto:careers@blackphage.com?subject=Candidature%20Ing%C3%A9nieur%C2%B7e%20prot%C3%A9ines">Postuler</a></li><li class="reveal"><div><div class="meta"><span>Équipe digitale</span><span>Temps plein</span></div><h3>Développeur·se web</h3><p>Faire évoluer notre boutique pour que commander soit toujours plus simple.</p></div><a class="btn btn--ghost" href="mailto:careers@blackphage.com?subject=Candidature%20D%C3%A9veloppeur%C2%B7se%20web">Postuler</a></li><li class="reveal"><div><div class="meta"><span>Ventes</span><span>Temps plein</span></div><h3>Chargé·e de développement commercial</h3><p>Aller à la rencontre des équipes de recherche et construire des relations durables.</p></div><a class="btn btn--ghost" href="mailto:careers@blackphage.com?subject=Candidature%20D%C3%A9veloppement%20commercial">Postuler</a></li></ul>
       </div>
     </section>
-
-    <!-- ============================================================ CANDIDATURE -->
-    <section class="cta" id="candidater">
+    <section class="tight">
       <div class="container">
-        <p class="eyebrow reveal">Candidature spontanée</p>
-        <h2 class="statement reveal">Aucun poste ne vous correspond&nbsp;?<br><span class="accent">Écrivez quand même.</span></h2>
-        <p class="lead reveal" style="margin: 0 auto 40px; text-align: center;">
-          Dites-nous ce que vous avez construit et ce que vous aimeriez attaquer chez nous. Un lien, un dépôt,
-          un article&nbsp;: c'est plus parlant qu'une lettre de motivation.
-        </p>
-        <div class="cta__row reveal">
-          <a class="btn btn--primary" href="mailto:careers@blackphage.com">careers@blackphage.com</a>
-          <a class="btn btn--line" href="index.html">Retour à l'accueil</a>
+        <div class="banner">
+          <div><h2>Aucun poste ne vous correspond ?</h2><p style="margin-top:12px">Écrivez-nous quand même. Dites-nous ce que vous savez faire et ce qui vous donne envie.</p></div>
+          <a class="btn btn--primary btn--lg" href="mailto:careers@blackphage.com">Candidature spontanée</a>
         </div>
       </div>
     </section>
   </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__top">
-        <div>
-          <a class="brand" href="index.html"><svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg><span>BLACKPHAGE</span></a>
-          <p class="footer__tag">Faire reculer les limites du traitable.</p>
-        </div>
-        <nav class="footer__links" aria-label="Pied de page">
-          <a href="index.html#mission">Mission</a>
-          <a href="index.html#smart-binders">Smart Binders</a>
-          <a href="index.html#plateforme">Plateforme</a>
-          <a href="index.html#applications">Applications</a>
-          <a href="careers.html">Carrières</a>
-        </nav>
-        <div class="footer__links">
-          <a href="mailto:careers@blackphage.com">careers@blackphage.com</a>
-          <a href="mailto:contact@blackphage.com">contact@blackphage.com</a>
-        </div>
-      </div>
-      <p class="disclaimer">
-        BlackPhage est une société de recherche. Aucun produit BlackPhage n'est autorisé ni disponible, et rien
-        sur ce site ne constitue un conseil médical ni une promesse de résultat thérapeutique.
-      </p>
-      <div class="footer__bottom">
-        <span>© <span id="year">2026</span> BlackPhage</span>
-        <span>Cible illustrée : adénylate kinase d'<i>E.&nbsp;coli</i>, d'après l'entrée PDB 4AKE (Müller et al., 1996). Protéine générée : illustration idéalisée. Rendu : three.js. Police : Inter.</span>
-      </div>
-    </div>
-  </footer>
+  <div id="site-footer"></div>
 </body>
 </html>

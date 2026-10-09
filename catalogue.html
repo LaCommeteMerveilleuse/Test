@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue | BlackPhage</title>
+  <meta name="description" content="Parcourez le catalogue BlackPhage et trouvez le Smart Binder de votre cible.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="assets/js/chrome.js"></script>
+  <script type="module" src="assets/js/catalogue.js"></script>
+</head>
+<body data-page="catalogue">
+  <div id="site-header"></div>
+  <main>
+
+    <section class="pagehead">
+      <div class="container">
+        <p class="eyebrow">Catalogue</p>
+        <h1>Trouvez votre Smart Binder.</h1>
+        <p class="lead">Tapez le nom d'une cible ou parcourez par univers. Le prix s'affiche tout de suite.</p>
+        <form class="search" role="search" style="margin-top:24px" onsubmit="return false">
+          <div class="search__box">
+            <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="q" type="search" placeholder="Cherchez une cible, un nom ou un univers" aria-label="Rechercher dans le catalogue" autocomplete="off">
+            <button id="clear" class="btn btn--ghost" type="button">Effacer</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="toolbar">
+          <div class="chips" id="cats" role="group" aria-label="Univers"></div>
+          <div class="toolbar__row">
+            <p id="count" class="muted" aria-live="polite"></p>
+            <label class="muted">Trier par
+              <select id="sort" class="select"><option value="pertinence">Pertinence</option><option value="prix">Prix croissant</option><option value="nom">Nom de A à Z</option></select>
+            </label>
+          </div>
+        </div>
+        <div class="grid grid--products" id="results"></div>
+        <div class="empty" id="empty" hidden>
+          <div class="vialbig" id="empty-vial"></div>
+          <h2 id="empty-title" style="font-size:1.5rem"></h2>
+          <p>Bonne nouvelle, nous pouvons le créer pour vous. Poser la question est gratuit.</p>
+          <a id="empty-cta" class="btn btn--primary btn--lg" href="sur-mesure.html">Demander cette cible</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="banner">
+          <div><h2>Vous ne trouvez pas votre cible ?</h2><p style="margin-top:12px;max-width:46ch">Nous la créons pour vous. Vous recevez une proposition claire sous <span data-shop="responseTime">2 jours ouvrés</span>, sans engagement.</p></div>
+          <a class="btn btn--primary btn--lg" href="sur-mesure.html">Demander une cible</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>
