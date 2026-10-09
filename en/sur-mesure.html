@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" data-base="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request a target | BlackPhage</title>
+  <meta name="description" content="Your target is not in the catalogue? Describe your need and we make your Smart Binder to order.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="../assets/js/chrome.js"></script>
+  <script type="module" src="../assets/js/sur-mesure.js"></script>
+</head>
+<body data-page="sur-mesure">
+  <div id="site-header"></div>
+  <main>
+
+    <section class="pagehead">
+      <div class="container">
+        <p class="eyebrow">Custom</p>
+        <h1>A new target? We take care of it.</h1>
+        <p class="lead">Tell us what you are looking for in three short steps. You receive a clear proposal with no commitment.</p>
+      </div>
+    </section>
+    <section class="tight">
+      <div class="container grid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,.9fr);align-items:start" id="customgrid">
+        <div>
+          <form id="customform" class="form card" style="padding:clamp(20px,3vw,32px)" novalidate>
+            <div class="stepper" id="stepper" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+            <p class="muted" id="step-label" aria-live="polite"></p>
+
+            <div data-step class="form">
+              <div class="field">
+                <label for="cible">Which target are you interested in?</label>
+                <input id="cible" name="cible" placeholder="A name, a code or a description" autocomplete="off">
+                <span class="hint">A simple name is enough, we will do the rest.</span>
+                <span class="err" id="err-cible"></span>
+              </div>
+              <div class="note" id="exists" hidden></div>
+              <div><button type="button" class="btn btn--primary btn--lg" data-next>Continue</button></div>
+            </div>
+
+            <div data-step class="form" hidden>
+              <fieldset class="field" style="border:0;padding:0;margin:0">
+                <legend>What is it for?</legend>
+                <div class="choices" style="margin-top:10px">
+                  <label class="choice"><input type="radio" name="usage" value="Laboratory research" checked><span>Laboratory research</span></label>
+                  <label class="choice"><input type="radio" name="usage" value="Developing a product"><span>Developing a product</span></label>
+                  <label class="choice"><input type="radio" name="usage" value="I do not know yet"><span>I do not know yet</span></label>
+                </div>
+              </fieldset>
+              <div class="row2">
+                <div class="field"><label for="quantite">Quantity wanted</label><select id="quantite" name="quantite"><option>Small quantity</option><option selected>Standard quantity</option><option>Large quantity</option></select></div>
+                <div class="field"><label for="delai">Timeline</label><select id="delai" name="delai"><option>As soon as possible</option><option selected>Within the month</option><option>No set date</option></select></div>
+              </div>
+              <div class="buyrow"><button type="button" class="btn btn--ghost" data-back>Back</button><button type="button" class="btn btn--primary btn--lg" data-next>Continue</button></div>
+            </div>
+
+            <div data-step class="form" hidden>
+              <div class="row2">
+                <div class="field"><label for="nom">Your name</label><input id="nom" name="nom" autocomplete="name"><span class="err" id="err-nom"></span></div>
+                <div class="field"><label for="email">Your email</label><input id="email" name="email" type="email" autocomplete="email"><span class="err" id="err-email"></span></div>
+              </div>
+              <div class="field"><label for="org">Your organisation (optional)</label><input id="org" name="org" autocomplete="organization"></div>
+              <div class="field"><label for="msg">Anything else to tell us (optional)</label><textarea id="msg" name="msg"></textarea></div>
+              <div class="buyrow"><button type="button" class="btn btn--ghost" data-back>Back</button><button type="submit" class="btn btn--primary btn--lg">Send my request</button></div>
+            </div>
+          </form>
+
+          <div class="sent" id="sent" hidden style="margin-top:24px">
+            <h2 style="font-size:1.4rem">Your request is ready</h2>
+            <p>Your email app will open with the message already filled in. If nothing opens, copy the text below and send it to <strong id="sent-to"></strong>.</p>
+            <textarea id="sent-text" class="select" readonly aria-label="Text of your request" style="width:100%;border-radius:12px"></textarea>
+            <div class="buyrow"><a id="sent-mail" class="btn btn--primary" href="#">Open my email app</a><button id="sent-copy" class="btn btn--ghost" type="button">Copy the text</button></div>
+          </div>
+        </div>
+
+        <aside class="card glass" style="padding:clamp(22px,3vw,32px);display:grid;gap:16px">
+          <h2 style="font-size:1.3rem">What you get</h2>
+          <ul class="ticks">
+            <li>A clear proposal within <span data-shop="responseTime">2 business days</span></li>
+            <li>One dedicated contact from start to finish</li>
+            <li>No commitment before you agree</li>
+            <li>A first conversation on us to shape your need</li>
+          </ul>
+          <p class="note"><span data-shop="research"></span></p>
+          <p>Prefer to look around first? <a class="link" href="catalogue.html">Browse the catalogue</a></p>
+        </aside>
+      </div>
+      <style>@media (max-width: 900px) { #customgrid { grid-template-columns: 1fr !important; } }</style>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+</body>
+</html>

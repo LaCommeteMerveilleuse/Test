@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" data-base="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BlackPhage</title>
+  <meta name="description" content="Find the Smart Binder for your target in the BlackPhage catalogue, or have one made for you.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="BlackPhage">
+  <meta property="og:description" content="The Smart Binder for your target, ready to order or made for you.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script type="importmap">{ "imports": { "three": "../assets/vendor/three/three.module.min.js" } }</script>
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="../assets/js/chrome.js"></script>
+  <script type="module" src="../assets/js/home.js"></script>
+  <script type="module" src="../assets/js/bg.js"></script>
+</head>
+<body class="has-bg" data-page="accueil">
+  <canvas id="bg" class="bgcanvas" aria-hidden="true"></canvas>
+  <div class="bg-veil" aria-hidden="true"></div>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <p class="eyebrow">Custom Smart Binders</p>
+          <h1>The Smart Binder for your target.</h1>
+          <p class="lead">Pick it from our catalogue or have it made for you. Our team supports you from your first question to delivery.</p>
+
+          <form id="home-search" class="search" role="search" autocomplete="off">
+            <div class="search__box">
+              <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input id="home-q" type="search" placeholder="Search for a target, e.g. TNF" aria-label="Search for a target" role="combobox" aria-expanded="false" aria-controls="home-suggest" aria-autocomplete="list">
+              <button class="btn btn--primary" type="submit">Browse the catalogue</button>
+            </div>
+            <div id="home-suggest" class="suggest" role="listbox" hidden></div>
+          </form>
+
+          <div class="hero__cta">
+            <span class="muted">Try</span>
+            <div class="chips">
+              <button class="chip" type="button" data-try="TNF">TNF</button>
+              <button class="chip" type="button" data-try="PD-L1">PD-L1</button>
+              <button class="chip" type="button" data-try="HER2">HER2</button>
+              <button class="chip" type="button" data-try="IL-6">IL-6</button>
+            </div>
+          </div>
+          <ul class="trust">
+            <li><span>Reply within <span data-shop="responseTime">2 business days</span></span></li>
+            <li><span>Tracked delivery in <span data-shop="delivery">3 to 7 business days</span></span></li>
+            <li><span>Free advice before you buy</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Getting started</p><h2>Two ways to get your Smart Binder.</h2></div>
+        <div class="grid grid--2">
+          <article class="card glass way reveal">
+            <span class="num">1</span>
+            <h3>My target is in the catalogue</h3>
+            <p>Compare sizes, see the price right away and add your choice to your order in a few clicks.</p>
+            <a class="btn btn--primary" href="catalogue.html">Browse the catalogue</a>
+          </article>
+          <article class="card glass way reveal">
+            <span class="num">2</span>
+            <h3>My target is not there yet</h3>
+            <p>Describe your need in three short steps. We get back to you with a clear proposal and no commitment.</p>
+            <a class="btn btn--ghost" href="sur-mesure.html">Request a target</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Our picks</p><h2>A selection to get you started.</h2></div>
+        <div class="grid grid--products" id="featured"></div>
+        <p style="margin-top:28px"><a class="link" href="catalogue.html">See the whole catalogue</a></p>
+      </div>
+    </section>
+
+    <section class="tight" id="quotes" hidden>
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">They trust us</p><h2>What our customers say.</h2></div>
+        <div class="quotes" id="quotes-list"></div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="head reveal"><p class="eyebrow">Simple</p><h2>From search to delivery in three steps.</h2></div>
+        <ol class="steps">
+          <li class="reveal"><h3>Search or describe</h3><p>Find your target in the catalogue or describe it in a few lines.</p></li>
+          <li class="reveal"><h3>Get a clear quote</h3><p>We check your request and send you a quote with no surprises.</p></li>
+          <li class="reveal"><h3>Receive your order</h3><p>Tracked delivery, and an expert stays available if you have a question.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="container">
+        <div class="banner reveal">
+          <div>
+            <h2>A question before you order?</h2>
+            <p style="margin-top:12px;max-width:46ch">Write to us. Advice is free and carries no commitment, and we reply within <span data-shop="responseTime">2 business days</span>.</p>
+          </div>
+          <a class="btn btn--primary btn--lg" href="a-propos.html#contact">Talk to the team</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 // BlackPhage - accueil : recherche avec suggestions, sélection de produits, témoignages éventuels.
+import { t } from './i18n.js';
 import { loadCatalogue, loadShop, searchProducts, highlight, productCard, esc, $ } from './shop.js';
 
 const [catalogue, shop] = await Promise.all([loadCatalogue(), loadShop()]);
@@ -38,8 +39,8 @@ function render() {
   active = -1;
   list.innerHTML = items.length
     ? items.map((p, i) => `<a role="option" id="sg-${i}" href="produit.html#${p.id}" aria-selected="false"><span>${highlight(p.name, q)}</span><small>${esc(catalogue.categories.find((c) => c.id === p.category)?.label || '')}</small></a>`).join('')
-      + (res.length > 6 ? `<a role="option" href="catalogue.html?q=${encodeURIComponent(q)}" data-all="1"><span><strong>Voir les ${res.length} résultats</strong></span></a>` : '')
-    : `<div class="suggest__empty">Pas encore de Smart Binder pour « ${esc(q)} ». <a class="link" href="sur-mesure.html" data-custom="1">Nous pouvons le créer pour vous</a></div>`;
+      + (res.length > 6 ? `<a role="option" href="catalogue.html?q=${encodeURIComponent(q)}" data-all="1"><span><strong>${t('see_n_results', { n: res.length })}</strong></span></a>` : '')
+    : `<div class="suggest__empty">${esc(t('no_binder_for', { q }))}. <a class="link" href="sur-mesure.html" data-custom="1">${t('can_create')}</a></div>`;
   list.hidden = false;
   input.setAttribute('aria-expanded', 'true');
 }

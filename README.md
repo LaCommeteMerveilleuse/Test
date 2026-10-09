@@ -3,6 +3,16 @@
 Site statique (HTML, CSS, JavaScript, sans étape de build) pour présenter les Smart Binders BlackPhage,
 vendre le catalogue existant et recevoir les demandes sur mesure.
 
+## Langues
+
+Le site existe en français (racine) et en anglais (dossier `en/`). Un bouton dans l'en-tête et le pied de page passe de l'une à l'autre.
+
+- Les pages anglaises sont **générées** par `python tools/build_en.py` à partir des pages françaises et de `tools/en_strings.py`.
+  Le script échoue si un texte n'a pas de traduction. Après toute modification d'une page française, relancez-le.
+- Les textes produits par le JavaScript sont dans `assets/js/i18n.js`.
+- Dans `products.json` et `shop.json`, les champs finissant par `_en` portent la version anglaise (`name_en`, `target_en`, `summary_en`, `uses_en`, `label_en`, `delivery_en`, ...).
+- Le texte anglais suit la même règle que le français : ni tiret long, ni point-virgule, ni deux-points.
+
 ## Pages
 
 | Page | Rôle |
@@ -56,8 +66,9 @@ Un double-clic sur `index.html` ne fonctionne pas : le navigateur bloque le char
 
 ## Technique
 
-- `assets/js/shop.js` regroupe données, moteur de recherche, panier (stocké dans le navigateur) et flacon illustré.
-- `assets/js/bg.js` dessine le fond de l'accueil avec three.js. Sans WebGL, une image fixe prend le relais.
+- `assets/js/shop.js` regroupe données, moteur de recherche, panier (stocké dans le navigateur) et affichage des flacons.
+- `assets/js/bg.js` dessine le fond de l'accueil avec three.js : une petite molécule et une protéine qui se génère autour d'elle par diffusion (bruit, puis squelette, puis hélices), en boucle. Les données viennent de `assets/data/pocket.json`, produit par `tools/build_background.py`. Sans WebGL, une image fixe prend le relais.
+- Les flacons de `assets/img/vials/` sont des rendus de synthèse (verre, liquide, étiquette au nom de la cible). Un fichier par produit, plus `custom-fr.webp` et `custom-en.webp`. Pour un nouveau produit, ajoutez un rendu du même nom que son identifiant.
 - Polices Inter et Montserrat hébergées dans le dépôt (licence SIL OFL), three.js sous licence MIT.
 - Texte du site sans tiret long, point-virgule ni deux-points, comme demandé.
 - Respect de `prefers-reduced-motion`, navigation au clavier, formulaires avec messages d'erreur.

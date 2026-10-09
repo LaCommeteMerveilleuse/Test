@@ -145,7 +145,7 @@ h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 600; letter-spacing: -0
 .pcard { display: flex; flex-direction: column; overflow: hidden; transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s; }
 .pcard:hover { transform: translateY(-4px); border-color: var(--sky); box-shadow: 0 30px 50px -26px rgba(22, 48, 150, 0.5); }
 .pcard__img { display: grid; place-items: center; padding: 18px 0 8px; background: radial-gradient(70% 70% at 50% 45%, var(--soft-2), #fff 75%); }
-.pcard__img svg { width: 150px; height: auto; filter: drop-shadow(0 14px 14px rgba(20, 45, 140, 0.18)); }
+.pcard__img img { width: 140px; height: auto; }
 .pcard__body { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px 18px; flex: 1; }
 .pcard__cat { font: 600 11px/1 var(--head); letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-2); }
 .pcard h3 { font-size: 1.05rem; }
@@ -161,14 +161,14 @@ h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 600; letter-spacing: -0
 .toolbar__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
 .select { padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; }
 .empty { display: grid; justify-items: center; gap: 14px; padding: 48px 24px; text-align: center; background: var(--soft); border-radius: var(--radius); }
-.empty .vialbig svg { width: 90px; opacity: 0.9; }
+.empty .vialbig img { width: 110px; height: auto; margin-inline: auto; }
 
 /* ------------------------------------------------------- fiche produit */
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.9rem; color: var(--muted); margin-bottom: 22px; }
 .crumbs a:hover { color: var(--blue); }
 .pdp { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
 .pdp__img { display: grid; place-items: center; padding: 40px 20px; background: radial-gradient(70% 70% at 50% 45%, var(--soft-2), #fff 78%); border-radius: 28px; border: 1px solid var(--line); position: sticky; top: 100px; }
-.pdp__img svg { width: min(290px, 62%); filter: drop-shadow(0 28px 24px rgba(20, 45, 140, 0.22)); }
+.pdp__img img { width: min(300px, 66%); height: auto; }
 .pdp__info { display: grid; gap: 22px; }
 .ticks { display: grid; gap: 10px; }
 .ticks li { position: relative; padding-left: 34px; }
@@ -219,7 +219,7 @@ h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 600; letter-spacing: -0
 /* ----------------------------------------------------------------- panier */
 .cartlist { display: grid; }
 .line { display: grid; grid-template-columns: 74px minmax(0, 1fr) auto auto; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
-.line__img svg { width: 56px; margin-inline: auto; }
+.line__img img { width: 60px; height: auto; margin-inline: auto; }
 .line h3 { font-size: 1rem; }
 .line small { color: var(--muted); }
 .line .x { border: 0; background: none; color: var(--muted); text-decoration: underline; font-size: 0.85rem; }
@@ -303,3 +303,7 @@ h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 600; letter-spacing: -0
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .reveal { opacity: 1; transform: none; }
 }
+.langlink { font-size: 0.86rem; font-weight: 600; color: var(--blue); padding: 6px 10px; border: 1px solid var(--line, #dbe3f7); border-radius: 999px; }
+.langlink:hover { background: var(--sky, #eef3ff); }
+.site-footer .langlink { display: inline-block; }
+.nav__links a.langlink::after { content: none; }
