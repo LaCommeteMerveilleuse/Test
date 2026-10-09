@@ -6,7 +6,10 @@ const root = document.documentElement;
 setTimeout(() => root.classList.add('reveal-fallback'), 3500);
 
 const page = document.body.dataset.page || '';
-const switchLink = (cls = '') => `<a class="langlink${cls}" href="${otherLangHref()}" hreflang="${LANG === 'en' ? 'fr' : 'en'}" lang="${LANG === 'en' ? 'fr' : 'en'}" aria-label="${t('lang_switch_label')}">${t('lang_switch')}</a>`;
+const GLOBE = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
+const CART = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 3.5h2.2l1.6 8.2h8.1l1.6-5.9H5.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/><circle cx="14" cy="16" r="1.3" fill="currentColor"/></svg>';
+const other = LANG === 'en' ? 'fr' : 'en';
+const switchLink = () => `<a class="langswitch" href="${otherLangHref()}" hreflang="${other}" lang="${other}" aria-label="${t('lang_switch_label')}">${GLOBE}<span class="${LANG === 'fr' ? 'is-on' : ''}">FR</span><span class="${LANG === 'en' ? 'is-on' : ''}">EN</span></a>`;
 const link = (href, label, key) => `<a href="${href}"${page === key ? ' aria-current="page"' : ''}>${label}</a>`;
 
 const wordmark = '<span class="wordmark">BLACKPH<i class="lam"></i>GE</span>';
@@ -20,9 +23,8 @@ if (header) {
 ${link('catalogue.html', t('nav_catalogue'), 'catalogue')}
 ${link('a-propos.html', t('nav_about'), 'a-propos')}
 ${link('careers.html', t('nav_careers'), 'carrieres')}
-<a class="cartlink" href="panier.html"${page === 'panier' ? ' aria-current="page"' : ''}>${t('nav_order')} <span class="badge-count" data-n="0" aria-label="${t('nav_items')}">0</span></a>
 ${switchLink()}
-<a class="btn btn--primary" href="sur-mesure.html">${t('nav_request')}</a>
+<a class="btn btn--primary cartbtn" href="panier.html"${page === 'panier' ? ' aria-current="page"' : ''}>${CART}<span>${t('nav_order')}</span> <span class="badge-count" data-n="0" aria-label="${t('nav_items')}">0</span></a>
 </nav></div></header>`;
 }
 

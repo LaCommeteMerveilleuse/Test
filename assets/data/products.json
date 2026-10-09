@@ -73,10 +73,10 @@
    "featured": true,
    "target_en": "TNF alpha",
    "name_en": "Smart Binder TNF alpha",
-   "summary_en": "A molecule designed to recognise TNF alpha with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize TNF alpha with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -123,10 +123,10 @@
    "featured": true,
    "target_en": "IL-6",
    "name_en": "Smart Binder IL-6",
-   "summary_en": "A molecule designed to recognise IL-6 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-6 with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -173,10 +173,10 @@
    "featured": false,
    "target_en": "IL-17A",
    "name_en": "Smart Binder IL-17A",
-   "summary_en": "A molecule designed to recognise IL-17A with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-17A with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -224,10 +224,10 @@
    "featured": false,
    "target_en": "IL-1 beta",
    "name_en": "Smart Binder IL-1 beta",
-   "summary_en": "A molecule designed to recognise IL-1 beta with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-1 beta with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -273,10 +273,10 @@
    "featured": false,
    "target_en": "IL-23",
    "name_en": "Smart Binder IL-23",
-   "summary_en": "A molecule designed to recognise IL-23 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-23 with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -323,10 +323,10 @@
    "featured": false,
    "target_en": "TGF beta",
    "name_en": "Smart Binder TGF beta",
-   "summary_en": "A molecule designed to recognise TGF beta with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize TGF beta with precision. Ready to use in your experiments.",
    "uses_en": [
     "Inflammation studies",
-    "Laboratory assay tests",
+    "Lab assay testing",
     "Checking your experiments"
    ]
   },
@@ -373,9 +373,9 @@
    "featured": false,
    "target_en": "IFN gamma",
    "name_en": "Smart Binder IFN gamma",
-   "summary_en": "A molecule designed to recognise IFN gamma with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IFN gamma with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -422,9 +422,9 @@
    "featured": false,
    "target_en": "IL-2",
    "name_en": "Smart Binder IL-2",
-   "summary_en": "A molecule designed to recognise IL-2 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-2 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -471,9 +471,9 @@
    "featured": false,
    "target_en": "IL-4",
    "name_en": "Smart Binder IL-4",
-   "summary_en": "A molecule designed to recognise IL-4 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-4 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -520,9 +520,9 @@
    "featured": false,
    "target_en": "IL-10",
    "name_en": "Smart Binder IL-10",
-   "summary_en": "A molecule designed to recognise IL-10 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize IL-10 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -569,9 +569,9 @@
    "featured": false,
    "target_en": "CD3",
    "name_en": "Smart Binder CD3",
-   "summary_en": "A molecule designed to recognise CD3 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize CD3 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -618,9 +618,9 @@
    "featured": false,
    "target_en": "CD19",
    "name_en": "Smart Binder CD19",
-   "summary_en": "A molecule designed to recognise CD19 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize CD19 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Studies of the body's defences",
+    "Studies of the body's defenses",
     "Tracking your experiments",
     "Quality control of your batches"
    ]
@@ -667,9 +667,9 @@
    "featured": true,
    "target_en": "CD20",
    "name_en": "Smart Binder CD20",
-   "summary_en": "A molecule designed to recognise CD20 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize CD20 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -717,9 +717,9 @@
    "featured": false,
    "target_en": "PD-1",
    "name_en": "Smart Binder PD-1",
-   "summary_en": "A molecule designed to recognise PD-1 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize PD-1 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -767,9 +767,9 @@
    "featured": true,
    "target_en": "PD-L1",
    "name_en": "Smart Binder PD-L1",
-   "summary_en": "A molecule designed to recognise PD-L1 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize PD-L1 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -816,9 +816,9 @@
    "featured": false,
    "target_en": "CTLA-4",
    "name_en": "Smart Binder CTLA-4",
-   "summary_en": "A molecule designed to recognise CTLA-4 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize CTLA-4 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -866,9 +866,9 @@
    "featured": true,
    "target_en": "HER2",
    "name_en": "Smart Binder HER2",
-   "summary_en": "A molecule designed to recognise HER2 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize HER2 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -916,9 +916,9 @@
    "featured": false,
    "target_en": "EGFR",
    "name_en": "Smart Binder EGFR",
-   "summary_en": "A molecule designed to recognise EGFR with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize EGFR with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -966,9 +966,9 @@
    "featured": true,
    "target_en": "VEGF-A",
    "name_en": "Smart Binder VEGF-A",
-   "summary_en": "A molecule designed to recognise VEGF-A with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize VEGF-A with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -1015,9 +1015,9 @@
    "featured": false,
    "target_en": "CD47",
    "name_en": "Smart Binder CD47",
-   "summary_en": "A molecule designed to recognise CD47 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize CD47 with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -1064,9 +1064,9 @@
    "featured": false,
    "target_en": "BCMA",
    "name_en": "Smart Binder BCMA",
-   "summary_en": "A molecule designed to recognise BCMA with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize BCMA with precision. Ready to use in your experiments.",
    "uses_en": [
-    "Tumour cell research",
+    "Tumor cell research",
     "Comparing your samples",
     "Validating your protocols"
    ]
@@ -1113,7 +1113,7 @@
    "featured": false,
    "target_en": "Insulin",
    "name_en": "Smart Binder Insulin",
-   "summary_en": "A molecule designed to recognise Insulin with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize Insulin with precision. Ready to use in your experiments.",
    "uses_en": [
     "Metabolism research",
     "Tracking your samples",
@@ -1162,7 +1162,7 @@
    "featured": false,
    "target_en": "PCSK9",
    "name_en": "Smart Binder PCSK9",
-   "summary_en": "A molecule designed to recognise PCSK9 with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize PCSK9 with precision. Ready to use in your experiments.",
    "uses_en": [
     "Metabolism research",
     "Tracking your samples",
@@ -1214,7 +1214,7 @@
    "featured": false,
    "target_en": "GLP-1 receptor",
    "name_en": "Smart Binder GLP-1 receptor",
-   "summary_en": "A molecule designed to recognise GLP-1 receptor with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize GLP-1 receptor with precision. Ready to use in your experiments.",
    "uses_en": [
     "Metabolism research",
     "Tracking your samples",
@@ -1265,7 +1265,7 @@
    "featured": false,
    "target_en": "Serum albumin",
    "name_en": "Smart Binder Serum albumin",
-   "summary_en": "A molecule designed to recognise Serum albumin with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize Serum albumin with precision. Ready to use in your experiments.",
    "uses_en": [
     "Labelling and detection",
     "Purifying your samples",
@@ -1315,7 +1315,7 @@
    "featured": false,
    "target_en": "GFP",
    "name_en": "Smart Binder GFP",
-   "summary_en": "A molecule designed to recognise GFP with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize GFP with precision. Ready to use in your experiments.",
    "uses_en": [
     "Labelling and detection",
     "Purifying your samples",
@@ -1367,7 +1367,7 @@
    "featured": false,
    "target_en": "His tag",
    "name_en": "Smart Binder His tag",
-   "summary_en": "A molecule designed to recognise His tag with precision. Ready to use in your experiments.",
+   "summary_en": "A molecule designed to recognize His tag with precision. Ready to use in your experiments.",
    "uses_en": [
     "Labelling and detection",
     "Purifying your samples",

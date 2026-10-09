@@ -21,36 +21,36 @@
       <div class="container">
         <p class="eyebrow">My order</p>
         <h1>Your selection.</h1>
-        <p class="lead">Check your items then request your quote. You pay nothing until you have agreed.</p>
+        <p class="lead">Review your items, then request your quote. You pay nothing until you agree to it.</p>
       </div>
     </section>
     <section class="tight">
       <div class="container">
         <div class="empty" id="empty-cart" hidden>
           <h2 style="font-size:1.6rem">Your order is empty</h2>
-          <p>Browse the catalogue or request a custom target.</p>
-          <div class="buyrow" style="justify-content:center"><a class="btn btn--primary btn--lg" href="catalogue.html">Browse the catalogue</a><a class="btn btn--ghost btn--lg" href="sur-mesure.html">Request a target</a></div>
+          <p>Browse the catalog or request a custom target.</p>
+          <div class="buyrow" style="justify-content:center"><a class="btn btn--primary btn--lg" href="catalogue.html">Browse the catalog</a><a class="btn btn--ghost btn--lg" href="sur-mesure.html">Request a target</a></div>
         </div>
         <div class="cartgrid" id="cartwrap" hidden>
           <div>
             <div class="cartlist" id="cartlist"></div>
-            <p style="margin-top:18px"><button id="clear-cart" class="x link" type="button" style="background:none;border-top:0;border-left:0;border-right:0">Empty my order</button></p>
+            <p style="margin-top:18px"><button id="clear-cart" class="x link" type="button" style="background:none;border-top:0;border-left:0;border-right:0">Clear my order</button></p>
           </div>
           <aside class="card summary">
             <h2 style="font-size:1.2rem">Summary</h2>
             <dl>
               <div><dt>Items</dt><dd id="nb"></dd></div>
               <div><dt>Subtotal</dt><dd id="subtotal"></dd></div>
-              <div><dt>Delivery</dt><dd>Given in the quote</dd></div>
+              <div><dt>Delivery</dt><dd>Included in the quote</dd></div>
             </dl>
             <div class="total" style="display:flex;justify-content:space-between"><span>Estimated total</span><span id="total"></span></div>
             <form id="orderform" class="form" novalidate>
               <div class="field"><label for="nom">Your name</label><input id="nom" name="nom" autocomplete="name" required><span class="err" id="err-nom"></span></div>
               <div class="field"><label for="email">Your email</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="err-email"></span></div>
-              <div class="field"><label for="org">Your organisation (optional)</label><input id="org" name="org" autocomplete="organization"></div>
+              <div class="field"><label for="org">Your organization (optional)</label><input id="org" name="org" autocomplete="organization"></div>
               <div class="field"><label for="msg">A message for the team (optional)</label><textarea id="msg" name="msg" style="min-height:90px"></textarea></div>
               <button class="btn btn--primary btn--lg btn--block" type="submit">Request my quote</button>
-              <p class="muted" style="font-size:.88rem">No payment now. Reply within <span data-shop="responseTime">2 business days</span>.</p>
+              <p class="muted" style="font-size:.88rem">No payment now. We reply within <span data-shop="responseTime">2 business days</span>.</p>
             </form>
           </aside>
         </div>
