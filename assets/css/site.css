@@ -108,7 +108,12 @@ h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 600; letter-spacing: -0
 /* la cible, une goutte, se glisse entre les pieds du lambda puis repart */
 .mark .target { animation: bp-bind 9s cubic-bezier(0.45, 0, 0.2, 1) infinite; }
 .logo:hover .mark .target { animation-duration: 3.2s; }
-@keyframes bp-bind { 0%, 32% { transform: translateY(0); } 46%, 68% { transform: translateY(-8.6px); } 84%, 100% { transform: translateY(0); } }
+@keyframes bp-bind { 0%, 32% { transform: translateY(0); } 46%, 68% { transform: translateY(-7.6px); } 84%, 100% { transform: translateY(0); } }
+.pagehead__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: clamp(24px, 5vw, 72px); align-items: center; }
+.brandmark { color: var(--blue); }
+.brandmark .mark { width: 100%; height: auto; max-width: 300px; margin-inline: auto; overflow: visible; filter: drop-shadow(0 34px 34px rgba(22, 48, 150, 0.28)); }
+.brandmark:hover .mark .target { animation-duration: 3.2s; }
+@media (max-width: 760px) { .pagehead__grid { grid-template-columns: minmax(0, 1fr); } .brandmark { display: none; } }
 .mark--intro .bead, .mark--intro .target { transform-box: fill-box; transform-origin: center; animation: bp-bead 1s var(--ease) backwards; animation-delay: calc(var(--i, 3) * 70ms + 80ms); }
 .mark--intro .target { animation: bp-bead 1s var(--ease) 0.7s backwards, bp-bind 9s cubic-bezier(0.45, 0, 0.2, 1) 1.8s infinite; }
 @keyframes bp-bead { from { transform: translate(-5px, -7px) scale(0.2); opacity: 0; } to { transform: none; opacity: 1; } }

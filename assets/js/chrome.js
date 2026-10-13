@@ -50,6 +50,9 @@ if (footer) {
 </div></footer>`;
 }
 
+// le grand signe de la page À propos
+$$('[data-mark]').forEach((el) => { el.innerHTML = markSvg(); });
+
 // le sélecteur de langue : adresse à jour au moment du clic, et choix mémorisé
 $$('.langswitch').forEach((a) => {
   const refresh = () => { a.href = otherLangHref(); };
