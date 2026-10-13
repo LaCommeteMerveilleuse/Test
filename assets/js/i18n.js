@@ -1,6 +1,6 @@
 // BlackPhage - langue de la page (fr ou en) et textes générés par le JavaScript.
 // Les pages anglaises vivent dans en/ et déclarent data-base="../" sur <html>.
-export const LANG = document.documentElement.lang === 'en' ? 'en' : 'fr';
+export const LANG = (document.documentElement.dataset.lang || document.documentElement.lang) === 'en' ? 'en' : 'fr';
 export const BASE = document.documentElement.dataset.base || '';
 
 const D = {
@@ -63,9 +63,16 @@ export function t(key, vars = {}) {
   return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : ''));
 }
 
-/** Adresse de la même page dans l'autre langue. */
+const FILES = { accueil: 'index.html', catalogue: 'catalogue.html', produit: 'produit.html', panier: 'panier.html', 'sur-mesure': 'sur-mesure.html', 'a-propos': 'a-propos.html', carrieres: 'careers.html' };
+
+/** Adresse de la même page dans l'autre langue (la recherche et l'ancre sont conservées). */
 export function otherLangHref() {
-  const file = location.pathname.split('/').pop() || 'index.html';
-  const rest = location.search + location.hash;
-  return (LANG === 'en' ? `../${file}` : `en/${file}`) + rest;
+  const fromPath = location.pathname.split('/').pop();
+  const file = FILES[document.body.dataset.page] || (/\.html$/.test(fromPath) ? fromPath : 'index.html');
+  return (LANG === 'en' ? `../${file}` : `en/${file}`) + location.search + location.hash;
+}
+
+/** Mémorise le choix de langue de la personne. La redirection automatique ne le contredit plus. */
+export function rememberLang(lang) {
+  try { localStorage.setItem('bp-lang', lang); } catch { /* stockage indisponible */ }
 }

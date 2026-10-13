@@ -157,9 +157,7 @@ export function cartLines(catalogue) {
 }
 
 // ----------------------------------------------------------- illustrations
-export function markSvg() {
-  return `<svg viewBox="0 0 36 36" aria-hidden="true"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"><path d="M13 8l11 4M24 12l-6 8M18 20l-9-3M18 20l-5 11M24 12l6 12"/></g><g fill="currentColor"><circle cx="13" cy="8" r="4.2"/><circle cx="25" cy="12.5" r="3.4"/><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="20" r="4.6"/><circle cx="12.5" cy="31" r="3.2"/><circle cx="30" cy="24.5" r="3.6"/></g></svg>`;
-}
+export { markSvg } from './mark.js';
 
 /** Photo de synthèse du flacon. Les cibles personnalisées utilisent le flacon générique. */
 export function vial(p) {

@@ -9,6 +9,27 @@
   <meta property="og:title" content="BlackPhage">
   <meta property="og:description" content="Le Smart Binder de votre cible, prêt à commander ou créé pour vous.">
   <meta property="og:type" content="website">
+  <!-- langue:debut -->
+  <link rel="alternate" hreflang="fr" href="index.html">
+  <link rel="alternate" hreflang="en" href="en/index.html">
+  <link rel="alternate" hreflang="x-default" href="en/index.html">
+  <script>
+(function () { try {
+  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
+  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
+  var want = localStorage.getItem('bp-lang');
+  if (want !== 'fr' && want !== 'en') {
+    if (sessionStorage.getItem('bp-auto')) return;
+    sessionStorage.setItem('bp-auto', '1');
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+    want = /^fr/i.test(l) ? 'fr' : 'en';
+  }
+  if (want === here) return;
+  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
+  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
+} catch (e) {} })();
+</script>
+  <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
@@ -27,12 +48,12 @@
     <section class="hero">
       <div class="container hero__grid">
         <div>
-          <p class="eyebrow">Smart Binders sur mesure</p>
-          <h1>Le Smart Binder de votre cible.</h1>
-          <p class="lead">Choisissez-le dans notre catalogue ou faites-le créer pour vous. Notre équipe vous accompagne de la première question jusqu'à la livraison.</p>
+          <p class="eyebrow" data-rise style="--d:0">Smart Binders sur mesure</p>
+          <h1 data-rise style="--d:1">Le Smart Binder <span class="hl">de votre cible.</span></h1>
+          <p class="lead" data-rise style="--d:2">Choisissez-le dans notre catalogue ou faites-le créer pour vous. Notre équipe vous accompagne de la première question jusqu'à la livraison.</p>
 
-          <form id="home-search" class="search" role="search" autocomplete="off">
-            <div class="search__box">
+          <form id="home-search" class="search" role="search" autocomplete="off" data-rise style="--d:3">
+            <div class="search__box glass glass--lens" data-blur="9">
               <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
               <input id="home-q" type="search" placeholder="Cherchez une cible, ex. TNF" aria-label="Rechercher une cible" role="combobox" aria-expanded="false" aria-controls="home-suggest" aria-autocomplete="list">
               <button class="btn btn--primary" type="submit">Voir le catalogue</button>
@@ -40,7 +61,7 @@
             <div id="home-suggest" class="suggest" role="listbox" hidden></div>
           </form>
 
-          <div class="hero__cta">
+          <div class="hero__cta" data-rise style="--d:4">
             <span class="muted">Essayez</span>
             <div class="chips">
               <button class="chip" type="button" data-try="TNF">TNF</button>
@@ -49,7 +70,7 @@
               <button class="chip" type="button" data-try="IL-6">IL-6</button>
             </div>
           </div>
-          <ul class="trust">
+          <ul class="trust" data-rise style="--d:5">
             <li><span>Réponse sous <span data-shop="responseTime">2 jours ouvrés</span></span></li>
             <li><span>Livraison suivie en <span data-shop="delivery">3 à 7 jours ouvrés</span></span></li>
             <li><span>Conseil gratuit avant achat</span></li>
@@ -61,8 +82,8 @@
     <section class="tight" id="concept">
       <div class="container">
         <div class="head reveal"><p class="eyebrow">Le concept</p><h2>Un Smart Binder, c'est quoi ?</h2>
-          <p class="lead" style="margin-top:14px;max-width:62ch">C'est une molécule conçue pour se fixer sur une cible précise, comme une clé dans une serrure. Vous l'utilisez là où vous utiliseriez un anticorps monoclonal, avec plus de souplesse.</p></div>
-        <div class="compare card reveal">
+          <p class="lead" style="margin-top:14px;max-width:50ch">C'est une molécule conçue pour se fixer sur une cible précise, comme une clé dans une serrure. Vous l'utilisez là où vous utiliseriez un anticorps monoclonal, avec plus de souplesse.</p></div>
+        <div class="compare card glass reveal">
           <table>
             <caption class="sr-only">Comparaison entre un anticorps monoclonal et un Smart Binder</caption>
             <thead><tr><th scope="col"><span class="sr-only">Critère</span></th>

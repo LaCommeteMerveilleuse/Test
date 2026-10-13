@@ -246,4 +246,6 @@ EN = {
 'Candidature': 'Application',
 'Rejoignez l équipe BlackPhage.': 'Join the BlackPhage team.',
 'Candidature spontanée': 'Open application',
+'Le Smart Binder': 'The Smart Binder',
+'de votre cible.': 'for your target.',
 }

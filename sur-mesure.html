@@ -6,6 +6,27 @@
   <title>Demander une cible | BlackPhage</title>
   <meta name="description" content="Votre cible n est pas au catalogue ? Décrivez votre besoin, nous créons votre Smart Binder sur mesure.">
   <meta name="theme-color" content="#ffffff">
+  <!-- langue:debut -->
+  <link rel="alternate" hreflang="fr" href="sur-mesure.html">
+  <link rel="alternate" hreflang="en" href="en/sur-mesure.html">
+  <link rel="alternate" hreflang="x-default" href="en/sur-mesure.html">
+  <script>
+(function () { try {
+  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
+  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
+  var want = localStorage.getItem('bp-lang');
+  if (want !== 'fr' && want !== 'en') {
+    if (sessionStorage.getItem('bp-auto')) return;
+    sessionStorage.setItem('bp-auto', '1');
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+    want = /^fr/i.test(l) ? 'fr' : 'en';
+  }
+  if (want === here) return;
+  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
+  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
+} catch (e) {} })();
+</script>
+  <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">

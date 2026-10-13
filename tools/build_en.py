@@ -1,5 +1,8 @@
 """Génère les pages anglaises (en/*.html) à partir des pages françaises.
 
+Le script s'occupe aussi du bloc de langue de l'en-tête de chaque page (liens hreflang et redirection
+automatique selon la langue du navigateur), entre les repères langue:debut et langue:fin.
+
 Chaque morceau de texte visible et chaque attribut textuel doit figurer dans tools/en_strings.py.
 Un texte manquant fait échouer le script, pour qu'aucune phrase française ne reste dans la version anglaise.
 Usage : python tools/build_en.py
@@ -14,6 +17,42 @@ PAGES = ['index', 'catalogue', 'produit', 'panier', 'sur-mesure', 'a-propos', 'c
 ATTRS = ['placeholder', 'aria-label', 'alt', 'title', 'content']
 SKIP_META = {'viewport', 'theme-color'}
 missing = []
+
+# Redirection automatique : une seule décision par visite, jamais contre un choix explicite (bouton FR / EN).
+# Sans stockage disponible, on ne redirige pas, car on ne pourrait pas retenir le choix de la personne.
+REDIRECT = '''<script>
+(function () { try {
+  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
+  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
+  var want = localStorage.getItem('bp-lang');
+  if (want !== 'fr' && want !== 'en') {
+    if (sessionStorage.getItem('bp-auto')) return;
+    sessionStorage.setItem('bp-auto', '1');
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+    want = /^fr/i.test(l) ? 'fr' : 'en';
+  }
+  if (want === here) return;
+  var f = location.pathname.split('/').pop(); if (!/\\.html$/.test(f)) f = 'index.html';
+  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
+} catch (e) {} })();
+</script>'''
+
+def lang_block(name, lang):
+    f = f'{name}.html'
+    fr, en = (f, 'en/' + f) if lang == 'fr' else ('../' + f, f)
+    return ('<!-- langue:debut -->\n'
+            f'  <link rel="alternate" hreflang="fr" href="{fr}">\n'
+            f'  <link rel="alternate" hreflang="en" href="{en}">\n'
+            f'  <link rel="alternate" hreflang="x-default" href="{en}">\n'
+            f'  {REDIRECT}\n  <!-- langue:fin -->')
+
+BLOCK = re.compile(r'<!-- langue:debut -->.*?<!-- langue:fin -->', re.S)
+
+def sync_head(src, name, lang):
+    block = lang_block(name, lang)
+    if BLOCK.search(src):
+        return BLOCK.sub(lambda m: block, src)
+    return src.replace('  <link rel="icon"', '  ' + block + '\n  <link rel="icon"', 1)
 
 def tr(s):
     key = re.sub(r'\s+', ' ', unescape(s)).strip()
@@ -52,8 +91,8 @@ def convert(src, name):
         part = re.sub(r'>([^<]+)<', lambda m: '>' + tr(m.group(1)) + '<', part)
         out.append(part)
     html = ''.join(out)
-    html = html.replace('<html lang="fr">', '<html lang="en" data-base="../">')
-    return html
+    html = html.replace('<html lang="fr">', '<html lang="en" data-lang="en" data-base="../">')
+    return sync_head(html, name, 'en')
 
 def tr_subject(enc):
     from urllib.parse import unquote, quote
@@ -62,6 +101,8 @@ def tr_subject(enc):
 (ROOT / 'en').mkdir(exist_ok=True)
 for name in PAGES:
     src = (ROOT / f'{name}.html').read_text(encoding='utf-8')
+    src = sync_head(src, name, 'fr')
+    (ROOT / f'{name}.html').write_text(src, encoding='utf-8')
     html = convert(src, name)
     (ROOT / 'en' / f'{name}.html').write_text(html, encoding='utf-8')
 # l'importmap de l'accueil doit pointer vers le dossier parent

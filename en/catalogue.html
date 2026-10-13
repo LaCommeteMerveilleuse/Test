@@ -1,11 +1,32 @@
 <!doctype html>
-<html lang="en" data-base="../">
+<html lang="en" data-lang="en" data-base="../">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catalog | BlackPhage</title>
   <meta name="description" content="Browse the BlackPhage catalog and find the Smart Binder for your target.">
   <meta name="theme-color" content="#ffffff">
+  <!-- langue:debut -->
+  <link rel="alternate" hreflang="fr" href="../catalogue.html">
+  <link rel="alternate" hreflang="en" href="catalogue.html">
+  <link rel="alternate" hreflang="x-default" href="catalogue.html">
+  <script>
+(function () { try {
+  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
+  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
+  var want = localStorage.getItem('bp-lang');
+  if (want !== 'fr' && want !== 'en') {
+    if (sessionStorage.getItem('bp-auto')) return;
+    sessionStorage.setItem('bp-auto', '1');
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+    want = /^fr/i.test(l) ? 'fr' : 'en';
+  }
+  if (want === here) return;
+  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
+  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
+} catch (e) {} })();
+</script>
+  <!-- langue:fin -->
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="../assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../assets/css/site.css">
@@ -23,7 +44,7 @@
         <h1>Find your Smart Binder.</h1>
         <p class="lead">Type a target name or browse by category. Prices show right away.</p>
         <form class="search" role="search" style="margin-top:24px" onsubmit="return false">
-          <div class="search__box">
+          <div class="search__box glass glass--lens" data-blur="9">
             <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
             <input id="q" type="search" placeholder="Search by target, name or category" aria-label="Search the catalog" autocomplete="off">
             <button id="clear" class="btn btn--ghost" type="button">Clear</button>

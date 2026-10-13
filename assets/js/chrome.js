@@ -1,6 +1,10 @@
-// BlackPhage - en-tête, pied de page, menu mobile, compteur de commande, apparitions au défilement.
-import { loadShop, cart, markSvg, $, $$ } from './shop.js';
-import { LANG, t, otherLangHref } from './i18n.js';
+// BlackPhage - en-tête en verre, pied de page, menu mobile, compteur de commande, apparitions au défilement.
+// Charge aussi les couches de l'identité : aurore, verre liquide, signe.
+import { loadShop, cart, $, $$ } from './shop.js';
+import { LANG, t, otherLangHref, rememberLang } from './i18n.js';
+import { mountMarkDefs, markSvg } from './mark.js';
+import { initGlass } from './glass.js';
+import { stage } from './stage.js';
 
 const root = document.documentElement;
 setTimeout(() => root.classList.add('reveal-fallback'), 3500);
@@ -11,13 +15,17 @@ const CART = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 3.5h2.2l
 const other = LANG === 'en' ? 'fr' : 'en';
 const switchLink = () => `<a class="langswitch" href="${otherLangHref()}" hreflang="${other}" lang="${other}" aria-label="${t('lang_switch_label')}">${GLOBE}<span class="${LANG === 'fr' ? 'is-on' : ''}">FR</span><span class="${LANG === 'en' ? 'is-on' : ''}">EN</span></a>`;
 const link = (href, label, key) => `<a href="${href}"${page === key ? ' aria-current="page"' : ''}>${label}</a>`;
-
 const wordmark = '<span class="wordmark">BLACKPH<i class="lam"></i>GE</span>';
+
+mountMarkDefs();
+// le signe s'assemble une seule fois par session
+let intro = false;
+try { intro = !sessionStorage.getItem('bp-intro') && !stage.reduce; sessionStorage.setItem('bp-intro', '1'); } catch { /* ignoré */ }
 
 const header = $('#site-header');
 if (header) {
-  header.outerHTML = `<header class="nav" id="nav"><div class="container nav__in">
-<a class="logo" href="index.html" aria-label="${t('home_aria')}">${markSvg()}<span>${wordmark}</span></a>
+  header.outerHTML = `<header class="nav" id="nav"><div class="container"><div class="nav__in glass">
+<a class="logo" href="index.html" aria-label="${t('home_aria')}">${markSvg({ bold: true, intro })}<span>${wordmark}</span></a>
 <button class="nav__burger" type="button" aria-label="${t('nav_menu')}" aria-expanded="false" aria-controls="nav-links"><span></span></button>
 <nav class="nav__links" id="nav-links" aria-label="${t('nav_main')}">
 ${link('catalogue.html', t('nav_catalogue'), 'catalogue')}
@@ -25,14 +33,14 @@ ${link('a-propos.html', t('nav_about'), 'a-propos')}
 ${link('careers.html', t('nav_careers'), 'carrieres')}
 ${switchLink()}
 <a class="btn btn--primary cartbtn" href="panier.html"${page === 'panier' ? ' aria-current="page"' : ''}>${CART}<span>${t('nav_order')}</span> <span class="badge-count" data-n="0" aria-label="${t('nav_items')}">0</span></a>
-</nav></div></header>`;
+</nav></div></div></header>`;
 }
 
 const footer = $('#site-footer');
 if (footer) {
   footer.outerHTML = `<footer class="site-footer"><div class="container">
 <div class="site-footer__top">
-<div><a class="logo logo--stack" href="index.html" aria-label="${t('home_aria')}"><span style="display:flex;align-items:center;gap:12px">${markSvg()}${wordmark}</span><span class="tagline">Smart Binders</span></a>
+<div><a class="logo logo--stack" href="index.html" aria-label="${t('home_aria')}"><span style="display:flex;align-items:center;gap:12px">${markSvg({ bold: true })}${wordmark}</span><span class="tagline">Smart Binders</span></a>
 <p class="muted" style="margin-top:16px;max-width:30ch">${t('foot_tagline')}</p></div>
 <div><h4>${t('foot_shop')}</h4><ul><li><a href="catalogue.html">${t('nav_catalogue')}</a></li><li><a href="sur-mesure.html">${t('nav_request')}</a></li><li><a href="panier.html">${t('nav_order')}</a></li></ul></div>
 <div><h4>${t('foot_company')}</h4><ul><li><a href="a-propos.html">${t('nav_about')}</a></li><li><a href="a-propos.html#questions">${t('foot_faq')}</a></li><li><a href="careers.html">${t('nav_careers')}</a></li></ul></div>
@@ -41,6 +49,13 @@ if (footer) {
 <div class="legal"><span data-shop="research"></span><span>© ${new Date().getFullYear()} BlackPhage</span></div>
 </div></footer>`;
 }
+
+// le sélecteur de langue : adresse à jour au moment du clic, et choix mémorisé
+$$('.langswitch').forEach((a) => {
+  const refresh = () => { a.href = otherLangHref(); };
+  ['pointerenter', 'focus', 'touchstart'].forEach((ev) => a.addEventListener(ev, refresh, { passive: true }));
+  a.addEventListener('click', () => { refresh(); rememberLang(other); });
+});
 
 loadShop().then((shop) => {
   $$('[data-shop="mail"]').forEach((a) => { a.textContent = shop.email; a.href = `mailto:${shop.email}`; });
@@ -79,3 +94,8 @@ export function observeReveals(scope = document) {
 }
 observeReveals();
 window.__observeReveals = observeReveals;
+
+// couches de l'identité : verre, grain, aurore
+initGlass();
+if (!$('.grain')) { const g = document.createElement('div'); g.className = 'grain'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); }
+import('./aurora.js').then((m) => m.initAurora()).catch(() => root.classList.add('no-webgl'));

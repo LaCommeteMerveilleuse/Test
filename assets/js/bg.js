@@ -1,15 +1,19 @@
-// BlackPhage - fond de la page d'accueil : une surface organique bleu et blanc, qui ondule doucement
-// et dérive pendant le défilement. Rendu three.js. Sans WebGL, une image fixe prend le relais (voir site.css).
+// BlackPhage - la protéine de l'accueil. Une surface organique en verre liquide : elle réfracte l'aurore
+// qui coule derrière elle, avec un peu de dispersion de couleur, un film irisé et des reflets de métal liquide.
+// Rendu three.js, organisé comme une scène react-three-fiber : un Canvas, des objets, des useFrame.
+// Sans WebGL, une image fixe prend le relais (voir site.css).
 import * as THREE from 'three';
+import { stage, useFrame, onResize } from './stage.js';
+import { AURORA_GLSL, calmFor } from './aurora.js';
 
 const root = document.documentElement;
 const canvas = document.getElementById('bg');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function webgl2() { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } }
-if (!canvas || !webgl2()) { root.classList.add('no-webgl'); } else { start().catch(() => root.classList.add('no-webgl')); }
+if (!canvas || !webgl2()) { root.classList.add('no-webgl'); } else { start().catch((e) => { console.warn('bg', e); root.classList.add('no-webgl'); }); }
 
-const NOISE = `
+// ------------------------------------------------------------------ shaders
+const NOISE3 = `
 vec4 bp_permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
 vec4 bp_inv(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
 float bp_noise(vec3 v){
@@ -37,7 +41,7 @@ attribute vec3 aNormal;
 attribute float aAo;
 uniform float uTime;
 varying vec3 vN; varying vec3 vV; varying float vAo;
-${NOISE}
+${NOISE3}
 float wave(vec3 q){ float t = uTime; return bp_noise(q * 1.5 + vec3(0.0, t * 0.12, t * 0.08)) * 0.7 + bp_noise(q * 3.2 - vec3(t * 0.15, 0.0, t * 0.1)) * 0.3; }
 void main(){
   vec3 n = normalize(aNormal);
@@ -51,36 +55,60 @@ void main(){
 }`;
 
 const FRAG = `
+uniform vec2 uRes; uniform float uTime; uniform float uScroll; uniform float uCalm; uniform vec3 uKey;
 varying vec3 vN; varying vec3 vV; varying float vAo;
+${AURORA_GLSL}
 void main(){
   vec3 N = normalize(vN); vec3 V = normalize(-vV);
   if (dot(N, V) < 0.0) N = -N;
-  vec3 L1 = normalize(vec3(0.5, 0.7, 0.6)); vec3 L2 = normalize(vec3(-0.7, -0.2, 0.4));
-  float key = clamp(dot(N, L1) * 0.5 + 0.5, 0.0, 1.0);
-  float fill = clamp(dot(N, L2) * 0.5 + 0.5, 0.0, 1.0);
-  float ao = pow(clamp(vAo, 0.0, 1.0), 2.4);
-  float fres = pow(1.0 - max(dot(N, V), 0.0), 2.2);
+  float ndv = clamp(dot(N, V), 0.0, 1.0);
+  float fres = pow(1.0 - ndv, 2.4);
+  float depth = pow(1.0 - clamp(vAo, 0.0, 1.0), 1.25);           // cavités : le verre y est plus épais
+  float thick = clamp((1.0 - ndv) * 0.80 + depth * 0.75, 0.0, 1.0);
 
-  // couleurs en lumière linéaire (la conversion finale les éclaircit)
-  vec3 white = vec3(0.93, 0.95, 1.00);
-  vec3 sky   = vec3(0.30, 0.47, 0.92);
-  vec3 blue  = vec3(0.017, 0.07, 0.56);
-  vec3 deep  = vec3(0.004, 0.012, 0.20);
+  // verre liquide : l'aurore vue à travers la matière, décalée par la courbure, avec dispersion des couleurs
+  vec2 uv = gl_FragCoord.xy / uRes;
+  float aspect = uRes.x / uRes.y;
+  vec2 off = N.xy * (0.050 + 0.190 * thick);
+  vec3 refr = vec3(bp_field(uv - off,        uTime, uScroll, aspect, uCalm).r,
+                   bp_field(uv - off * 1.10, uTime, uScroll, aspect, uCalm).g,
+                   bp_field(uv - off * 1.21, uTime, uScroll, aspect, uCalm).b);
 
-  float light = key * 0.55 + ao * 0.60;
-  vec3 col = mix(blue, white, smoothstep(0.42, 0.95, light));
-  col = mix(col, sky, fres * 0.40 * (1.0 - smoothstep(0.5, 1.0, light)));
-  col = mix(deep, col, smoothstep(0.02, 0.45, ao + fill * 0.20));
-  float spec = pow(max(dot(N, normalize(L1 + V)), 0.0), 60.0) * 0.55;
-  col += vec3(spec);
-  float fog = smoothstep(7.4, 11.0, -vV.z);
-  col = mix(col, vec3(1.0), fog * 0.30);
-  gl_FragColor = vec4(col, 1.0);
-  #include <colorspace_fragment>
+  // absorption : le verre devient cobalt là où il est épais
+  vec3 cobalt = vec3(0.06, 0.19, 0.80);
+  vec3 azure  = vec3(0.36, 0.58, 1.00);
+  float k = smoothstep(0.12, 0.95, thick);
+  vec3 col = refr * mix(vec3(1.0), mix(azure, cobalt, k), 0.30 + 0.80 * k);
+  col = mix(col, col * vec3(0.80, 0.86, 1.0), depth * 0.35);
+
+  // lumière douce sur le volume
+  vec3 L1 = normalize(uKey);
+  vec3 L2 = normalize(vec3(-0.75, -0.25, 0.45));
+  float dif = clamp(dot(N, L1) * 0.5 + 0.5, 0.0, 1.0);
+  col *= mix(0.80, 1.06, dif);
+
+  // film irisé, comme une bulle de savon
+  vec3 iri = 0.5 + 0.5 * cos(6.28318 * (vec3(0.00, 0.33, 0.67) + ndv * 0.9 + thick * 0.45 + uTime * 0.012));
+  col = mix(col, col * (0.55 + 0.75 * iri), 0.10 + 0.26 * fres);
+
+  // reflets nets du verre et lisière lumineuse
+  float s1 = pow(max(dot(N, normalize(L1 + V)), 0.0), 140.0);
+  float s2 = pow(max(dot(N, normalize(L2 + V)), 0.0), 40.0);
+  float rim = pow(1.0 - ndv, 3.2);
+  col += vec3(1.0) * s1 * 1.05 + vec3(0.75, 0.88, 1.0) * s2 * 0.38 + vec3(0.88, 0.94, 1.0) * rim * 0.50;
+
+  // bandes de métal liquide, très discrètes, qui suivent la courbure
+  float band = sin((N.y * 1.3 + N.x * 0.8 + N.z * 0.4) * 4.2 + uTime * 0.18);
+  col += vec3(0.92, 0.96, 1.0) * smoothstep(0.55, 1.0, band) * (0.06 + 0.40 * fres) * 0.50;
+
+  // arête sombre du verre, ce qui détache l'objet du fond clair
+  col = mix(col, cobalt * 0.62, smoothstep(0.70, 1.0, 1.0 - ndv) * 0.55);
+  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }`;
 
 const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 
+// ------------------------------------------------------------------- scène
 async function start() {
   const data = await (await fetch((root.dataset.base || '') + 'assets/data/surface.json')).json();
   const pos = new Float32Array(b64(data.position).buffer);
@@ -95,57 +123,53 @@ async function start() {
   geo.setIndex(new THREE.BufferAttribute(idx, 1));
   geo.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1.6);
 
-  const uniforms = { uTime: { value: 0 } };
-  const mesh = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide }));
-  mesh.frustumCulled = false;
+  const uniforms = {
+    uTime: { value: 0 }, uScroll: { value: 0 }, uCalm: { value: calmFor(stage.w) },
+    uRes: { value: new THREE.Vector2(1, 1) }, uKey: { value: new THREE.Vector3(0.5, 0.7, 0.6) },
+  };
+  const protein = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide }));
+  protein.frustumCulled = false;
   const pivot = new THREE.Group();
-  pivot.add(mesh);
+  pivot.add(protein);
   const scene = new THREE.Scene();
   scene.add(pivot);
 
+  // <Canvas>
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0xffffff, 0);
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
   const FOV = 28;
   const DIST = 9;
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 40);
   camera.position.set(0, 0, DIST);
   const halfH = DIST * Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+  const buffer = new THREE.Vector2();
+  onResize((s) => {
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75) * s.quality);
+    renderer.setSize(s.w, s.h, false);
+    camera.aspect = s.w / s.h;
+    camera.updateProjectionMatrix();
+    renderer.getDrawingBufferSize(buffer);
+    uniforms.uRes.value.copy(buffer);
+    uniforms.uCalm.value = calmFor(s.w);
+  });
 
-  let W = 0; let H = 0;
-  const resize = () => { W = innerWidth; H = innerHeight; renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix(); };
-  addEventListener('resize', resize);
-  resize();
-
-  const mouse = { x: 0, y: 0 };
-  addEventListener('pointermove', (e) => { mouse.x = e.clientX / W - 0.5; mouse.y = e.clientY / H - 0.5; }, { passive: true });
-
-  const cur = { p: 0 };
-  const clock = new THREE.Clock();
-  let visible = !document.hidden;
-  document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
-
-  function frame() {
-    requestAnimationFrame(frame);
-    if (!visible) return;
-    const dt = Math.min(clock.getDelta(), 0.25);
-    const t = clock.elapsedTime * (reduce ? 0.15 : 1);
-    const max = Math.max(1, document.documentElement.scrollHeight - H);
-    const target = Math.min(1, scrollY / max);
-    cur.p += (target - cur.p) * (1 - Math.exp(-dt * 4));
-    const p = cur.p;
-
-    const small = W < 820;
-    const size = (small ? 0.62 : 0.75) * halfH * 1.18;                    // rayon en unités monde
-    const halfW = halfH * W / H;
-    const ox = (small ? 0.2 : 0.66 - 0.55 * p) * halfW;
-    const oy = (small ? 0.26 - 0.5 * p : 0.06 - 0.30 * p) * halfH;
+  // useFrame
+  useFrame((s) => {
+    const p = s.scroll;
+    const small = s.w < 820;
+    const size = (small ? 0.62 : 0.70) * halfH * 1.18;
+    const halfW = halfH * s.w / s.h;
     pivot.scale.setScalar(size);
-    pivot.position.set(ox, oy, 0);
-    pivot.rotation.set(0.35 + p * 0.9 + mouse.y * 0.12, -0.55 + p * 2.6 + t * 0.045 + mouse.x * 0.18, 0.12 - p * 0.5);
-    uniforms.uTime.value = t;
+    pivot.position.set((small ? 0.2 : 0.60 - 0.50 * p) * halfW, (small ? 0.26 - 0.5 * p : 0.06 - 0.30 * p) * halfH, 0);
+    pivot.rotation.set(0.35 + p * 0.9 + s.pointer.y * 0.12, -0.55 + p * 2.6 + s.time * 0.045 + s.pointer.x * 0.18, 0.12 - p * 0.5);
+    // la protéine appartient à l'accueil : elle s'efface en douceur quand on descend dans la page
+    const fade = 1 - THREE.MathUtils.smoothstep(p, 0.02, 0.20);
+    canvas.style.opacity = fade.toFixed(3);
+    if (fade < 0.015) return;                                     // invisible : on ne dessine plus rien
+    uniforms.uTime.value = s.time;
+    uniforms.uScroll.value = s.scroll;
+    uniforms.uKey.value.set(0.5 + s.pointer.x * 0.9, 0.7 - s.pointer.y * 0.9, 0.62);   // la lumière suit le pointeur
     renderer.render(scene, camera);
-  }
+  });
   root.classList.add('webgl-ready');
-  frame();
 }
