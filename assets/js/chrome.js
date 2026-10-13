@@ -7,7 +7,7 @@ import { initGlass } from './glass.js';
 import { stage } from './stage.js';
 
 const root = document.documentElement;
-setTimeout(() => root.classList.add('reveal-fallback'), 3500);
+setTimeout(() => root.classList.add('reveal-fallback'), 2200);
 
 const page = document.body.dataset.page || '';
 const GLOBE = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
