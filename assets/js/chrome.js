@@ -54,16 +54,22 @@ loadSite().then((site) => {
   $$('.copy[data-mailkey]').forEach((b) => { if (site[b.dataset.mailkey]) b.dataset.copy = site[b.dataset.mailkey]; });
 }).catch(() => { /* les adresses du HTML restent */ });
 
-$$('.copy').forEach((b) => {
-  const idle = () => { b.textContent = t('copy_mail'); b.setAttribute('aria-label', t('copy_label', { mail: b.dataset.copy })); b.classList.remove('is-done'); };
-  idle();
-  b.addEventListener('click', async () => {
-    const ok = await copyText(b.dataset.copy);
-    b.textContent = ok ? t('copied') : b.dataset.copy;
-    b.classList.toggle('is-done', ok);
-    setTimeout(idle, 1800);
+/** Branche les boutons Copier d'une zone. Appelée aussi par les pages qui écrivent leur contenu après coup. */
+export function wireCopy(scope = document) {
+  $$('.copy', scope).forEach((b) => {
+    if (b.dataset.wired) return;
+    b.dataset.wired = '1';
+    const idle = () => { b.textContent = t('copy_mail'); b.setAttribute('aria-label', t('copy_label', { mail: b.dataset.copy })); b.classList.remove('is-done'); };
+    idle();
+    b.addEventListener('click', async () => {
+      const ok = await copyText(b.dataset.copy);
+      b.textContent = ok ? t('copied') : b.dataset.copy;
+      b.classList.toggle('is-done', ok);
+      setTimeout(idle, 1800);
+    });
   });
-});
+}
+wireCopy();
 
 // la liste des programmes du pied de page suit programs.json
 const plist = $('[data-programs-list]');

@@ -57,6 +57,11 @@ ICONS = {
     'ph': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.5c3.9 4.8 7.2 8.5 7.2 12.3a7.2 7.2 0 0 1-14.4 0c0-3.8 3.3-7.5 7.2-12.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.6 16.6c1.6-1.3 3.1-1.3 4.7 0s3.1 1.3 4.7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     'gentle': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.6 22 6.8v6.2c0 4.8-3.3 8.7-8 10.6-4.7-1.9-8-5.8-8-10.6V6.8l8-3.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 14.2c1.3 1.5 2.5 2.2 4 2.2s2.7-.7 4-2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
     'precise': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="14" r="2.2" fill="currentColor"/><path d="M14 2.5v5M14 20.5v5M2.5 14h5M20.5 14h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'compass': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m18.6 9.4-2.3 6.9-6.9 2.3 2.3-6.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'heart': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.2s-8.4-5-8.4-11.3a4.7 4.7 0 0 1 8.4-2.9 4.7 4.7 0 0 1 8.4 2.9c0 6.3-8.4 11.3-8.4 11.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
+    'team': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="10.5" cy="10.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="19.5" cy="11.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 22.5c.5-4 3-6 6.7-6s6.2 2 6.7 6M17.5 16.6c3.2-.5 6 .9 6.7 5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'globe': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 14h19M14 4.5c-4 4.4-4 14.6 0 19M14 4.5c4 4.4 4 14.6 0 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+    'grow': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.5V8.5M8.2 14.2 14 8.4l5.8 5.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 23.5h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
 }
 
 BAD = re.compile('[—;:]')   # tiret long, point-virgule, deux-points
@@ -64,7 +69,8 @@ problems = []
 
 
 def h(s):
-    return escape(s, quote=False)
+    """Échappe un texte et met de vraies apostrophes."""
+    return escape(s, quote=False).replace("'", "\u2019")
 
 
 def a(s):
@@ -360,8 +366,8 @@ def contact_rows(T, lg):
 def build_about(lg):
     T = STR[lg]
     drive = ''.join(
-        f'<article class="card glass reveal"><span class="card__n">0{i}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
-        for i in range(1, 4))
+        f'<article class="card glass reveal"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
+        for i, k in ((1, 'compass'), (2, 'precise'), (3, 'heart')))
     how = ''.join(f'<li class="reveal">{h(T[f"how_{i}"])}</li>' for i in range(1, 4))
     main = f'''<section class="pagehead">
   <div class="container pagehead__grid">
@@ -410,13 +416,19 @@ def build_about(lg):
 
 
 # ------------------------------------------------------------------ carrières
+def mailrow(key, addr):
+    """L'adresse en toutes lettres, avec son bouton Copier : un lien mailto: ne s'ouvre pas partout."""
+    return (f'<p class="mailrow"><a data-mail="{key}" href="mailto:{a(addr)}">{h(addr)}</a>'
+            f'<button class="copy" type="button" data-copy="{a(addr)}" data-mailkey="{key}"></button></p>')
+
+
 def build_careers(lg):
     T = STR[lg]
     why = ''.join(
-        f'<article class="card glass reveal"><span class="card__n">0{i}</span><h3>{h(T[f"why_{i}"])}</h3><p>{h(T[f"why_{i}n"])}</p></article>'
-        for i in range(1, 4))
+        f'<article class="card glass reveal"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"why_{i}"])}</h3><p>{h(T[f"why_{i}n"])}</p></article>'
+        for i, k in ((1, 'team'), (2, 'globe'), (3, 'grow')))
     quals = ''.join(
-        f'<li class="qual reveal"><span class="qual__n">0{i}</span><span class="qual__w">{h(T[f"q_{i}"])}</span><span class="qual__p">{h(T[f"q_{i}n"])}</span></li>'
+        f'<li class="qual reveal"><span class="qual__w">{h(T[f"q_{i}"])}</span><span class="qual__p">{h(T[f"q_{i}n"])}</span></li>'
         for i in range(1, 6))
     skills = ''.join(f'<li class="chip reveal">{h(T[f"sk_{i}"])}</li>' for i in range(1, 9))
     jobs = ''
@@ -470,6 +482,8 @@ def build_careers(lg):
     <div class="sec__head">
       <p class="eyebrow reveal">{h(T['jobs_eyebrow'])}</p>
       <h2 class="h2 reveal">{h(T['jobs_h2'])}</h2>
+      <p class="lead reveal">{h(T['jobs_lead'])}</p>
+      {mailrow('careersEmail', SITE['careersEmail'])}
     </div>
     <div class="jobs">{jobs}</div>
   </div>
@@ -483,6 +497,7 @@ def build_careers(lg):
       <div class="hero__cta">
         <a class="btn btn--light btn--lg" data-mail="careersEmail" data-subject="{end_subject}" href="mailto:{a(SITE['careersEmail'])}?subject={end_subject}">{h(T['car_end_cta'])}{ARROW}</a>
       </div>
+      {mailrow('careersEmail', SITE['careersEmail'])}
     </div>
   </div>
 </section>'''

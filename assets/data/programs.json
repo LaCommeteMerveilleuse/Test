@@ -62,7 +62,7 @@
     }
    ],
    "intro": {
-    "fr": "Les médicaments ciblant GLP-1R ont transformé la prise en charge de l'obésité et du diabète de type 2. La demande est immense. Les compromis aussi.",
+    "fr": "Les médicaments ciblant GLP-1R ont transformé la prise en charge de l’obésité et du diabète de type 2. La demande est immense. Les compromis aussi.",
     "en": "GLP-1R drugs reshaped the treatment of obesity and type 2 diabetes. Demand is huge. So are the trade-offs."
    },
    "problems": [
@@ -72,8 +72,8 @@
       "en": "Everywhere at once."
      },
      "p": {
-      "fr": "Le récepteur est présent dans l'intestin, le cerveau, le pancréas et le cœur. Les traitements actuels les activent tous.",
-      "en": "The receptor lives in gut, brain, pancreas and heart. Today's drugs hit them all."
+      "fr": "Le récepteur est présent dans l’intestin, le cerveau, le pancréas et le cœur. Les traitements actuels les activent tous.",
+      "en": "The receptor lives in gut, brain, pancreas and heart. Today’s drugs hit them all."
      }
     },
     {
@@ -82,7 +82,7 @@
       "en": "Nausea drives patients away."
      },
      "p": {
-      "fr": "Les effets digestifs sont l'une des premières raisons d'arrêt.",
+      "fr": "Les effets digestifs sont l’une des premières raisons d’arrêt.",
       "en": "Digestive side effects are a leading reason people stop."
      }
     },
@@ -102,7 +102,7 @@
       "en": "Stop, and it returns."
      },
      "p": {
-      "fr": "Le poids tend à remonter après l'arrêt du traitement.",
+      "fr": "Le poids tend à remonter après l’arrêt du traitement.",
       "en": "Weight tends to come back once treatment ends."
      }
     },
@@ -154,7 +154,7 @@
       "en": "Frontier precision."
      },
      "p": {
-      "fr": "Une sélectivité plus fine au niveau du récepteur. Moins d'effets hors cible.",
+      "fr": "Une sélectivité plus fine au niveau du récepteur. Moins d’effets hors cible.",
       "en": "Sharper selectivity at the receptor. Fewer off-target effects."
      }
     },
@@ -184,7 +184,7 @@
     }
    ],
    "disclaimer": {
-    "fr": "Expérimental. Préclinique. Non approuvé par la FDA ni par aucune autorité. Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et la littérature publiques. Nos objectifs de conception ne sont pas des allégations de sécurité ou d'efficacité.",
+    "fr": "Expérimental. Préclinique. Non approuvé par la FDA ni par aucune autorité. Les constats sur la classe thérapeutique actuelle s’appuient sur les notices et la littérature publiques. Nos objectifs de conception ne sont pas des allégations de sécurité ou d’efficacité.",
     "en": "Investigational. Preclinical. Not approved by the FDA or any regulator. Statements about the current drug class draw on public labels and literature. Our design goals are not claims of safety or efficacy."
    }
   },
@@ -204,11 +204,11 @@
     "en": "Discovery"
    },
    "status": {
-    "fr": "Confidentiel jusqu'aux dépôts de brevets",
+    "fr": "Confidentiel jusqu’aux dépôts de brevets",
     "en": "Undisclosed until filings land"
    },
    "summary": {
-    "fr": "L'agent travaille sur de nouvelles cibles. Elles apparaissent ici dès que la protection est assurée.",
+    "fr": "L’agent travaille sur de nouvelles cibles. Elles apparaissent ici dès que la protection est assurée.",
     "en": "The agent is working on new targets. They appear here as soon as protection is in place."
    }
   }

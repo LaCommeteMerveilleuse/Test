@@ -35,12 +35,9 @@ def build(name, pose, h, faces, forearm):
     AO = ambient_occlusion(fn, V2, N)
     TH = thickness(fn, V2, N)
     # extrémité de l'index, pour les placer l'une en face de l'autre
+    # le doigt subit la rotation du poignet : la géométrie tourne de -wrist, la pointe aussi
     J, _, _, _ = finger_points(FINGERS['index'], pose['index'][:3], pose['index'][3])
-    # le doigt subit la rotation du poignet : on la rejoue
-    a = np.radians(pose.get('wrist', 0.0)); c, s = np.cos(a), np.sin(a)
-    tip = J[3]
-    tip = np.array([tip[0] * c + tip[1] * -s * -1, 0, tip[2]])  # placeholder, recalculé ci-dessous
-    # (x', y') = R(-wrist) appliqué à l'inverse : la géométrie tourne de -wrist, donc la pointe tourne de -wrist
+    a = np.radians(pose.get('wrist', 0.0))
     cx, sx = np.cos(-a), np.sin(-a)
     tip = np.array([J[3][0] * cx - J[3][1] * sx, J[3][0] * sx + J[3][1] * cx, J[3][2]])
     print(name, 'final', len(V2), 'sommets', len(F2), 'faces', round(time.time() - t0), 's', 'pointe de l\'index', tip.round(2))

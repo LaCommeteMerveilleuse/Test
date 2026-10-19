@@ -124,6 +124,32 @@ void main(){
   gl_FragColor = vec4(vec3(0.82, 0.97, 1.0) * a, a);
 }`;
 
+// ------------------------------------------------------------------ poussière d'or
+// De petites braises montent de l'étincelle quand les doigts se rapprochent.
+const MOTE_VERT = `
+attribute vec4 aSeed; uniform float uTime; uniform float uPx; uniform vec3 uSparkW; uniform float uFlare;
+varying float vA;
+void main(){
+  float life = fract(uTime * (0.07 + 0.10 * aSeed.x) + aSeed.y);
+  float spread = 0.4 + 2.4 * life;
+  vec3 p = uSparkW + vec3((aSeed.z - 0.5) * 2.0, 0.0, (aSeed.w - 0.5) * 1.4) * spread;
+  p.y += life * (2.5 + 6.0 * aSeed.x);
+  p.x += sin(uTime * 0.8 + aSeed.y * 40.0) * 0.6 * life;
+  vec4 mv = viewMatrix * vec4(p, 1.0);
+  vA = uFlare * uFlare * smoothstep(0.0, 0.08, life) * (1.0 - life) * (0.35 + 0.65 * aSeed.w);
+  gl_PointSize = max(2.0, (0.8 + 2.2 * aSeed.z) * uPx * 200.0 / -mv.z);
+  gl_Position = projectionMatrix * mv;
+}`;
+const MOTE_FRAG = `
+varying float vA;
+void main(){
+  float r = length(gl_PointCoord - 0.5) * 2.0;
+  if (r > 1.0) discard;
+  float a = smoothstep(1.0, 0.0, r);
+  a = a * a * vA;
+  gl_FragColor = vec4(vec3(1.0, 0.86, 0.58) * a * 2.4, a);
+}`;
+
 // ------------------------------------------------------------------ passe finale : reflet, rides, grain
 const FIN_VERT = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const FIN_FRAG = `
@@ -278,6 +304,17 @@ async function start() {
   snow.frustumCulled = false;
   scene.add(snow);
 
+  // poussière d'or
+  const M = 70;
+  const mp = new Float32Array(M * 3); const mseed = new Float32Array(M * 4);
+  for (let i = 0; i < M; i++) { mseed[i * 4] = Math.random(); mseed[i * 4 + 1] = Math.random(); mseed[i * 4 + 2] = Math.random(); mseed[i * 4 + 3] = Math.random(); }
+  const mg = new THREE.BufferGeometry();
+  mg.setAttribute('position', new THREE.BufferAttribute(mp, 3));
+  mg.setAttribute('aSeed', new THREE.BufferAttribute(mseed, 4));
+  const motes = new THREE.Points(mg, new THREE.ShaderMaterial({ uniforms, vertexShader: MOTE_VERT, fragmentShader: MOTE_FRAG, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  motes.frustumCulled = false;
+  scene.add(motes);
+
   const camera = new THREE.PerspectiveCamera(CAM_FOV, 1.6, 1, 600);
 
   // passe finale
@@ -302,6 +339,9 @@ async function start() {
     renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75) * s.quality);
     renderer.setSize(s.w, s.h, false);
     const size = renderer.getDrawingBufferSize(new THREE.Vector2());
+    // si l'appareil peine, on abandonne le lissage des bords : c'est ce qui coûte le plus
+    const samples = s.quality < 0.99 ? 0 : 4;
+    if (rt.samples !== samples) { rt.samples = samples; rt.dispose(); }
     rt.setSize(size.x, size.y);
     uniforms.uRes.value.copy(size);
     uniforms.uPx.value = size.y / 900;
@@ -323,13 +363,13 @@ async function start() {
     if (mirror) { group.matrix.premultiply(new THREE.Matrix4().makeScale(-1, 1, 1)); }
   }
 
-  const ripples = []; let ripT = -1;
+  let ripN = 0; let ripT = -1;
   const tipL = new THREE.Vector3(), tipR = new THREE.Vector3(), mid = new THREE.Vector3();
   addEventListener('pointermove', (e) => {
     if (stage.time - ripT < 0.28) return;
     ripT = stage.time;
     const v = uniforms.uRip.value;
-    const k = ripples.length % 4; ripples.push(0);
+    const k = ripN++ % 4;
     v[k].set(e.clientX / stage.w, 1 - e.clientY / stage.h, stage.time);
   }, { passive: true });
 

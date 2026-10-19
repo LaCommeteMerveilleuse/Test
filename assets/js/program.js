@@ -2,11 +2,11 @@
 // Une protéine de verre flotte dans l'eau à côté du titre (protein.js).
 import { $, loadPrograms, loadSite, esc, ARROW } from './site.js';
 import { L, t } from './i18n.js';
+import { wireCopy } from './chrome.js';
 
 const root = document.documentElement;
 const box = $('#prog');
 const BACK = '<svg class="arr arr--back" viewBox="0 0 20 20" aria-hidden="true"><path d="M16 10H5M9.5 5l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const pad = (i) => String(i + 1).padStart(2, '0');
 
 function missing() {
   root.classList.add('prog-miss');
@@ -21,8 +21,8 @@ function view(p, site) {
   const name = L(p.name);
   document.title = `${name} · BlackPhage`;
   const subject = encodeURIComponent(t('mail_subject', { name }));
-  const problems = (p.problems || []).map((x, i) => `<article class="prob glass reveal" style="--i:${i % 3}"><span class="prob__n">${pad(i)}</span><h3>${esc(L(x.h))}</h3><p>${esc(L(x.p))}</p></article>`).join('');
-  const answers = (p.answers || []).map((x, i) => `<article class="ans glass reveal" style="--i:${i % 2}"><span class="ans__n">${pad(i)}</span><h3>${esc(L(x.h))}</h3><p>${esc(L(x.p))}</p></article>`).join('');
+  const problems = (p.problems || []).map((x, i) => `<article class="prob glass reveal" style="--i:${i % 3}"><span class="mark-dot" aria-hidden="true"></span><h3>${esc(L(x.h))}</h3><p>${esc(L(x.p))}</p></article>`).join('');
+  const answers = (p.answers || []).map((x, i) => `<article class="ans glass reveal" style="--i:${i % 2}"><span class="mark-dot mark-dot--gold" aria-hidden="true"></span><h3>${esc(L(x.h))}</h3><p>${esc(L(x.p))}</p></article>`).join('');
   const where = (p.where || []).map((x, i) => `<li class="reveal" style="--i:${i}"><span class="where__dot" aria-hidden="true"></span>${esc(L(x))}</li>`).join('');
   box.innerHTML = `
 <section class="phero">
@@ -82,11 +82,13 @@ function view(p, site) {
         <a class="btn btn--light btn--lg" href="mailto:${esc(site.email)}?subject=${subject}">${esc(t('cta_btn'))}${ARROW}</a>
         <a class="btn btn--ghost btn--lg" href="pipeline.html">${esc(t('cta_all'))}</a>
       </div>
+      <p class="mailrow"><a href="mailto:${esc(site.email)}?subject=${subject}">${esc(site.email)}</a><button class="copy" type="button" data-copy="${esc(site.email)}"></button></p>
     </div>
     <p class="disclaimer">${esc(L(p.disclaimer))}</p>
   </div>
 </section>`;
   window.__observeReveals?.(box);
+  wireCopy(box);
 }
 
 Promise.all([loadPrograms(), loadSite()]).then(([data, site]) => {
