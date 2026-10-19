@@ -1,13 +1,13 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>BlackPhage</title>
-  <meta name="description" content="Trouvez le Smart Binder de votre cible dans le catalogue BlackPhage, ou faites-le créer sur mesure.">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Un agent autonome qui conçoit des médicaments protéiques plus intelligents. Dépendants du pH. Précis. Brevets en cours.">
+  <meta name="theme-color" content="#02080b">
   <meta property="og:title" content="BlackPhage">
-  <meta property="og:description" content="Le Smart Binder de votre cible, prêt à commander ou créé pour vous.">
+  <meta property="og:description" content="Un agent autonome qui conçoit des médicaments protéiques plus intelligents. Dépendants du pH. Précis. Brevets en cours.">
   <meta property="og:type" content="website">
   <!-- langue:debut -->
   <link rel="alternate" hreflang="fr" href="index.html">
@@ -31,137 +31,129 @@
 </script>
   <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrumentserif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
   <script type="importmap">{ "imports": { "three": "./assets/vendor/three/three.module.min.js" } }</script>
   <script>document.documentElement.classList.add('js')</script>
   <script type="module" src="assets/js/chrome.js"></script>
   <script type="module" src="assets/js/home.js"></script>
-  <script type="module" src="assets/js/bg.js"></script>
+  <script type="module" src="assets/js/scene.js"></script>
 </head>
-<body class="has-bg" data-page="accueil">
-  <canvas id="bg" class="bgcanvas" aria-hidden="true"></canvas>
-  <div class="bg-veil" aria-hidden="true"></div>
-  <div id="site-header"></div>
+<body data-page="accueil" class="page-home">
+<a class="skip" href="#main">Aller au contenu</a>
+<canvas id="scene" class="scene" aria-hidden="true"></canvas>
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+    <nav class="nav__pill glass" id="nav-links" aria-label="Navigation principale">
+      <a href="index.html" aria-current="page">Accueil</a>
+      <a href="pipeline.html">Pipeline</a>
+      <a href="a-propos.html">À propos</a>
+      <a href="careers.html">Carrières</a>
+      <a class="btn btn--light nav__cta-m" href="a-propos.html#contact">Devenir partenaire</a>
+    </nav>
+    <div class="nav__end">
+      <a class="langswitch" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a>
+      <a class="btn btn--light nav__cta" href="a-propos.html#contact">Devenir partenaire</a>
+      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="hero" id="top">
+  <div class="hero__copy container">
+    <h1 class="hero__title"><span class="hero__line">Repousser la <em class="accent">frontière</em></span> <span class="hero__line">du traitable.</span></h1>
+    <p class="hero__lead">Un agent autonome qui conçoit des médicaments protéiques plus intelligents. Dépendants du pH. Précis. Brevets en cours.</p>
+    <div class="hero__cta">
+      <a class="btn btn--light btn--lg" href="pipeline.html">Explorer le pipeline<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn--ghost btn--lg" href="a-propos.html#contact">Devenir partenaire</a>
+    </div>
+  </div>
+  <p class="sr-only">Deux mains de marbre, sous l'eau, se tendent l'une vers l'autre dans des rayons de lumière dorée.</p>
+  <ul class="hero__strip container" aria-label="Repères"><li>Brevets en cours</li><li>Société privée</li><li>Conçu pour le marché américain</li></ul>
+</section>
 
-  <main>
-    <section class="hero">
-      <div class="container hero__grid">
-        <div>
-          <p class="eyebrow" data-rise style="--d:0">Smart Binders sur mesure</p>
-          <h1 data-rise style="--d:1">Le Smart Binder <span class="hl">de votre cible.</span></h1>
-          <p class="lead" data-rise style="--d:2">Choisissez-le dans notre catalogue ou faites-le créer pour vous. Notre équipe vous accompagne de la première question jusqu'à la livraison.</p>
+<section class="sec idea" id="idea">
+  <div class="container">
+    <h2 class="eyebrow reveal">L'idée</h2>
+    <ol class="idea__list"><li class="idea__row reveal"><span class="idea__n">01</span><p class="idea__h">Comprendre le vivant.</p><p class="idea__p">Notre agent lit la biologie à grande échelle.</p></li><li class="idea__row reveal"><span class="idea__n">02</span><p class="idea__h">Concevoir l'intervention.</p><p class="idea__p">Il dessine, évalue et affine de nouvelles protéines.</p></li><li class="idea__row reveal"><span class="idea__n">03</span><p class="idea__h">Reprendre le contrôle.</p><p class="idea__p">Chaque variante agit là où elle le doit, et nulle part ailleurs.</p></li></ol>
+  </div>
+</section>
 
-          <form id="home-search" class="search" role="search" autocomplete="off" data-rise style="--d:3">
-            <div class="search__box glass glass--lens" data-blur="9">
-              <svg class="ico" viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              <input id="home-q" type="search" placeholder="Cherchez une cible, ex. TNF" aria-label="Rechercher une cible" role="combobox" aria-expanded="false" aria-controls="home-suggest" aria-autocomplete="list">
-              <button class="btn btn--primary" type="submit">Voir le catalogue</button>
-            </div>
-            <div id="home-suggest" class="suggest" role="listbox" hidden></div>
-          </form>
+<section class="sec engine" id="engine">
+  <div class="container engine__grid">
+    <div class="engine__copy">
+      <p class="eyebrow reveal">Le moteur</p>
+      <h2 class="h2 reveal">Un agent. Plusieurs pathologies.</h2>
+      <p class="lead reveal">BlackPhage fait tourner une boucle de conception autonome. Elle propose. Elle juge. Elle apprend. Puis elle recommence.</p>
+      <ol class="steps"><li class="step reveal"><span class="step__n">1</span><div><h3>Lire</h3><p>Cartographie la biologie de la maladie et de la cible.</p></div></li><li class="step reveal"><span class="step__n">2</span><div><h3>Concevoir</h3><p>Dessine des Smart Binders à partir de zéro.</p></div></li><li class="step reveal"><span class="step__n">3</span><div><h3>Juger</h3><p>Note chaque candidat sur la précision et la sécurité.</p></div></li><li class="step reveal"><span class="step__n">4</span><div><h3>Apprendre</h3><p>Réinjecte chaque résultat dans le tour suivant.</p></div></li></ol>
+    </div>
+    <div class="engine__viz reveal" aria-hidden="true"><svg class="ring" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+  <defs><linearGradient id="ring-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bff3ff"/><stop offset="0.55" stop-color="#4fc3dc" stop-opacity="0.55"/><stop offset="1" stop-color="#ffe2ae" stop-opacity="0.8"/></linearGradient></defs>
+  <circle class="ring__track" cx="200" cy="200" r="154" fill="none"/>
+  <circle class="ring__arc" cx="200" cy="200" r="154" fill="none" stroke="url(#ring-g)"/>
+  <g class="ring__node" style="--d:0s"><circle cx="200" cy="46" r="7"/><text x="200" y="24" text-anchor="middle">Lire</text></g><g class="ring__node" style="--d:3s"><circle cx="354" cy="200" r="7"/><text x="380" y="205" text-anchor="start">Concevoir</text></g><g class="ring__node" style="--d:6s"><circle cx="200" cy="354" r="7"/><text x="200" y="390" text-anchor="middle">Juger</text></g><g class="ring__node" style="--d:9s"><circle cx="46" cy="200" r="7"/><text x="20" y="205" text-anchor="end">Apprendre</text></g>
+  <circle class="ring__dot" r="5"><animateMotion dur="12s" repeatCount="indefinite" path="M200,46 A154,154 0 1 1 199.9,46"/></circle>
+</svg><div class="engine__core" data-mark></div></div>
+  </div>
+</section>
 
-          <div class="hero__cta" data-rise style="--d:4">
-            <span class="muted">Essayez</span>
-            <div class="chips">
-              <button class="chip" type="button" data-try="TNF">TNF</button>
-              <button class="chip" type="button" data-try="PD-L1">PD-L1</button>
-              <button class="chip" type="button" data-try="HER2">HER2</button>
-              <button class="chip" type="button" data-try="IL-6">IL-6</button>
-            </div>
-          </div>
-          <ul class="trust" data-rise style="--d:5">
-            <li><span>Réponse sous <span data-shop="responseTime">2 jours ouvrés</span></span></li>
-            <li><span>Livraison suivie en <span data-shop="delivery">3 à 7 jours ouvrés</span></span></li>
-            <li><span>Conseil gratuit avant achat</span></li>
-          </ul>
-        </div>
+<section class="sec binders" id="binders">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">Smart Binders</p>
+      <h2 class="h2 reveal">Une nouvelle classe de médicaments.</h2>
+      <p class="lead reveal">Des protéines conçues de zéro pour se lier à une seule cible, avec intention.</p>
+    </div>
+    <div class="pillars"><article class="pillar glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.5c3.9 4.8 7.2 8.5 7.2 12.3a7.2 7.2 0 0 1-14.4 0c0-3.8 3.3-7.5 7.2-12.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.6 16.6c1.6-1.3 3.1-1.3 4.7 0s3.1 1.3 4.7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Dépendant du pH</h3><p>Conçu pour s'activer là où le pH local le permet.</p></article><article class="pillar glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.6 22 6.8v6.2c0 4.8-3.3 8.7-8 10.6-4.7-1.9-8-5.8-8-10.6V6.8l8-3.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 14.2c1.3 1.5 2.5 2.2 4 2.2s2.7-.7 4-2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Plus doux</h3><p>Pensé pour un profil de toxicité plus bas.</p></article><article class="pillar glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="14" r="2.2" fill="currentColor"/><path d="M14 2.5v5M14 20.5v5M2.5 14h5M20.5 14h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Précis</h3><p>Une sélectivité plus fine au niveau de la cible.</p></article></div>
+  </div>
+</section>
+
+<section class="sec spotlight" id="program">
+  <div class="container">
+    <article class="spot glass reveal">
+      <span class="spot__bg" aria-hidden="true"></span>
+      <div class="spot__copy">
+        <p class="eyebrow">Pipeline</p>
+        <h2 class="spot__name">GLP-1R</h2>
+        <p class="lead">Le récepteur le plus convoité de la médecine. Notre réponse est dépendante du pH, plus douce et plus précise.</p>
+        <a class="btn btn--light" href="program.html#glp-1r">Voir le programme<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-    </section>
-
-    <section class="tight" id="concept">
-      <div class="container">
-        <div class="head reveal"><p class="eyebrow">Le concept</p><h2>Un Smart Binder, c'est quoi ?</h2>
-          <p class="lead" style="margin-top:14px;max-width:50ch">C'est une molécule conçue pour se fixer sur une cible précise, comme une clé dans une serrure. Vous l'utilisez là où vous utiliseriez un anticorps monoclonal, avec plus de souplesse.</p></div>
-        <div class="compare card glass reveal">
-          <table>
-            <caption class="sr-only">Comparaison entre un anticorps monoclonal et un Smart Binder</caption>
-            <thead><tr><th scope="col"><span class="sr-only">Critère</span></th>
-              <th scope="col"><svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"><path d="M20 36V21M20 21L9 8M20 21L31 8"/></g><circle cx="9" cy="8" r="3.4" fill="currentColor"/><circle cx="31" cy="8" r="3.4" fill="currentColor"/></svg>Anticorps monoclonal</th>
-              <th scope="col" class="is-us"><svg viewBox="0 0 36 36" aria-hidden="true"><g stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"><path d="M13 8l11 4M24 12l-6 8M18 20l-9-3M18 20l-5 11M24 12l6 12"/></g><g fill="currentColor"><circle cx="13" cy="8" r="4.2"/><circle cx="25" cy="12.5" r="3.4"/><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="20" r="4.6"/><circle cx="12.5" cy="31" r="3.2"/><circle cx="30" cy="24.5" r="3.6"/></g></svg>Smart Binder</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Conception et fabrication</th><td>Produit par des cellules vivantes</td><td class="is-us">Conçu de novo par ordinateur, puis fabriqué à partir d'une séquence connue</td></tr>
-              <tr><th scope="row">Une nouvelle cible</th><td>Une mise au point à refaire pour chaque cible</td><td class="is-us">Conçu sur mesure pour votre cible</td></tr>
-              <tr><th scope="row">D'une commande à l'autre</th><td>Peut varier d'un lot à l'autre</td><td class="is-us">Même séquence à chaque commande</td></tr>
-              <tr><th scope="row">Intelligence</th><td>Reconnaît sa cible</td><td class="is-us">Reconnaît sa cible et peut s'adapter à son environnement</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <ul class="uses reveal"><li>Détecter</li><li>Doser</li><li>Purifier</li><li>Suivre vos échantillons</li></ul>
-        <p style="margin-top:20px"><a class="link" href="catalogue.html">Voir les Smart Binders disponibles</a></p>
+      <div class="spot__pairs">
+        <div class="spot__cols"><span>Sur le marché</span><span>Avec BlackPhage</span></div>
+        <ul data-teaser><li class="pair"><span class="pair__from">Partout à la fois</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pair__to">Dépendant du pH</span></li><li class="pair"><span class="pair__from">Les nausées font fuir</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pair__to">Moins toxique par conception</span></li><li class="pair"><span class="pair__from">Un outil émoussé</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pair__to">Précision à la frontière</span></li></ul>
       </div>
-    </section>
+    </article>
+    <p class="spot__next reveal"><span class="dotlive" aria-hidden="true"></span>Prochains programmes. Confidentiels jusqu'aux dépôts de brevets.</p>
+  </div>
+</section>
 
-
-    <section class="tight">
-      <div class="container">
-        <div class="head reveal"><p class="eyebrow">Pour commencer</p><h2>Deux façons d'obtenir votre Smart Binder.</h2></div>
-        <div class="grid grid--2">
-          <article class="card glass way reveal">
-            <span class="num">1</span>
-            <h3>Ma cible est dans le catalogue</h3>
-            <p>Comparez les formats, voyez le prix tout de suite et ajoutez votre choix à votre commande en quelques clics.</p>
-            <a class="btn btn--primary" href="catalogue.html">Parcourir le catalogue</a>
-          </article>
-          <article class="card glass way reveal">
-            <span class="num">2</span>
-            <h3>Ma cible n'y est pas encore</h3>
-            <p>Décrivez votre besoin en trois petites étapes. Nous revenons vers vous avec une proposition claire, sans engagement.</p>
-            <a class="btn btn--ghost" href="sur-mesure.html">Demander une cible</a>
-          </article>
-        </div>
+<section class="sec end" id="partner">
+  <div class="container">
+    <div class="end__in glass reveal">
+      <h2 class="end__h">La frontière est ouverte.</h2>
+      <p class="lead">Nous parlons aux partenaires pharmaceutiques américains, aux investisseurs et à la presse.</p>
+      <div class="hero__cta">
+        <a class="btn btn--light btn--lg" href="a-propos.html#contact">Devenir partenaire<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a>
       </div>
-    </section>
-
-    <section class="tight">
-      <div class="container">
-        <div class="head reveal"><p class="eyebrow">Notre sélection</p><h2>Une sélection pour démarrer.</h2></div>
-        <div class="grid grid--products" id="featured"></div>
-        <p style="margin-top:28px"><a class="link" href="catalogue.html">Voir tout le catalogue</a></p>
-      </div>
-    </section>
-
-    <section class="tight" id="quotes" hidden>
-      <div class="container">
-        <div class="head reveal"><p class="eyebrow">Ils nous font confiance</p><h2>Ce que disent nos clients.</h2></div>
-        <div class="quotes" id="quotes-list"></div>
-      </div>
-    </section>
-
-    <section class="tight">
-      <div class="container">
-        <div class="head reveal"><p class="eyebrow">Simple</p><h2>De la recherche à la livraison en trois étapes.</h2></div>
-        <ol class="steps">
-          <li class="reveal"><h3>Cherchez ou décrivez</h3><p>Trouvez votre cible dans le catalogue ou décrivez-la en quelques lignes.</p></li>
-          <li class="reveal"><h3>Recevez un devis clair</h3><p>Nous vérifions votre demande et vous envoyons un devis, sans mauvaise surprise.</p></li>
-          <li class="reveal"><h3>Réceptionnez votre commande</h3><p>Livraison suivie, et un expert reste disponible si vous avez une question.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="tight">
-      <div class="container">
-        <div class="banner reveal">
-          <div>
-            <h2>Une question avant de commander ?</h2>
-            <p style="margin-top:12px;max-width:46ch">Écrivez-nous. Le conseil est gratuit et sans engagement, et nous répondons sous <span data-shop="responseTime">2 jours ouvrés</span>.</p>
-          </div>
-          <a class="btn btn--primary btn--lg" href="a-propos.html#contact">Parler à l'équipe</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="site-footer"></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="foot">
+  <div class="container foot__in">
+    <div class="foot__brand">
+      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+      <p class="foot__tag">Repousser la frontière du traitable.</p>
+    </div>
+    <div><h4>Société</h4><ul><li><a href="a-propos.html">À propos</a></li><li><a href="careers.html">Carrières</a></li></ul></div>
+    <div><h4>Programmes</h4><ul data-programs-list><li><a href="pipeline.html">Pipeline</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a></li></ul></div>
+  </div>
+  <div class="container foot__legal"><p>Brevets en cours. Programmes expérimentaux, non approuvés par la FDA ni par aucune autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
+</footer>
 </body>
 </html>

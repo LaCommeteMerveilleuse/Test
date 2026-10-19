@@ -1,60 +1,37 @@
-// BlackPhage - langue de la page (fr ou en) et textes générés par le JavaScript.
+// BlackPhage - langue de la page (fr ou en) et textes produits par le JavaScript.
+// Les textes des pages statiques sont dans tools/content.py. Ici, seulement ce que le JavaScript écrit lui-même.
 // Les pages anglaises vivent dans en/ et déclarent data-base="../" sur <html>.
 export const LANG = (document.documentElement.dataset.lang || document.documentElement.lang) === 'en' ? 'en' : 'fr';
 export const BASE = document.documentElement.dataset.base || '';
 
 const D = {
   fr: {
-    nav_catalogue: 'Catalogue', nav_about: 'À propos', nav_careers: 'Carrières', nav_order: 'Ma commande', nav_request: 'Demander une cible',
-    nav_menu: 'Ouvrir le menu', nav_main: 'Navigation principale', nav_items: 'articles', home_aria: 'BlackPhage, accueil',
-    foot_tagline: 'Le Smart Binder de votre cible, prêt à commander ou créé pour vous.',
-    foot_shop: 'Boutique', foot_company: 'Société', foot_faq: 'Questions fréquentes', foot_contact: 'Contact',
-    reply_within: 'Réponse sous {x}', lang_switch: 'English', lang_switch_label: 'Switch to English',
-    from: 'À partir de', in_stock: 'En stock', on_demand: 'Sur commande', only_left: 'Plus que {n} en stock',
-    all_catalogue: 'Tout le catalogue', no_result: 'Aucun résultat', n_binders: '{n} Smart Binder{s}',
-    no_binder_for: 'Pas encore de Smart Binder pour « {q} »', new_target: 'Nouvelle cible', your_target: 'Votre cible',
-    see_n_results: 'Voir les {n} résultats', can_create: 'Nous pouvons le créer pour vous',
-    not_found: 'Produit introuvable', not_exist: "Ce Smart Binder n'existe pas", find_or_custom: 'Retrouvez-le dans le catalogue ou demandez-le sur mesure.',
-    see_catalogue: 'Voir le catalogue', request_target: 'Demander une cible', crumbs: "Fil d'Ariane",
-    choose_format: 'Choisissez votre format', format: 'Format', our_advice: 'Notre conseil', quantity: 'Quantité', less: 'Moins', more: 'Plus',
-    add_to_order: 'Ajouter à ma commande', tick_delivery: 'Livraison suivie en', tick_question: 'Une question avant de commander ? Notre équipe répond sous',
-    tick_quote: 'Vous recevez un devis clair avant tout paiement.', ideal_for: 'Idéal pour', ask_team: "Poser une question à l'équipe",
-    same_world: 'Dans le même univers', added: '{n} ajouté à votre commande.', see_order: 'Voir ma commande',
-    q_subject: 'Question sur {n}', q_body: "Bonjour,\n\nJ'ai une question sur {n}.\n\n",
-    remove: 'Retirer',
-    mail_hello: 'Bonjour,', mail_thanks: 'Merci.', quote_intro: 'Je souhaite recevoir un devis pour la commande suivante.',
-    line: '- {n}, {f} ({d}), quantité {q}, {t}', est_total: 'Total estimé', name: 'Nom', email: 'E-mail', org: 'Organisation', not_given: 'non précisée', message: 'Message',
-    quote_subject: 'Demande de devis de {n}', err_name: 'Indiquez votre nom.', err_email: 'Indiquez une adresse e-mail valide.', err_target: 'Indiquez la cible qui vous intéresse.',
-    copied: 'Texte copié', copy_manual: 'Sélectionnez le texte puis copiez-le',
-    step_of: 'Étape {i} sur {n}', good_news: 'Bonne nouvelle.', exists_now: 'Ce Smart Binder existe déjà, vous pouvez le commander tout de suite.', or: 'ou',
-    custom_intro: 'Je souhaite faire créer un Smart Binder sur mesure.', target: 'Cible', usage: 'Usage', unspecified: 'Non précisé', qty_wanted: 'Quantité souhaitée', timeline: 'Échéance', details: 'Précisions',
-    custom_subject: 'Demande sur mesure pour {n}',
+    updated: 'Mis à jour le {date}', programs_n: '{n} programmes', program_n: '{n} programme',
+    h_program: 'Programme', h_area: 'Domaine', h_stage: 'Phase', h_status: 'Statut',
+    view_program: 'Voir le programme', back_pipeline: 'Tout le pipeline',
+    not_found: 'Programme introuvable', not_found_p: 'Ce programme n\'existe pas ou n\'est pas public.',
+    problem_eyebrow: 'Le problème', problem_h2: 'Ce que les traitements actuels laissent sur la table.',
+    answer_eyebrow: 'Notre réponse', answer_h2: 'Un autre type de binder.',
+    where_eyebrow: 'Où nous en sommes', where_h2: 'Une avance protégée.',
+    cta_h2: 'Écrivons la suite ensemble.', cta_p: 'Nous parlons de {name} avec des partenaires américains. Dites-nous ce que vous construisez.',
+    cta_btn: 'Parlons partenariat', cta_all: 'Voir tout le pipeline',
+    copy_mail: 'Copier', copied: 'Copié', copy_label: 'Copier l\'adresse {mail}', undisclosed: 'Confidentiel',
+    loading: 'Chargement', error: 'Les données ne se sont pas chargées. Réessayez dans un instant.',
+    mail_subject: 'Programme {name}',
   },
   en: {
-    nav_catalogue: 'Catalog', nav_about: 'About', nav_careers: 'Careers', nav_order: 'My order', nav_request: 'Request a target',
-    nav_menu: 'Open the menu', nav_main: 'Main navigation', nav_items: 'items', home_aria: 'BlackPhage, home',
-    foot_tagline: 'The Smart Binder for your target, ready to order or made for you.',
-    foot_shop: 'Shop', foot_company: 'Company', foot_faq: 'Frequently asked questions', foot_contact: 'Contact',
-    reply_within: 'We reply within {x}', lang_switch: 'Français', lang_switch_label: 'Passer en français',
-    from: 'From', in_stock: 'In stock', on_demand: 'Made to order', only_left: 'Only {n} left in stock',
-    all_catalogue: 'Full catalog', no_result: 'No results', n_binders: '{n} Smart Binder{s}',
-    no_binder_for: 'No Smart Binder yet for "{q}"', new_target: 'New target', your_target: 'Your target',
-    see_n_results: 'See all {n} results', can_create: 'We can make it for you',
-    not_found: 'Product not found', not_exist: 'This Smart Binder does not exist', find_or_custom: 'Find it in the catalog or request it as a custom order.',
-    see_catalogue: 'Browse the catalog', request_target: 'Request a target', crumbs: 'Breadcrumb',
-    choose_format: 'Choose your size', format: 'Size', our_advice: 'Our advice', quantity: 'Quantity', less: 'Less', more: 'More',
-    add_to_order: 'Add to my order', tick_delivery: 'Tracked delivery in', tick_question: 'A question before you order? Our team replies within',
-    tick_quote: 'You receive a clear quote before any payment.', ideal_for: 'Ideal for', ask_team: 'Ask the team a question',
-    same_world: 'More in this category', added: '{n} added to your order.', see_order: 'See my order',
-    q_subject: 'Question about {n}', q_body: 'Hello,\n\nI have a question about {n}.\n\n',
-    remove: 'Remove',
-    mail_hello: 'Hello,', mail_thanks: 'Thank you.', quote_intro: 'I would like to receive a quote for the following order.',
-    line: '- {n}, {f} ({d}), quantity {q}, {t}', est_total: 'Estimated total', name: 'Name', email: 'Email', org: 'Organization', not_given: 'not given', message: 'Message',
-    quote_subject: 'Quote request from {n}', err_name: 'Please enter your name.', err_email: 'Please enter a valid email address.', err_target: 'Please enter the target you are interested in.',
-    copied: 'Text copied', copy_manual: 'Select the text then copy it',
-    step_of: 'Step {i} of {n}', good_news: 'Good news.', exists_now: 'This Smart Binder already exists, you can order it right away.', or: 'or',
-    custom_intro: 'I would like to have a custom Smart Binder made.', target: 'Target', usage: 'Use', unspecified: 'Not specified', qty_wanted: 'Quantity wanted', timeline: 'Timeline', details: 'Details',
-    custom_subject: 'Custom request for {n}',
+    updated: 'Updated {date}', programs_n: '{n} programs', program_n: '{n} program',
+    h_program: 'Program', h_area: 'Area', h_stage: 'Stage', h_status: 'Status',
+    view_program: 'View the program', back_pipeline: 'Full pipeline',
+    not_found: 'Program not found', not_found_p: 'This program does not exist or is not public.',
+    problem_eyebrow: 'The problem', problem_h2: 'What today\'s drugs leave on the table.',
+    answer_eyebrow: 'Our answer', answer_h2: 'A different kind of binder.',
+    where_eyebrow: 'Where we are', where_h2: 'A protected head start.',
+    cta_h2: 'Build the next chapter with us.', cta_p: 'We are speaking with U.S. partners about {name}. Tell us what you are building.',
+    cta_btn: 'Talk partnership', cta_all: 'See the full pipeline',
+    copy_mail: 'Copy', copied: 'Copied', copy_label: 'Copy the address {mail}', undisclosed: 'Undisclosed',
+    loading: 'Loading', error: 'The data did not load. Try again in a moment.',
+    mail_subject: '{name} program',
   },
 };
 
@@ -63,9 +40,12 @@ export function t(key, vars = {}) {
   return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : ''));
 }
 
-const FILES = { accueil: 'index.html', catalogue: 'catalogue.html', produit: 'produit.html', panier: 'panier.html', 'sur-mesure': 'sur-mesure.html', 'a-propos': 'a-propos.html', carrieres: 'careers.html' };
+/** Choisit la langue d'un champ {fr, en} des fichiers de données. */
+export const L = (o) => (o && typeof o === 'object' ? (o[LANG] ?? o.fr ?? '') : (o ?? ''));
 
-/** Adresse de la même page dans l'autre langue (la recherche et l'ancre sont conservées). */
+const FILES = { accueil: 'index.html', pipeline: 'pipeline.html', programme: 'program.html', 'a-propos': 'a-propos.html', carrieres: 'careers.html' };
+
+/** Adresse de la même page dans l'autre langue (l'ancre est conservée). */
 export function otherLangHref() {
   const fromPath = location.pathname.split('/').pop();
   const file = FILES[document.body.dataset.page] || (/\.html$/.test(fromPath) ? fromPath : 'index.html');

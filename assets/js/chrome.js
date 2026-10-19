@@ -1,104 +1,98 @@
-// BlackPhage - en-tête en verre, pied de page, menu mobile, compteur de commande, apparitions au défilement.
-// Charge aussi les couches de l'identité : aurore, verre liquide, signe.
-import { loadShop, cart, $, $$ } from './shop.js';
-import { LANG, t, otherLangHref, rememberLang } from './i18n.js';
+// BlackPhage - le cadre commun des pages : signe, menu, langue, contact, apparitions au défilement, décor.
+// L'en-tête et le pied de page sont écrits dans le HTML (tools/build_site.py). Ici, on les rend vivants.
+import { $, $$, loadSite, loadPrograms, copyText } from './site.js';
+import { LANG, L, t, otherLangHref, rememberLang } from './i18n.js';
 import { mountMarkDefs, markSvg } from './mark.js';
 import { initGlass } from './glass.js';
+import { initAbyss } from './abyss.js';
 import { stage } from './stage.js';
 
 const root = document.documentElement;
 setTimeout(() => root.classList.add('reveal-fallback'), 2200);
 
-const page = document.body.dataset.page || '';
-const GLOBE = '<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>';
-const CART = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 3.5h2.2l1.6 8.2h8.1l1.6-5.9H5.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="16" r="1.3" fill="currentColor"/><circle cx="14" cy="16" r="1.3" fill="currentColor"/></svg>';
-const other = LANG === 'en' ? 'fr' : 'en';
-const switchLink = () => `<a class="langswitch" href="${otherLangHref()}" hreflang="${other}" lang="${other}" aria-label="${t('lang_switch_label')}">${GLOBE}<span class="${LANG === 'fr' ? 'is-on' : ''}">FR</span><span class="${LANG === 'en' ? 'is-on' : ''}">EN</span></a>`;
-const link = (href, label, key) => `<a href="${href}"${page === key ? ' aria-current="page"' : ''}>${label}</a>`;
-const wordmark = '<span class="wordmark">BLACKPH<i class="lam"></i>GE</span>';
-
+// ------------------------------------------------------------------ le signe
 mountMarkDefs();
-// le signe s'assemble une seule fois par session
-let intro = false;
+let intro = false;   // le signe s'assemble une seule fois par session
 try { intro = !sessionStorage.getItem('bp-intro') && !stage.reduce; sessionStorage.setItem('bp-intro', '1'); } catch { /* ignoré */ }
+$$('[data-mark]').forEach((el, i) => {
+  const small = el.classList.contains('logo__mark');
+  el.innerHTML = markSvg({ bold: small, intro: small && intro && i === 0 });
+});
 
-const header = $('#site-header');
-if (header) {
-  header.outerHTML = `<header class="nav" id="nav"><div class="container"><div class="nav__in glass">
-<a class="logo" href="index.html" aria-label="${t('home_aria')}">${markSvg({ bold: true, intro })}<span>${wordmark}</span></a>
-<button class="nav__burger" type="button" aria-label="${t('nav_menu')}" aria-expanded="false" aria-controls="nav-links"><span></span></button>
-<nav class="nav__links" id="nav-links" aria-label="${t('nav_main')}">
-${link('catalogue.html', t('nav_catalogue'), 'catalogue')}
-${link('a-propos.html', t('nav_about'), 'a-propos')}
-${link('careers.html', t('nav_careers'), 'carrieres')}
-${switchLink()}
-<a class="btn btn--primary cartbtn" href="panier.html"${page === 'panier' ? ' aria-current="page"' : ''}>${CART}<span>${t('nav_order')}</span> <span class="badge-count" data-n="0" aria-label="${t('nav_items')}">0</span></a>
-</nav></div></div></header>`;
-}
-
-const footer = $('#site-footer');
-if (footer) {
-  footer.outerHTML = `<footer class="site-footer"><div class="container">
-<div class="site-footer__top">
-<div><a class="logo logo--stack" href="index.html" aria-label="${t('home_aria')}"><span style="display:flex;align-items:center;gap:12px">${markSvg({ bold: true })}${wordmark}</span><span class="tagline">Smart Binders</span></a>
-<p class="muted" style="margin-top:16px;max-width:30ch">${t('foot_tagline')}</p></div>
-<div><h4>${t('foot_shop')}</h4><ul><li><a href="catalogue.html">${t('nav_catalogue')}</a></li><li><a href="sur-mesure.html">${t('nav_request')}</a></li><li><a href="panier.html">${t('nav_order')}</a></li></ul></div>
-<div><h4>${t('foot_company')}</h4><ul><li><a href="a-propos.html">${t('nav_about')}</a></li><li><a href="a-propos.html#questions">${t('foot_faq')}</a></li><li><a href="careers.html">${t('nav_careers')}</a></li></ul></div>
-<div><h4>${t('foot_contact')}</h4><ul><li><a data-shop="mail" href="#"></a></li><li class="muted" data-shop="response"></li><li>${switchLink()}</li></ul></div>
-</div>
-<div class="legal"><span data-shop="research"></span><span>© ${new Date().getFullYear()} BlackPhage</span></div>
-</div></footer>`;
-}
-
-// le grand signe de la page À propos
-$$('[data-mark]').forEach((el) => { el.innerHTML = markSvg(); });
-
-// le sélecteur de langue : adresse à jour au moment du clic, et choix mémorisé
+// ------------------------------------------------------------------ langue
+// Le sélecteur calcule son adresse au moment du clic (l'ancre peut avoir changé) et mémorise le choix.
+const other = LANG === 'en' ? 'fr' : 'en';
 $$('.langswitch').forEach((a) => {
   const refresh = () => { a.href = otherLangHref(); };
   ['pointerenter', 'focus', 'touchstart'].forEach((ev) => a.addEventListener(ev, refresh, { passive: true }));
   a.addEventListener('click', () => { refresh(); rememberLang(other); });
 });
 
-loadShop().then((shop) => {
-  $$('[data-shop="mail"]').forEach((a) => { a.textContent = shop.email; a.href = `mailto:${shop.email}`; });
-  $$('[data-shop="mailhref"]').forEach((a) => { a.href = `mailto:${shop.email}`; });
-  $$('[data-shop="mail-text"]').forEach((e) => { e.textContent = shop.email; });
-  $$('[data-shop="response"]').forEach((e) => { e.textContent = t('reply_within', { x: shop.responseTime }); });
-  $$('[data-shop="research"]').forEach((e) => { e.textContent = shop.researchOnly; });
-  $$('[data-shop="delivery"]').forEach((e) => { e.textContent = shop.delivery; });
-  $$('[data-shop="responseTime"]').forEach((e) => { e.textContent = shop.responseTime; });
-}).catch(() => {});
-
-// menu mobile
+// ------------------------------------------------------------------ menu
 const nav = $('#nav');
 if (nav) {
   const burger = $('.nav__burger', nav);
   const close = () => { nav.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
   burger.addEventListener('click', () => { const o = nav.classList.toggle('is-open'); burger.setAttribute('aria-expanded', String(o)); });
-  $$('.nav__links a', nav).forEach((a) => a.addEventListener('click', close));
+  $$('.nav__pill a', nav).forEach((a) => a.addEventListener('click', close));
   addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  document.addEventListener('pointerdown', (e) => { if (nav.classList.contains('is-open') && !nav.contains(e.target)) close(); });
   const onScroll = () => nav.classList.toggle('is-scrolled', scrollY > 8);
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 }
 
-// compteur de commande
-const paint = () => $$('.badge-count').forEach((b) => { const n = cart.count(); b.textContent = n; b.dataset.n = n; b.setAttribute('aria-label', `${n} ${LANG === 'en' ? (n === 1 ? 'item' : 'items') : `article${n > 1 ? 's' : ''}`}`); });
-paint();
-cart.onChange(paint);
+// ------------------------------------------------------------------ contact
+// Les adresses sont écrites dans le HTML. Si assets/data/site.json change, on les met à jour sans reconstruire.
+loadSite().then((site) => {
+  $$('[data-mail]').forEach((a) => {
+    const addr = site[a.dataset.mail];
+    if (!addr) return;
+    a.href = `mailto:${addr}${a.dataset.subject ? `?subject=${a.dataset.subject}` : ''}`;
+    if (a.textContent.includes('@')) a.textContent = addr;
+  });
+  $$('.copy[data-mailkey]').forEach((b) => { if (site[b.dataset.mailkey]) b.dataset.copy = site[b.dataset.mailkey]; });
+}).catch(() => { /* les adresses du HTML restent */ });
 
-// apparitions
+$$('.copy').forEach((b) => {
+  const idle = () => { b.textContent = t('copy_mail'); b.setAttribute('aria-label', t('copy_label', { mail: b.dataset.copy })); b.classList.remove('is-done'); };
+  idle();
+  b.addEventListener('click', async () => {
+    const ok = await copyText(b.dataset.copy);
+    b.textContent = ok ? t('copied') : b.dataset.copy;
+    b.classList.toggle('is-done', ok);
+    setTimeout(idle, 1800);
+  });
+});
+
+// la liste des programmes du pied de page suit programs.json
+const plist = $('[data-programs-list]');
+if (plist) {
+  loadPrograms().then((d) => {
+    const first = plist.firstElementChild;
+    plist.replaceChildren(first, ...d.programs.filter((p) => p.detail).map((p) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `program.html#${p.id}`;
+      a.textContent = L(p.name);
+      li.append(a);
+      return li;
+    }));
+  }).catch(() => { /* la liste du HTML reste */ });
+}
+
+// ------------------------------------------------------------------ apparitions
 const io = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
   entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
-}, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }) : null;
+}, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }) : null;
 export function observeReveals(scope = document) {
   $$('.reveal', scope).forEach((el) => { if (io) io.observe(el); else el.classList.add('is-in'); });
 }
 observeReveals();
 window.__observeReveals = observeReveals;
 
-// couches de l'identité : verre, grain, aurore
+// ------------------------------------------------------------------ couches de l'identité
 initGlass();
 if (!$('.grain')) { const g = document.createElement('div'); g.className = 'grain'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); }
-import('./aurora.js').then((m) => m.initAurora()).catch(() => root.classList.add('no-webgl'));
+// l'accueil a sa propre scène (scene.js). Les autres pages reçoivent l'abysse, plus calme.
+if (!document.getElementById('scene')) initAbyss();

@@ -1,0 +1,216 @@
+{
+ "_note": "Programmes affichés sur la page Pipeline et sur leur page de détail. Chaque champ texte existe en français (fr) et en anglais (en). Ajoutez un programme en copiant une entrée. detail=false affiche une carte sans page de détail. Les données sont des exemples à valider avant mise en ligne.",
+ "updated": "2026-10-19",
+ "programs": [
+  {
+   "id": "glp-1r",
+   "detail": true,
+   "name": {
+    "fr": "GLP-1R",
+    "en": "GLP-1R"
+   },
+   "area": {
+    "fr": "Métabolisme",
+    "en": "Metabolic"
+   },
+   "stage": {
+    "fr": "Programme phare",
+    "en": "Lead program"
+   },
+   "status": {
+    "fr": "En conception",
+    "en": "In design"
+   },
+   "tagline": {
+    "fr": "Le récepteur qui a changé la médecine. Pas encore terminé.",
+    "en": "The receptor that changed medicine. Not yet finished."
+   },
+   "summary": {
+    "fr": "Le récepteur le plus convoité de la médecine. Nous construisons un binder dépendant du pH, plus doux et plus précis.",
+    "en": "The most wanted receptor in medicine. We are building a pH-dependent binder, gentler and sharper."
+   },
+   "teaser": [
+    {
+     "from": {
+      "fr": "Partout à la fois",
+      "en": "Everywhere at once"
+     },
+     "to": {
+      "fr": "Dépendant du pH",
+      "en": "pH-dependent"
+     }
+    },
+    {
+     "from": {
+      "fr": "Les nausées font fuir",
+      "en": "Nausea drives patients away"
+     },
+     "to": {
+      "fr": "Moins toxique par conception",
+      "en": "Less toxic by design"
+     }
+    },
+    {
+     "from": {
+      "fr": "Un outil émoussé",
+      "en": "A blunt instrument"
+     },
+     "to": {
+      "fr": "Précision à la frontière",
+      "en": "Frontier precision"
+     }
+    }
+   ],
+   "intro": {
+    "fr": "Les médicaments ciblant GLP-1R ont transformé la prise en charge de l'obésité et du diabète de type 2. La demande est immense. Les compromis aussi.",
+    "en": "GLP-1R drugs reshaped the treatment of obesity and type 2 diabetes. Demand is huge. So are the trade-offs."
+   },
+   "problems": [
+    {
+     "h": {
+      "fr": "Partout à la fois.",
+      "en": "Everywhere at once."
+     },
+     "p": {
+      "fr": "Le récepteur est présent dans l'intestin, le cerveau, le pancréas et le cœur. Les traitements actuels les activent tous.",
+      "en": "The receptor lives in gut, brain, pancreas and heart. Today's drugs hit them all."
+     }
+    },
+    {
+     "h": {
+      "fr": "Les nausées font fuir.",
+      "en": "Nausea drives patients away."
+     },
+     "p": {
+      "fr": "Les effets digestifs sont l'une des premières raisons d'arrêt.",
+      "en": "Digestive side effects are a leading reason people stop."
+     }
+    },
+    {
+     "h": {
+      "fr": "Le poids baisse. Le muscle aussi.",
+      "en": "Weight comes off. So does muscle."
+     },
+     "p": {
+      "fr": "Une partie du poids perdu est de la masse maigre.",
+      "en": "Part of the weight lost is lean mass."
+     }
+    },
+    {
+     "h": {
+      "fr": "On arrête, il revient.",
+      "en": "Stop, and it returns."
+     },
+     "p": {
+      "fr": "Le poids tend à remonter après l'arrêt du traitement.",
+      "en": "Weight tends to come back once treatment ends."
+     }
+    },
+    {
+     "h": {
+      "fr": "Des étiquettes lourdes.",
+      "en": "Heavy labels."
+     },
+     "p": {
+      "fr": "Les avertissements sur le pancréas, la vésicule et la thyroïde pèsent sur chaque prescription.",
+      "en": "Warnings on pancreas, gallbladder and thyroid shape every prescription."
+     }
+    },
+    {
+     "h": {
+      "fr": "Difficile à déployer.",
+      "en": "Hard to scale."
+     },
+     "p": {
+      "fr": "Injections hebdomadaires, chaîne du froid, pénuries et coût.",
+      "en": "Weekly injections, cold chain, supply limits and cost."
+     }
+    }
+   ],
+   "answers": [
+    {
+     "h": {
+      "fr": "Dépendant du pH.",
+      "en": "pH-dependent."
+     },
+     "p": {
+      "fr": "Conçu pour engager le récepteur là où le pH local le permet. Silencieux partout ailleurs.",
+      "en": "Built to engage the receptor where the local pH says go. Quiet everywhere else."
+     }
+    },
+    {
+     "h": {
+      "fr": "Moins toxique par conception.",
+      "en": "Less toxic by design."
+     },
+     "p": {
+      "fr": "Nous visons un profil de toxicité plus bas dès la première esquisse, pas après coup.",
+      "en": "We design for a lower toxicity profile from the first sketch, not as an afterthought."
+     }
+    },
+    {
+     "h": {
+      "fr": "Précision à la frontière.",
+      "en": "Frontier precision."
+     },
+     "p": {
+      "fr": "Une sélectivité plus fine au niveau du récepteur. Moins d'effets hors cible.",
+      "en": "Sharper selectivity at the receptor. Fewer off-target effects."
+     }
+    },
+    {
+     "h": {
+      "fr": "Conçu par un agent.",
+      "en": "Designed by an agent."
+     },
+     "p": {
+      "fr": "Chaque variante est évaluée, apprise et améliorée en boucle fermée.",
+      "en": "Every variant is scored, learned from and improved in a closed loop."
+     }
+    }
+   ],
+   "where": [
+    {
+     "fr": "Brevet en cours",
+     "en": "Patent pending"
+    },
+    {
+     "fr": "Conçu par notre agent",
+     "en": "Designed by our agent"
+    },
+    {
+     "fr": "À la recherche de partenaires américains",
+     "en": "Seeking U.S. partners"
+    }
+   ],
+   "disclaimer": {
+    "fr": "Expérimental. Préclinique. Non approuvé par la FDA ni par aucune autorité. Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et la littérature publiques. Nos objectifs de conception ne sont pas des allégations de sécurité ou d'efficacité.",
+    "en": "Investigational. Preclinical. Not approved by the FDA or any regulator. Statements about the current drug class draw on public labels and literature. Our design goals are not claims of safety or efficacy."
+   }
+  },
+  {
+   "id": "next",
+   "detail": false,
+   "name": {
+    "fr": "Prochains programmes",
+    "en": "Next programs"
+   },
+   "area": {
+    "fr": "Plusieurs pathologies",
+    "en": "Several diseases"
+   },
+   "stage": {
+    "fr": "Découverte",
+    "en": "Discovery"
+   },
+   "status": {
+    "fr": "Confidentiel jusqu'aux dépôts de brevets",
+    "en": "Undisclosed until filings land"
+   },
+   "summary": {
+    "fr": "L'agent travaille sur de nouvelles cibles. Elles apparaissent ici dès que la protection est assurée.",
+    "en": "The agent is working on new targets. They appear here as soon as protection is in place."
+   }
+  }
+ ]
+}

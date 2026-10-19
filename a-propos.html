@@ -1,11 +1,14 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>À propos | BlackPhage</title>
-  <meta name="description" content="BlackPhage met des Smart Binders sur mesure à la disposition des équipes de recherche.">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>À propos · BlackPhage</title>
+  <meta name="description" content="BlackPhage est une société privée. Son agent autonome conçoit des médicaments protéiques dépendants du pH.">
+  <meta name="theme-color" content="#02080b">
+  <meta property="og:title" content="À propos · BlackPhage">
+  <meta property="og:description" content="BlackPhage est une société privée. Son agent autonome conçoit des médicaments protéiques dépendants du pH.">
+  <meta property="og:type" content="website">
   <!-- langue:debut -->
   <link rel="alternate" hreflang="fr" href="a-propos.html">
   <link rel="alternate" hreflang="en" href="en/a-propos.html">
@@ -28,64 +31,88 @@
 </script>
   <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrumentserif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
   <script>document.documentElement.classList.add('js')</script>
   <script type="module" src="assets/js/chrome.js"></script>
 </head>
-<body data-page="a-propos">
-  <div id="site-header"></div>
-  <main>
+<body data-page="a-propos" class="page-inner">
+<a class="skip" href="#main">Aller au contenu</a>
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+    <nav class="nav__pill glass" id="nav-links" aria-label="Navigation principale">
+      <a href="index.html">Accueil</a>
+      <a href="pipeline.html">Pipeline</a>
+      <a href="a-propos.html" aria-current="page">À propos</a>
+      <a href="careers.html">Carrières</a>
+      <a class="btn btn--light nav__cta-m" href="a-propos.html#contact">Devenir partenaire</a>
+    </nav>
+    <div class="nav__end">
+      <a class="langswitch" href="en/a-propos.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a>
+      <a class="btn btn--light nav__cta" href="a-propos.html#contact">Devenir partenaire</a>
+      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="pagehead">
+  <div class="container pagehead__grid">
+    <div>
+      <p class="eyebrow">À propos</p>
+      <h1 class="h1">Nous construisons la frontière du médicament protéique.</h1>
+      <p class="lead">BlackPhage est une société privée. Son agent autonome conçoit des Smart Binders, une nouvelle classe de médicaments protéiques dépendants du pH, pour des maladies qui manquent encore de bonnes réponses.</p>
+    </div>
+    <div class="brandmark" data-mark aria-hidden="true"></div>
+  </div>
+</section>
 
-    <section class="pagehead">
-      <div class="container pagehead__grid">
-        <div>
-          <p class="eyebrow">À propos</p>
-          <h1>Des Smart Binders pour avancer plus vite.</h1>
-          <p class="lead">BlackPhage conçoit des molécules sur mesure qui reconnaissent une cible précise. Nous les mettons à votre disposition, simplement.</p>
-        </div>
-        <div class="brandmark" data-mark aria-hidden="true"></div>
-      </div>
-    </section>
+<section class="sec sec--tight">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">Ce qui nous porte</p>
+      <h2 class="h2 reveal">Trois principes.</h2>
+    </div>
+    <div class="cards3"><article class="card glass reveal"><span class="card__n">01</span><h3>La frontière d'abord</h3><p>Nous allons là où les outils actuels s'arrêtent.</p></article><article class="card glass reveal"><span class="card__n">02</span><h3>La précision avant le volume</h3><p>Une molécule précise vaut mieux que mille molécules grossières.</p></article><article class="card glass reveal"><span class="card__n">03</span><h3>Les patients fixent la barre</h3><p>Chaque choix de conception répond à quelqu'un qui attend mieux.</p></article></div>
+  </div>
+</section>
 
-    <section class="tight">
-      <div class="container">
-        <ul class="grid grid--3 values">
-          <li class="reveal"><h3>Sur mesure</h3><p>Chaque cible est différente. Si la vôtre n'est pas au catalogue, nous la créons pour vous.</p></li>
-          <li class="reveal"><h3>Clair</h3><p>Des prix visibles, des formats simples et un devis sans mauvaise surprise.</p></li>
-          <li class="reveal"><h3>À votre écoute</h3><p>Une vraie personne répond à vos questions, avant comme après votre commande.</p></li>
-        </ul>
-      </div>
-    </section>
+<section class="sec sec--tight">
+  <div class="container split">
+    <div>
+      <p class="eyebrow reveal">Notre méthode</p>
+      <h2 class="h2 reveal">L'agent mène. Les scientifiques décident.</h2>
+    </div>
+    <ul class="ticks"><li class="reveal">L'agent propose, les scientifiques tranchent.</li><li class="reveal">Chaque tour apprend au suivant.</li><li class="reveal">Privé par défaut. Protégé avant d'être public.</li></ul>
+  </div>
+</section>
 
-    <section class="tight">
-      <div class="container center">
-        <h2 style="max-width:20ch;margin-inline:auto" class="reveal">Comprendre le vivant. Concevoir l'intervention. Reprendre le contrôle.</h2>
+<section class="sec" id="contact">
+  <div class="container">
+    <div class="contact glass reveal">
+      <div class="contact__copy">
+        <p class="eyebrow">Contact</p>
+        <h2 class="h2">Devenir partenaire.</h2>
+        <p class="lead">Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques américains, aux investisseurs et à la presse.</p>
       </div>
-    </section>
-
-    <section class="tight" id="questions">
-      <div class="container">
-        <div class="head"><p class="eyebrow">Questions fréquentes</p><h2>Vous vous demandez peut-être</h2></div>
-        <div class="faq">
-          <details><summary>Qu'est-ce qu'un Smart Binder ?</summary><p>C'est une molécule conçue pour reconnaître une cible précise. Vous choisissez la cible, nous fournissons le Smart Binder qui lui correspond.</p></details>
-          <details><summary>Comment passer commande ?</summary><p>Ajoutez vos produits à votre commande puis demandez votre devis. Nous vous répondons sous <span data-shop="responseTime">2 jours ouvrés</span> et le paiement n'a lieu qu'après votre accord.</p></details>
-          <details><summary>Quels sont les délais de livraison ?</summary><p>Comptez <span data-shop="delivery">3 à 7 jours ouvrés</span> pour les produits en stock. Pour les produits sur commande, nous confirmons le délai dans votre devis.</p></details>
-          <details><summary>Ma cible n'est pas dans le catalogue, que faire ?</summary><p>Faites une demande sur mesure. C'est gratuit et sans engagement, et vous recevez une proposition claire. <a class="link" href="sur-mesure.html">Demander une cible</a></p></details>
-          <details><summary>Puis-je utiliser vos produits pour un traitement ?</summary><p>Non. Nos produits sont réservés à la recherche. Ils ne sont pas destinés à un usage thérapeutique ni au diagnostic.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <section class="tight" id="contact">
-      <div class="container">
-        <div class="banner">
-          <div><h2>Parlons de votre projet.</h2><p style="margin-top:12px">Écrivez-nous à <strong style="color:#fff" data-shop="mail-text">contact@blackphage.com</strong>. Nous répondons sous <span data-shop="responseTime">2 jours ouvrés</span>.</p></div>
-          <a class="btn btn--primary btn--lg" data-shop="mailhref" href="mailto:contact@blackphage.com">Écrire à l'équipe</a>
-        </div>
-      </div>
-    </section>
-  </main>
-  <div id="site-footer"></div>
+      <ul class="contact__list"><li><span class="contact__k">Partenaires et investisseurs</span><a class="contact__v" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a><button class="copy" type="button" data-copy="partners@blackphage.com" data-mailkey="email"></button></li><li><span class="contact__k">Presse</span><a class="contact__v" data-mail="pressEmail" href="mailto:press@blackphage.com">press@blackphage.com</a><button class="copy" type="button" data-copy="press@blackphage.com" data-mailkey="pressEmail"></button></li><li><span class="contact__k">Recrutement</span><a class="contact__v" data-mail="careersEmail" href="mailto:careers@blackphage.com">careers@blackphage.com</a><button class="copy" type="button" data-copy="careers@blackphage.com" data-mailkey="careersEmail"></button></li></ul>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="foot">
+  <div class="container foot__in">
+    <div class="foot__brand">
+      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+      <p class="foot__tag">Repousser la frontière du traitable.</p>
+    </div>
+    <div><h4>Société</h4><ul><li><a href="a-propos.html">À propos</a></li><li><a href="careers.html">Carrières</a></li></ul></div>
+    <div><h4>Programmes</h4><ul data-programs-list><li><a href="pipeline.html">Pipeline</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="en/a-propos.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a></li></ul></div>
+  </div>
+  <div class="container foot__legal"><p>Brevets en cours. Programmes expérimentaux, non approuvés par la FDA ni par aucune autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
+</footer>
 </body>
 </html>

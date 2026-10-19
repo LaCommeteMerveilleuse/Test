@@ -13,6 +13,11 @@ export const stage = {
   reduce: matchMedia('(prefers-reduced-motion: reduce)').matches,
 };
 
+// ?t=4.4 fige l'animation sur cet instant (captures d'écran, tests). C'est aussi l'image de « réduire les animations ».
+const FROZEN = new URLSearchParams(location.search).get('t');
+if (FROZEN !== null && !Number.isNaN(+FROZEN)) stage.reduce = true;
+const STILL = FROZEN !== null && !Number.isNaN(+FROZEN) ? +FROZEN : 4.4;
+
 const frames = new Set();
 const watchers = new Set();
 
@@ -98,7 +103,7 @@ function tick(now) {
 }
 
 if (stage.reduce) {
-  stage.time = 7.5;
+  stage.time = STILL;
   addEventListener('scroll', () => {
     stage.scroll = Math.min(1, scrollY / Math.max(1, document.documentElement.scrollHeight - stage.h));
     redraw();
