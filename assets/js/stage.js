@@ -6,7 +6,8 @@ export const stage = {
   time: 0,            // secondes d'animation
   dt: 0,
   w: 0,
-  h: 0,
+  h: 0,               // hauteur du grand écran (barres du navigateur repliées), la taille des canevas
+  vh: 0,              // hauteur du petit écran (barres affichées), celle du texte de l'accueil
   scroll: 0,          // défilement lissé, de 0 (haut) à 1 (bas)
   pointer: { x: 0, y: 0, px: -1e4, py: -1e4 },   // x et y entre -0.5 et 0.5, px et py en pixels
   quality: 1,         // 1 plein, puis 0.75, 0.5
@@ -37,9 +38,25 @@ export function onResize(fn) {
 
 const notify = () => watchers.forEach((fn) => fn(stage));
 
+// Sur mobile, la barre d'adresse qui se replie change innerHeight sans que la page change : les canevas gardent
+// la hauteur 100lvh (grand écran), et la composition se cale sur 100svh (petit écran), le haut restant toujours visible.
+function probe(unit) {
+  const d = document.createElement('div');
+  d.style.cssText = `position:fixed;left:0;top:0;width:0;height:100${unit};visibility:hidden;pointer-events:none`;
+  document.documentElement.appendChild(d);
+  return d;
+}
+const large = probe('lvh');
+const small = probe('svh');
+
 function measure() {
-  stage.w = innerWidth;
-  stage.h = innerHeight;
+  const w = innerWidth;
+  const h = large.offsetHeight || innerHeight;
+  const vh = Math.min(h, small.offsetHeight || h);
+  if (w === stage.w && h === stage.h && vh === stage.vh) return;
+  stage.w = w;
+  stage.h = h;
+  stage.vh = vh;
   notify();
   redraw();
 }

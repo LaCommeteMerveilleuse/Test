@@ -327,7 +327,7 @@ async function start() {
   let halfH = 1;
   function frame() {
     const aspect = stage.w / stage.h;
-    const needHalfW = aspect < 0.8 ? 17 : aspect < 1.2 ? 21 : 28.5;   // demi-largeur à montrer, en cm
+    const needHalfW = aspect < 0.7 ? 13.5 : aspect < 0.8 ? 17 : aspect < 1.2 ? 21 : 28.5;   // demi-largeur à montrer, en cm
     const dist = Math.max(52, needHalfW / (aspect * Math.tan(THREE.MathUtils.degToRad(CAM_FOV / 2)))) * 1.08;
     camera.aspect = aspect; camera.position.set(0, 0, dist); camera.updateProjectionMatrix(); camera.updateMatrixWorld();
     uniforms.uCam.value.copy(camera.position);
@@ -394,13 +394,14 @@ async function start() {
     const reach = Math.max(smooth(0.06, 0.24, cyc) * (1 - smooth(0.30, 0.40, cyc)), smooth(0.52, 0.70, cyc) * (1 - smooth(0.76, 0.92, cyc)) * 1.0);
     const gap = GAP.far + (GAP.near - GAP.far) * reach + 0.18 * Math.sin(t * 0.7);
     uniforms.uFlare.value = reach;
-    // placer les mains
-    const yTip = (TIP_Y - 0.5) * halfH * 2 + p * halfH * 1.3;
+    // placer les mains. Si les barres du navigateur cachent le bas du canevas, on cale la composition sur le haut, toujours visible
+    const kv = s.vh / s.h;
+    const yTip = ((1 - kv) + TIP_Y * kv - 0.5) * halfH * 2 + p * halfH * 1.3;
     const bob = Math.sin(t * 0.55) * 0.35;
     const px = s.pointer.x * 1.2; const py = -s.pointer.y * 0.6;
     place(left, adamTip, 7 + 1.2 * Math.sin(t * 0.4), ROLL, new THREE.Vector3(-gap / 2 + px * 0.2, yTip + bob - 0.8 + py, 0), false);
     place(right, makerTip, 4 + 1.0 * Math.sin(t * 0.35 + 1.0), ROLL, new THREE.Vector3(-gap / 2 - px * 0.2, yTip - bob + 0.5 + py, -1.2), true);
-    uniforms.uHorizon.value = HORIZON + p * 0.65;
+    uniforms.uHorizon.value = (1 - kv) + HORIZON * kv + p * 0.65;
     scene.updateMatrixWorld(true);
     // l'étincelle : au milieu des deux index, plus vive quand ils sont tout près
     tipL.copy(adamTip).applyMatrix4(left.matrix);
