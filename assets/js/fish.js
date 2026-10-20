@@ -273,6 +273,47 @@ export function buildFishGeometry() {
 export const FISH_LENGTH = 1.36;    // museau au bout de la queue, en unités de corps
 const EYE_C = [xOf(EYE_T), yc(EYE_T) + halfHeight(EYE_T) * 0.30];
 
+// ------------------------------------------------------------------ la nage
+// Une onde court du museau à la queue en grandissant : la tête reste presque immobile, la queue balance le plus.
+// De profil, une onde latérale resterait invisible. Elle est donc dessinée surtout dans le plan de l'image (plane),
+// avec un peu de profondeur (depth) pour garder du relief. Chaque section du corps penche avec l'axe, comme dans un
+// corps qui se plie, et les nageoires, les yeux et la zone de toucher suivent la même déformation.
+const SWIM = { k: 7.0, env0: 0.30, plane: 0.88, depth: 0.46 };
+
+/** Déplace le point p (repère du poisson) comme le fait le shader : phase et amp viennent de la nage, bend du virage. */
+export function swimPoint(p, phase, amp, bend) {
+  const s = Math.min(1, Math.max(0, (0.5 - p.x) / FISH_LENGTH));
+  const env = SWIM.env0 + (1 - SWIM.env0) * s * s;
+  const ph = phase - s * SWIM.k;
+  const lat = amp * env * Math.sin(ph);
+  const dlat = amp * (2 * (1 - SWIM.env0) * s * Math.sin(ph) - env * SWIM.k * Math.cos(ph));
+  const sl = -SWIM.plane * dlat / FISH_LENGTH;
+  const cs = 1 / Math.sqrt(1 + sl * sl); const sn = sl * cs;
+  const v = p.y;
+  p.x -= v * sn;
+  p.y = SWIM.plane * lat + v * cs;
+  p.z += SWIM.depth * lat + bend * s * s;
+  return p;
+}
+
+const SWIM_GLSL = /* glsl */ `
+uniform float uPhase; uniform float uSwimAmp; uniform float uBend;
+void swim(inout vec3 p, inout vec3 n, float x){
+  float s = clamp((0.5 - x) / ${FISH_LENGTH.toFixed(2)}, 0.0, 1.0);                // du museau (0) au bout de la queue (1)
+  float env = ${SWIM.env0.toFixed(2)} + ${(1 - SWIM.env0).toFixed(2)} * s * s;
+  float ph = uPhase - s * ${SWIM.k.toFixed(2)};
+  float lat = uSwimAmp * env * sin(ph);
+  float dlat = uSwimAmp * (${(2 * (1 - SWIM.env0)).toFixed(2)} * s * sin(ph) - env * ${SWIM.k.toFixed(2)} * cos(ph));   // pente de l'écart le long du corps
+  float sl = -${SWIM.plane.toFixed(2)} * dlat / ${FISH_LENGTH.toFixed(2)};                      // pente de l'axe dans le plan de l'image
+  float cs = inversesqrt(1.0 + sl * sl); float sn = sl * cs;
+  float v = p.y;
+  p.x -= v * sn;
+  p.y = ${SWIM.plane.toFixed(2)} * lat + v * cs;
+  p.z += ${SWIM.depth.toFixed(2)} * lat + uBend * s * s;
+  n.xy = vec2(n.x * cs - n.y * sn, n.x * sn + n.y * cs);
+  n.x += (${SWIM.depth.toFixed(2)} * dlat + 2.0 * uBend * s) / ${FISH_LENGTH.toFixed(2)} * n.z;
+}`;
+
 // ------------------------------------------------------------------ matière
 // Le corps est translucide : une teinte violette qui se densifie sur les bords, et dessus une lumière vivante.
 // La bioluminescence se compose de quatre choses : de grandes taches orange qui dérivent vers la queue, de fines
@@ -284,7 +325,8 @@ attribute vec3 aFin;    // nageoire : x de la base (0) au bord libre (1), y en t
 attribute vec3 aR;      // direction du rayon (de la base vers le bord libre)
 attribute vec3 aT;      // direction en travers, dans le plan de la nageoire
 attribute vec2 aM;      // longueurs locales : le long du rayon, en travers
-uniform float uPhase; uniform float uFinPhase; uniform float uSwimAmp; uniform float uBend; uniform float uFlutter;
+uniform float uFinPhase; uniform float uFlutter;
+${SWIM_GLSL}
 varying vec3 vN; varying vec3 vW; varying vec3 vP; varying vec4 vBody; varying vec3 vFin; varying float vRip;
 void main(){
   vec3 p = position;
@@ -316,16 +358,8 @@ void main(){
     n = normalize(n - (dhdr / max(aM.x, 1e-3)) * aR - (dhda / max(aM.y, 1e-3)) * aT);
     rip = s1;
   }
-  // la nage : une onde le long du corps, qui grandit vers la queue
-  float s = clamp((0.5 - position.x) / 1.36, 0.0, 1.0);          // du museau (0) au bout de la queue (1)
-  float amp = uSwimAmp * (0.04 + 0.96 * s * s);
-  float ph = uPhase - s * 5.4;
-  float dz = amp * sin(ph) + uBend * s * s;
-  float dzds = uSwimAmp * 1.92 * s * sin(ph) - amp * 5.4 * cos(ph) + uBend * 2.0 * s;
-  p.z += dz;
-  // vue de profil, l'ondulation en profondeur ne se voit pas : on lui ajoute un léger roulis vertical
-  p.y += uSwimAmp * 0.55 * (0.04 + 0.96 * s * s) * sin(ph + 1.3);
-  n.x += dzds / 1.36 * n.z;
+  // la nage : l'onde qui parcourt le corps, des nageoires comprises
+  swim(p, n, position.x);
   vN = normalize(mat3(modelMatrix) * n);
   vec4 w = modelMatrix * vec4(p, 1.0);
   vW = w.xyz; vP = position; vBody = aBody; vFin = aFin; vRip = rip;
@@ -521,16 +555,13 @@ void main(){
 }`;
 
 const EYE_VERT = /* glsl */ `
-uniform float uPhase; uniform float uSwimAmp; uniform float uBend;
+${SWIM_GLSL}
 varying vec3 vN; varying vec3 vW; varying vec3 vL; varying float vSide;
 void main(){
   vec3 p = position;
-  float s = clamp((0.5 - p.x) / 1.36, 0.0, 1.0);
-  float amp = uSwimAmp * (0.04 + 0.96 * s * s);
-  float ph = uPhase - s * 5.4;
-  p.z += amp * sin(ph) + uBend * s * s;
-  p.y += uSwimAmp * 0.55 * (0.04 + 0.96 * s * s) * sin(ph + 1.3);
-  vN = normalize(mat3(modelMatrix) * normal);
+  vec3 n = normal;
+  swim(p, n, position.x);
+  vN = normalize(mat3(modelMatrix) * n);
   vL = normal; vSide = position.z >= 0.0 ? 1.0 : -1.0;
   vec4 w = modelMatrix * vec4(p, 1.0); vW = w.xyz;
   gl_Position = projectionMatrix * viewMatrix * w;

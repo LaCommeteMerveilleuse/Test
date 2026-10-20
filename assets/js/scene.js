@@ -1,12 +1,12 @@
 // BlackPhage - l'œuvre de l'accueil. Un poisson combattant translucide traverse un monde moléculaire : à mesure qu'on descend la page,
 // il nage de station en station (l'air libre des molécules, l'ADN, la boucle du moteur, une protéine cible et ses liants, une membrane
 // et son récepteur, puis une vue d'ensemble), une station par section. La caméra le suit de profil, c'est le monde qui défile.
-// Il bouge peu : un léger flottement au repos, une nage qui ne s'anime qu'avec le défilement. Un clic sur lui lance une vague de
-// bioluminescence sur son corps (le même geste est possible au clavier).
+// Il reste à sa place à l'écran : un léger flottement, un corps qui ondule en nageant (plus largement quand on défile). Un clic sur lui
+// lance une vague de bioluminescence sur son corps (le même geste est possible au clavier).
 // Rendu three.js, organisé comme une scène react-three-fiber. Sans WebGL, une image fixe prend le relais (voir site.css).
 import * as THREE from 'three';
 import { stage, useFrame, onResize } from './stage.js';
-import { buildFishGeometry, fishUniforms, fishMaterials } from './fish.js';
+import { buildFishGeometry, fishUniforms, fishMaterials, swimPoint } from './fish.js';
 import { buildWorld, cameraRig, STATIONS } from './world.js';
 
 const root = document.documentElement;
@@ -176,7 +176,7 @@ async function start() {
   // ---------------------------------------------------------------- le poisson : état, clics
   const F = {
     pos: new THREE.Vector3(), fwd: new THREE.Vector3(-1, 0, 0.2).normalize(), want: new THREE.Vector3(),
-    lean: new THREE.Vector2(), phase: 0, fin: 0, amp: 0.022, bend: 0, roll: 0, energy: 0.1, hover: 0, lastYaw: 0, u: 0, du: 0,
+    lean: new THREE.Vector2(), phase: 0, fin: 0, amp: 0.085, bend: 0, roll: 0, energy: 0.1, hover: 0, lastYaw: 0, u: 0, du: 0,
   };
   const rig = {};
   const tmp = new THREE.Vector3(); const tmp2 = new THREE.Vector3(); const tmp3 = new THREE.Vector3();
@@ -197,10 +197,12 @@ async function start() {
     [0.02, 0.24, 0.14, 0.50, 1.0], [-0.18, 0.21, 0.11, 0.80, 1.0], [-0.10, -0.22, 0.13, 0.70, -1.0], [-0.24, -0.20, 0.10, 0.90, -1.0], [0.18, -0.30, 0.10, 0.35, -1.0],
   ];
   const proj = spine.map(() => ({ x: 0, y: 0, r: 0 }));
+  /** Un point du poisson, dans le monde, avec la déformation de la nage (la même que dans le shader). */
+  const bodyPoint = (x, y, z, out) => swimPoint(out.set(x, y, z), F.phase, F.amp, F.bend).applyMatrix4(fish.matrix);
   function updateProjection() {
     const pxPerUnit = stage.h / (rig.H || 262);
     for (let i = 0; i < spine.length; i++) {
-      tmp.set(spine[i][0], spine[i][1], 0).applyMatrix4(fish.matrix).project(camera);
+      bodyPoint(spine[i][0], spine[i][1], 0, tmp).project(camera);
       proj[i].x = (tmp.x * 0.5 + 0.5) * stage.w; proj[i].y = (0.5 - tmp.y * 0.5) * stage.h;
       proj[i].r = spine[i][2] * FISH_SCALE * pxPerUnit;
     }
@@ -230,14 +232,14 @@ async function start() {
     if (i < 0) return;
     triggerWave(spine[i][3], spine[i][4], 1.0, stage.time);
     F.hover = 1;
-    emit(tmp.set(spine[i][0], spine[i][1], 0).applyMatrix4(fish.matrix), 30, 60, 1.4);
+    emit(bodyPoint(spine[i][0], spine[i][1], 0, tmp), 30, 60, 1.4);
   }, { passive: true });
   document.addEventListener('pointerleave', () => { ptr.moved = -99; });
 
   // geste au clavier : un bouton caché, pour que tout le monde puisse toucher le poisson
   document.querySelectorAll('[data-fish-wave]').forEach((b) => b.addEventListener('click', () => {
     triggerWave(0.30, 0.0, 1.0, stage.time);
-    emit(tmp.set(0.1, 0, 0).applyMatrix4(fish.matrix), 30, 60, 1.4);
+    emit(bodyPoint(0.1, 0, 0, tmp), 30, 60, 1.4);
   }));
 
   // ---------------------------------------------------------------- boucle
@@ -285,13 +287,13 @@ async function start() {
     F.bend += (clamp(-yawRate * 0.04, -0.08, 0.08) - F.bend) * (1 - Math.exp(-3 * dt));
     F.roll += (clamp(-yawRate * 0.10, -0.25, 0.25) - F.roll) * (1 - Math.exp(-3 * dt));
 
-    // ---- la nage : calme au repos, un peu plus vive quand on défile
-    F.phase += dt * Math.PI * 2 * (0.40 + 0.85 * sp01);
+    // ---- la nage : le corps ondule en douceur au repos, plus ample et plus vif quand on défile
+    F.phase += dt * Math.PI * 2 * (0.55 + 0.70 * sp01);
     F.fin += dt * (1.20 + 1.3 * sp01);
-    F.amp += ((0.020 + 0.028 * sp01) - F.amp) * (1 - Math.exp(-2.5 * dt));
+    F.amp += ((0.085 + 0.045 * sp01) - F.amp) * (1 - Math.exp(-2.5 * dt));
     F.energy += ((0.10 + 0.45 * sp01) - F.energy) * (1 - Math.exp(-0.9 * dt));
     F.hover += (0 - F.hover) * (1 - Math.exp(-1.5 * dt));
-    if (reduce) { F.phase = t * 3.0; F.fin = t * 1.6; F.amp = 0.03; F.bend = 0; F.roll = 0; F.energy = 0.35; }
+    if (reduce) { F.phase = t * 3.0; F.fin = t * 1.6; F.amp = 0.095; F.bend = 0; F.roll = 0; F.energy = 0.35; }
 
     // la base du poisson : x = cap, y = haut, z = côté, avec un petit roulis autour du cap
     sideV.crossVectors(F.fwd, UP); if (sideV.lengthSq() < 1e-4) sideV.set(0, 0, 1); sideV.normalize();
