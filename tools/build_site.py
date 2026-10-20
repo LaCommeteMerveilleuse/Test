@@ -217,25 +217,6 @@ def teaser_pairs(lg, T):
     return rows
 
 
-def ring(T):
-    steps = [(T['step_1']), (T['step_2']), (T['step_3']), (T['step_4'])]
-    pts = [(200, 46), (354, 200), (200, 354), (46, 200)]
-    nodes = ''
-    for i, ((x, y), label) in enumerate(zip(pts, steps)):
-        ty = y - 22 if i == 0 else (y + 36 if i == 2 else y + 5)
-        tx = x + (26 if i == 1 else (-26 if i == 3 else 0))
-        anchor = 'start' if i == 1 else ('end' if i == 3 else 'middle')
-        nodes += (f'<g class="ring__node" style="--d:{i * 3}s"><circle cx="{x}" cy="{y}" r="7"/>'
-                  f'<text x="{tx}" y="{ty}" text-anchor="{anchor}">{h(label)}</text></g>')
-    return f'''<svg class="ring" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
-  <defs><linearGradient id="ring-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bff3ff"/><stop offset="0.55" stop-color="#4fc3dc" stop-opacity="0.55"/><stop offset="1" stop-color="#ffe2ae" stop-opacity="0.8"/></linearGradient></defs>
-  <circle class="ring__track" cx="200" cy="200" r="154" fill="none"/>
-  <circle class="ring__arc" cx="200" cy="200" r="154" fill="none" stroke="url(#ring-g)"/>
-  {nodes}
-  <circle class="ring__dot" r="5"><animateMotion dur="12s" repeatCount="indefinite" path="M200,46 A154,154 0 1 1 199.9,46"/></circle>
-</svg>'''
-
-
 def build_index(lg):
     T = STR[lg]
     P = '' if lg == 'fr' else '../'
@@ -278,7 +259,6 @@ def build_index(lg):
       <p class="lead reveal">{h(T['engine_lead'])}</p>
       <ol class="steps">{steps}</ol>
     </div>
-    <div class="engine__viz reveal" aria-hidden="true">{ring(T)}<div class="engine__core"><img src="{P}assets/img/symbole.svg" alt="" width="76" height="72"></div></div>
   </div>
 </section>
 

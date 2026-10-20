@@ -8,7 +8,7 @@ Il n'y a plus de vente directe : le site présente la société, son pipeline, s
 
 | Page | Rôle |
 | --- | --- |
-| `index.html` | Accueil. L'œuvre (un Petit Prince joue avec un poisson combattant bioluminescent), l'idée, le moteur, les Smart Binders, le programme phare, le bandeau de contact. |
+| `index.html` | Accueil. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page, l'idée, le moteur, les Smart Binders, le programme phare, le bandeau de contact. |
 | `pipeline.html` | Pipeline. Les programmes, lus dans `assets/data/programs.json`, mis à jour par l'agent. |
 | `program.html#glp-1r` | Détail d'un programme : les problèmes du marché, notre réponse, où nous en sommes. Une protéine de verre flotte à côté du titre. |
 | `a-propos.html` | À propos : mission, principes, méthode, logos officiels (blanc et noir, à télécharger), contact (partenaires, presse, recrutement). |
@@ -58,47 +58,33 @@ Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et
 
 ## Identité visuelle
 
-L'idée : **un enfant, un poisson de lumière, et la brume du soir.** Un ciel d'indigo qui s'éclaircit vers l'horizon, un sol brillant qui reflète tout,
-des lueurs corail. Le Petit Prince (cheveux blonds, tunique verte, grande écharpe dorée qui flotte) joue avec un poisson combattant (Betta) translucide qui nage dans l'air.
+L'idée : **un poisson de lumière qui traverse un monde moléculaire.** Un ciel d'indigo qui s'approfondit à mesure qu'on descend, des molécules en boules et bâtons,
+de l'ADN, des protéines en rubans, une membrane et son récepteur, et des lueurs corail que le poisson répand autour de lui.
 
 | Élément | Où | Rôle |
 | --- | --- | --- |
-| **Le poisson** | `assets/js/fish.js` | Un combattant construit par code, sans fichier de modèle : un corps fin et translucide (écailles qui s'allument, squelette vu par transparence, opercule, œil à iris), de grandes nageoires en voile avec leurs rayons (queue en éventail, dorsale, anale, ventrales en rubans, pectorales qui battent). Chaque nageoire porte une **onde qui court de sa base vers son bord libre**, en travers du plan et dans le plan, et la lumière suit le relief du voile. La bioluminescence se compose de grandes taches, de veines, de vagues régulières qui descendent le corps, d'impulsions qui filent le long des rayons. |
-| **Le jeu** | `assets/js/scene.js` | Le poisson suit le pointeur (inertie, cap, virage). **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires, et l'enfant sursaute de joie. Au repos, le poisson vient de lui-même toucher le doigt de l'enfant. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
-| **L'enfant** | `assets/js/child.js`, `assets/data/child.json`, `tools/child/` | Un petit garçon modélisé par code (champs de distance, marching cubes, décimation), avec un squelette de treize os : le bras se tend vers le museau (cinématique inverse à deux os), la tête suit, le buste se penche, un clic le fait sauter. Huit matières aux parts interpolées (tunique, peau, cheveux, bottes, écharpe, manchettes, pantalon, ceinture), visage peint dans le shader. **L'écharpe** a deux pans animés dans le vertex shader (ondes, torsion, vent qui forcit avec le poisson et les clics). |
-| **La brume** | `assets/js/mist.js` | Le ciel de tout le site : indigo, nappes de lumière qui dérivent, poussières lumineuses. Sur l'accueil, la scène réutilise les mêmes fonctions GLSL (`MIST_GLSL`) ; sur les autres pages, un petit rendu WebGL2 sans bibliothèque. |
-| **Le sol** | `assets/js/scene.js` (passe finale) | Un sol brillant qui reflète la scène en stries horizontales, du halo (bloom) par mipmaps, des rides quand le pointeur le survole, un grain fin. |
-| **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume, s'allume de l'intérieur de la même lumière corail que le poisson et suit la zone `.phero__art` de la page. |
+| **Le poisson** | `assets/js/fish.js` | Un combattant construit par code, sans fichier de modèle : un corps fin et translucide (écailles qui s'allument, squelette vu par transparence, opercule), des **yeux de verre** (un liseré violet, un iris doré translucide, une pupille qui laisse voir à travers) et de grandes nageoires en voile avec leurs rayons (queue en éventail, dorsale, anale, ventrales en rubans, pectorales). Chaque nageoire porte une **onde qui court de sa base vers son bord libre**, en travers du plan et dans le plan, et la lumière suit le relief du voile. La bioluminescence se compose de grandes taches, de veines, de vagues régulières qui descendent le corps et d'impulsions qui filent le long des rayons. |
+| **Le parcours** | `assets/js/scene.js` | **Six stations, une par section de l'accueil.** Le défilement, lissé, avance le poisson le long d'un chemin ; la caméra le suit de profil, c'est le monde qui défile. Il bouge peu : un léger flottement au repos, une nage plus vive seulement quand on défile, et il penche à peine vers le pointeur. **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
+| **Le monde** | `assets/js/world.js`, `assets/js/molecules.js` | Tout est du code. Station 1 : l'air libre des petites molécules (eau, benzène, sucre, purine, acide aminé, phosphate) ; 2 : la double hélice d'ADN ; 3 : la boucle du moteur, un anneau de molécules qui tourne ; 4 : la protéine cible, de verre, et ses liants ; 5 : la membrane (deux feuillets de sphères) et ses récepteurs à sept hélices ; 6 : une vue d'ensemble. Les molécules sont instanciées (une commande de dessin par modèle et par tranche du chemin), la brume de profondeur fond les formes lointaines dans le fond, **le poisson éclaire les molécules voisines**, et une voie reste libre autour de lui pour qu'il se lise. Chaque ensemble n'est dessiné que près de l'endroit où il se trouve. |
+| **La brume** | `assets/js/mist.js` | Le ciel des pages intérieures : indigo, nappes de lumière qui dérivent, poussières lumineuses. Un petit rendu WebGL2 sans bibliothèque. |
+| **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume et s'allume de l'intérieur de la même lumière corail que le poisson. Le même maillage sert de protéine cible dans le monde de l'accueil. |
 | **Le verre** | `assets/js/glass.js`, classe `.glass` | Surfaces translucides avec lisière lumineuse qui suit le pointeur. |
-| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » de la page À propos). `symbole.svg` est le « A » du logotype avec son point, utilisé pour le favicon et le moteur de l'accueil. |
+| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » de la page À propos). `symbole.svg` est le « A » du logotype avec son point, utilisé pour le favicon et la page À propos. |
 | **La scène** | `assets/js/stage.js` | Une seule boucle d'animation pour tout le site (modèle `useFrame`), pause onglet caché, défilement et pointeur lissés, qualité adaptative. |
 
 Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Titres en Space Grotesk, accent en Instrument Serif italique
 (le mot *frontier*), texte en Inter. Le titre de l'accueil lit « Push the frontier of the treatable. »
-En portrait (téléphone, tablette), le texte occupe le haut de l'écran et l'œuvre la moitié basse.
+Un voile sombre s'installe entre le monde et le texte quand on quitte le premier écran (variable CSS `--veil`, posée par `scene.js`).
+En portrait (téléphone, tablette), le texte occupe le haut de l'écran et le poisson la moitié basse.
 
 Sans WebGL, l'accueil garde une image fixe de l'œuvre (`assets/img/fond-accueil.webp`, et `fond-accueil-portrait.webp` en portrait) et les autres pages un dégradé.
-L'image sert aussi de premier affichage, puis fond vers la scène vivante. Avec « réduire les animations », tout est figé sur l'instant où le museau touche le doigt,
-une vague de lumière sur le corps. Si l'appareil peine, la qualité baisse toute seule (résolution, lissage).
+L'image sert aussi de premier affichage, puis fond vers la scène vivante. Avec « réduire les animations », le monde reste immobile sur le premier écran,
+avec une vague de lumière sur le corps du poisson. Si l'appareil peine, la qualité baisse toute seule (résolution, lissage, nombre de molécules, de rubans et de lipides).
 
-Réglages utiles : `FISH_UNIT`, `FISH_ABOVE`, `FISH_BELOW` et les dispositions `layout()` (grand écran, portrait) en tête de `scene.js` ; les amplitudes d'ondulation des nageoires
-(`kr`, `ka`, `ao`, `ai` par nageoire) dans `FISH_VERT` de `fish.js` ; les couleurs des matières dans `CHILD_FRAG` de `child.js`.
-Ajoutez `?t=6.9` à l'adresse de l'accueil pour figer l'animation sur cet instant (captures d'écran, tests).
-
-## Reconstruire l'enfant
-
-Le garçon est modélisé par du code, sans aucun fichier d'artiste : des champs de distance (`tools/child/child.py` : tête, cheveux en mèches, tunique, écharpe, bottes),
-un marching cubes, une décimation, puis occlusion ambiante, huit poids de matière et poids de peau par échantillonnage du champ.
-Le résultat est quantifié dans `assets/data/child.json` (environ 1,2 Mo, 46 000 triangles).
-
-```bash
-pip install numpy scikit-image scipy fast-simplification
-python3 tools/child/build.py --h 0.34 --faces 46000     # qualité finale, une vingtaine de secondes
-python3 tools/child/build.py --h 0.6 --faces 26000      # aperçu rapide
-```
-
-Les mèches (`make_locks`), les proportions et les matières se règlent dans `tools/child/child.py` ; l'écharpe flottante est dans `child.js` (`SCARF_VERT`).
-Le poisson n'a pas de fichier de données : tout est dans `fish.js`. L'image fixe se refait avec une capture de l'accueil sans texte (`?t=6.9`).
+Réglages utiles : `PATH` (le chemin, une station par point), `corridor()` (la voie libre autour du poisson, la densité), `N` (nombre de petites molécules) et `buildWorld()` dans `world.js` ;
+`cameraRig()` (où le poisson apparaît à l'écran, la distance) ; les amplitudes de nage et d'ondulation (`F.amp`, `F.fin`, `uFlutter`) dans la boucle de `scene.js` ;
+les amplitudes d'ondulation de chaque nageoire (`kr`, `ka`, `ao`, `ai`) dans `FISH_VERT` de `fish.js`.
+Ajoutez `?t=4` à l'adresse de l'accueil pour figer l'animation sur cet instant (captures d'écran, tests), et `?u=3` (de 0 à 5) pour choisir la station affichée.
 
 ## Lancer en local
 

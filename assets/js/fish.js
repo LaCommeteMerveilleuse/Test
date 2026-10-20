@@ -536,29 +536,40 @@ void main(){
   gl_Position = projectionMatrix * viewMatrix * w;
 }`;
 const EYE_FRAG = /* glsl */ `
-uniform vec3 uCam; uniform float uTime; uniform float uEnergy; varying vec3 vN; varying vec3 vW; varying vec3 vL; varying float vSide;
+uniform vec3 uCam; uniform float uTime; uniform float uEnergy; uniform float uPass; varying vec3 vN; varying vec3 vW; varying vec3 vL; varying float vSide;
 void main(){
-  vec3 N = normalize(vN); vec3 V = normalize(uCam - vW);
+  vec3 N = normalize(vN);
+  if (!gl_FrontFacing) N = -N;
+  vec3 V = normalize(uCam - vW);
   float ndv = clamp(dot(N, V), 0.0, 1.0);
+  float rim = pow(1.0 - ndv, 2.2);
   vec3 axis = normalize(vec3(0.30, 0.10, vSide));
   float c = dot(normalize(vL), axis);                           // 1 au centre de la pupille
-  float pupil = smoothstep(0.915, 0.935, c);
-  float irisR = smoothstep(0.70, 0.74, c) * (1.0 - pupil);
-  float ringB = exp(-pow((c - 0.935) / 0.016, 2.0));
-  vec3 head = mix(vec3(0.05, 0.04, 0.16), vec3(0.20, 0.16, 0.45), pow(1.0 - ndv, 2.0));
+  float pupil = smoothstep(0.915, 0.94, c);
+  float irisM = smoothstep(0.68, 0.74, c) * (1.0 - pupil);
   float rad = clamp((0.935 - c) / 0.235, 0.0, 1.0);           // 0 au bord de la pupille, 1 au bord de l'iris
-  vec3 iris = mix(vec3(1.0, 0.72, 0.28), vec3(0.78, 0.26, 0.40), rad);
-  float fleck = 0.6 + 0.4 * sin(atan(vL.y - 0.10, vL.x + 0.30 * vSide) * 17.0 + rad * 5.0 + uTime * 0.6);
-  iris *= (0.55 + 0.55 * fleck) * (0.75 + 0.5 * uEnergy);
-  vec3 col = head;
-  col = mix(col, iris, irisR);
-  col += vec3(1.0, 0.62, 0.36) * ringB * 0.55;
-  col = mix(col, vec3(0.012, 0.010, 0.04), pupil);
+  float fleck = 0.6 + 0.4 * sin(atan(vL.y - 0.10, vL.x + 0.30 * vSide) * 17.0 + rad * 5.0 + uTime * 0.4);
+  // un œil de verre : presque invisible au centre, un liseré violet sur les bords
+  vec3 glass = mix(vec3(0.34, 0.36, 0.86), vec3(0.76, 0.80, 1.0), rim);
+  float aGlass = 0.06 + 0.32 * rim;
+  vec3 pre = glass * aGlass; float a = aGlass;
+  // l'iris : une lueur dorée qui vire au corail, translucide
+  vec3 iris = mix(vec3(1.0, 0.78, 0.36), vec3(0.95, 0.36, 0.54), rad) * (0.65 + 0.55 * fleck);
+  float aIris = irisM * (0.30 + 0.16 * uEnergy);
+  pre = iris * aIris + pre * (1.0 - aIris); a = aIris + a * (1.0 - aIris);
+  // la pupille : un disque sombre qui laisse voir à travers
+  float aPupil = pupil * 0.42;
+  pre = vec3(0.07, 0.06, 0.26) * aPupil + pre * (1.0 - aPupil); a = aPupil + a * (1.0 - aPupil);
+  // de la lumière en plus : l'anneau de l'iris, et deux reflets sur le verre
+  float ring = exp(-pow((c - 0.935) / 0.018, 2.0));
+  pre += vec3(1.0, 0.66, 0.40) * (irisM * 0.16 * (1.0 + uEnergy) + ring * 0.28);
   vec3 L = normalize(vec3(-0.5, 0.8, 0.6));
   float spec = pow(max(dot(N, normalize(L + V)), 0.0), 90.0);
-  float spec2 = pow(max(dot(N, normalize(vec3(0.6, -0.3, 0.7) + V)), 0.0), 40.0) * 0.25;
-  col += vec3(1.0, 0.96, 0.92) * (spec + spec2);
-  gl_FragColor = vec4(col, 1.0);
+  float spec2 = pow(max(dot(N, normalize(vec3(0.6, -0.3, 0.7) + V)), 0.0), 40.0) * 0.22;
+  pre += vec3(1.0, 0.97, 0.94) * (spec + spec2);
+  a = clamp(max(a, 0.5 * (spec + spec2 + ring * 0.28)), 0.0, 0.9);
+  if (uPass < 0.5) { pre *= 0.55; a *= 0.55; }
+  gl_FragColor = vec4(pre, a);
 }`;
 
 /** Les uniformes partagés par toutes les pièces du poisson. */
@@ -572,13 +583,15 @@ export function fishUniforms() {
 
 const premultiplied = { transparent: true, depthWrite: false, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor };
 
-/** Les matières : l'intérieur du corps (faces arrière), l'extérieur (faces avant), les nageoires, les yeux. */
+/** Les matières : l'intérieur du corps (faces arrière), l'extérieur (faces avant), les nageoires, les yeux (deux passes). */
 export function fishMaterials(uniforms) {
   const mk = (side, pass) => new THREE.ShaderMaterial({ uniforms: { ...uniforms, uPass: { value: pass } }, vertexShader: FISH_VERT, fragmentShader: FISH_FRAG, side, ...premultiplied });
   return {
     back: mk(THREE.BackSide, 0),
     front: mk(THREE.FrontSide, 1),
     fins: mk(THREE.DoubleSide, 1),
-    eyes: new THREE.ShaderMaterial({ uniforms, vertexShader: EYE_VERT, fragmentShader: EYE_FRAG }),
+    // les yeux sont de verre, eux aussi : la face arrière d'abord, puis la face avant
+    eyesBack: new THREE.ShaderMaterial({ uniforms: { ...uniforms, uPass: { value: 0 } }, vertexShader: EYE_VERT, fragmentShader: EYE_FRAG, side: THREE.BackSide, ...premultiplied }),
+    eyes: new THREE.ShaderMaterial({ uniforms: { ...uniforms, uPass: { value: 1 } }, vertexShader: EYE_VERT, fragmentShader: EYE_FRAG, side: THREE.FrontSide, ...premultiplied }),
   };
 }

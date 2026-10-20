@@ -194,8 +194,8 @@ s('car_end_cta', 'Postuler maintenant', 'Apply now')
 s('mail_subject_apply', 'Candidature', 'Application')
 
 # ------------------------------------------------------------------ divers
-s('art_alt', 'Un enfant tend le doigt vers un grand poisson translucide qui nage dans l\'air, couvert de vagues de lumière. Bougez le pointeur et le poisson vous suit. Touchez-le et une vague de lumière parcourt son corps.',
-  'A child reaches toward a large translucent fish swimming in the air, covered in waves of light. Move the pointer and the fish follows. Touch it and a wave of light runs across its body.')
+s('art_alt', 'Un poisson combattant translucide, couvert de vagues de lumière, nage à travers un monde de molécules, avec de l\'ADN, des protéines, une membrane et son récepteur. Il avance quand vous descendez la page. Touchez-le et une vague de lumière parcourt son corps.',
+  'A translucent fighting fish, covered in waves of light, swims through a world of molecules, with DNA, proteins, a membrane and its receptor. It moves forward as you scroll down the page. Touch it and a wave of light runs across its body.')
 s('facts_label', 'Repères', 'Company facts')
 s('tz_from', 'Sur le marché', 'On the market')
 s('tz_to', 'Avec BlackPhage', 'With BlackPhage')

@@ -22,8 +22,8 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
 /* ============================================================== identité
-   BlackPhage. Un ciel d'indigo, un enfant et un poisson de lumière.
-   - L'œuvre de l'accueil : un Petit Prince joue avec un combattant bioluminescent (assets/js/scene.js).
+   BlackPhage. Un ciel d'indigo et un poisson de lumière.
+   - L'œuvre de l'accueil : un combattant bioluminescent traverse un monde moléculaire à mesure qu'on descend la page (scene.js, world.js).
    - La brume des autres pages : le même ciel, plus calme (assets/js/mist.js).
    - Le verre : surfaces translucides qui suivent le pointeur (assets/js/glass.js).
    - Le logo : les fichiers officiels, blanc sur fond sombre, noir sur fond clair, jamais modifiés.
@@ -77,6 +77,9 @@ strong { color: var(--ink); font-weight: 600; }
 .skip:focus { top: calc(env(safe-area-inset-top, 0px) + 12px); }
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-left: max(var(--pad), env(safe-area-inset-left, 0px)); padding-right: max(var(--pad), env(safe-area-inset-right, 0px)); }
 main, .foot { position: relative; z-index: 2; }
+/* un voile doux entre le monde moléculaire de l'accueil et le texte : il s'installe quand on quitte le premier écran (--veil, posée par scene.js) */
+.webgl-ready main::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: var(--veil, 0);
+  background: linear-gradient(90deg, rgba(14, 18, 48, 0.64), rgba(14, 18, 48, 0.42) 52%, rgba(14, 18, 48, 0.20)); }
 
 /* ------------------------------------------------------------ couches */
 .scene, .mist, .protein { position: fixed; inset: 0; z-index: 0; width: 100vw; height: 100vh; height: 100lvh; pointer-events: none; }
@@ -183,7 +186,7 @@ h3 { font-family: var(--head); color: var(--ink); text-wrap: balance; }
 .hero::before { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: 100%; background: #151a3c url('../img/fond-accueil.webp') 62% 70% / cover no-repeat; transition: opacity 1.4s ease; }
 .webgl-ready .hero::before { opacity: 0; }
 .hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: calc(var(--nav-h) + clamp(10px, 3vh, 40px)); padding-bottom: 110px; }
-/* le texte à gauche, l'œuvre à droite : l'enfant et son poisson jouent de l'autre côté de l'écran */
+/* le texte à gauche, l'œuvre à droite : le poisson nage de l'autre côté de l'écran */
 .hero__copy { position: relative; text-align: left; }
 .hero__copy > * { max-width: min(34rem, 43vw); }
 .hero__title { font: 300 clamp(2.5rem, min(4.5vw, 8.6vh), 4.9rem)/1.02 var(--head); letter-spacing: -0.045em; color: var(--ink); text-wrap: balance; text-shadow: 0 2px 34px rgba(14, 18, 52, 0.55); }
@@ -206,7 +209,12 @@ h3 { font-family: var(--head); color: var(--ink); text-wrap: balance; }
   .hero__cta { margin-top: clamp(16px, 2.4vh, 26px); }
   .hero__cta .btn { padding: 14px 22px; }
   .hero::before { background-image: url('../img/fond-accueil-portrait.webp'); background-position: 50% 78%; }
+  /* un voile en haut du premier écran : le titre se lit même quand une grande protéine passe derrière */
+  .hero::after { content: ''; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: 64%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(14, 18, 48, 0.74), rgba(14, 18, 48, 0.40) 58%, rgba(14, 18, 48, 0)); }
 }
+/* devant le monde moléculaire, les petits textes gardent une ombre douce pour rester lisibles */
+.webgl-ready main :is(.idea__p, .step p, .step h3, .sec__head .lead, .eyebrow, .spot__next, .note, .hero__strip) { text-shadow: 0 1px 16px rgba(14, 18, 48, 0.9), 0 0 3px rgba(14, 18, 48, 0.55); }
 /* le poisson réagit au toucher : le curseur devient une main, et un bouton caché permet le même geste au clavier */
 html.over-fish, html.over-fish * { cursor: pointer; }
 .sr-only--focus { border: 0; padding: 0; background: none; color: inherit; font: inherit; }
@@ -221,28 +229,17 @@ html.over-fish, html.over-fish * { cursor: pointer; }
 .idea__n { font: 500 0.78rem/1 var(--head); letter-spacing: 0.16em; color: var(--coral); }
 .idea__h { font: 300 clamp(1.9rem, 4.6vw, 3.9rem)/1.02 var(--head); letter-spacing: -0.04em; color: var(--ink); transition: color 0.5s; }
 .idea__row:hover .idea__h { color: var(--peach); }
-.idea__p { color: var(--muted); max-width: 30ch; }
+.idea__p { color: var(--text); max-width: 30ch; }
 
 /* le moteur : une boucle */
-.engine__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+/* le moteur : le texte à gauche, et à droite la boucle de molécules du monde 3D */
+.engine__copy { max-width: min(38rem, 52vw); }
 .steps { margin-top: clamp(24px, 4vh, 44px); }
 .step { display: grid; grid-template-columns: 46px 1fr; gap: 18px; padding-block: 18px; border-top: 1px solid var(--line); }
 .step:last-child { border-bottom: 1px solid var(--line); }
 .step__n { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(185, 194, 255, 0.45); color: var(--iris); font: 500 0.82rem/1 var(--head); }
 .step h3 { font: 500 1.22rem/1.15 var(--head); letter-spacing: -0.015em; }
 .step p { color: var(--muted); margin-top: 4px; font-size: 0.97rem; }
-.engine__viz { position: relative; width: 100%; max-width: 470px; margin-inline: auto; aspect-ratio: 1; }
-.ring { width: 100%; height: 100%; overflow: visible; }
-.ring__track { stroke: rgba(208, 216, 255, 0.10); stroke-width: 1; }
-.ring__arc { stroke-width: 1.4; stroke-dasharray: 2 9; stroke-linecap: round; opacity: 0.85; transform-origin: 200px 200px; animation: ring-spin 80s linear infinite; }
-@keyframes ring-spin { to { transform: rotate(360deg); } }
-.ring__node circle { fill: #14193f; stroke: var(--iris); stroke-width: 1.6; animation: node-on 12s linear infinite; animation-delay: var(--d, 0s); }
-.ring__node text { fill: var(--text); font: 500 14px var(--head); letter-spacing: 0.12em; text-transform: uppercase; }
-@keyframes node-on { 0%, 100% { fill: #14193f; stroke: #b9c2ff; } 2%, 20% { fill: #ffdac9; stroke: #fff1ea; } 27% { fill: #14193f; stroke: #b9c2ff; } }
-.ring__dot { fill: #fff; filter: drop-shadow(0 0 8px #ffdac9) drop-shadow(0 0 18px #ffdac9); }
-.engine__core { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
-.engine__core::before { content: ''; position: absolute; width: 44%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(185, 194, 255, 0.22), transparent); }
-.engine__core img { position: relative; width: 24%; height: auto; filter: drop-shadow(0 0 28px rgba(185, 194, 255, 0.5)); }
 
 /* les trois qualités */
 .pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -399,7 +396,8 @@ a.prow:hover .prow__go .arr { transform: translateX(4px); }
   .nav__in { position: relative; }
   .foot__in { grid-template-columns: 1fr 1fr; }
   .foot__brand { grid-column: 1 / -1; }
-  .engine__grid, .spot, .contact, .split, .phero__grid { grid-template-columns: minmax(0, 1fr); }
+  .spot, .contact, .split, .phero__grid { grid-template-columns: minmax(0, 1fr); }
+  .engine__copy { max-width: none; }
   .phero__art { order: -1; min-height: clamp(240px, 52vw, 420px); }
   .phero { min-height: 0; }
   .problems { grid-template-columns: repeat(2, minmax(0, 1fr)); }

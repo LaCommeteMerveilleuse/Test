@@ -40,7 +40,7 @@ vec3 bp_mist(vec2 uv, float aspect, float t, float sc, float hero, float H){
   col += vec3(0.20, 0.25, 0.50) * smoothstep(0.42, 0.85, n) * 0.18;
   float n2 = bp_fbm(vec3(p * 2.2 + 7.0, t * 0.026));
   col += vec3(0.60, 0.34, 0.52) * smoothstep(0.60, 0.90, n2) * 0.07;           // un soupçon de rose corail
-  // l'horizon : une lueur de brume pâle, plus forte à droite, là où jouent l'enfant et le poisson
+  // l'horizon : une lueur de brume pâle, plus forte à droite
   float hz = exp(-pow((y - H) / 0.13, 2.0));
   float side = 0.55 + 0.75 * exp(-pow((uv.x - 0.66) / 0.42, 2.0));
   col += vec3(0.34, 0.41, 0.62) * hz * side * (0.50 * hero + 0.12);
