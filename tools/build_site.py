@@ -104,7 +104,7 @@ def head(name, lg, T, P):
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>{h(full)}</title>
   <meta name="description" content="{a(desc)}">
-  <meta name="theme-color" content="#02080b">
+  <meta name="theme-color" content="#151a3c">
   <meta property="og:title" content="{a(full)}">
   <meta property="og:description" content="{a(desc)}">
   <meta property="og:type" content="website">
