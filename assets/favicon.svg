@@ -1,8 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-<defs>
-<linearGradient id="g" gradientUnits="userSpaceOnUse" x1="8" y1="4" x2="40" y2="46"><stop offset="0" stop-color="#f6fdff"/><stop offset=".42" stop-color="#9fe6f3"/><stop offset=".78" stop-color="#3a9fc0"/><stop offset="1" stop-color="#1b6a8a"/></linearGradient>
-<radialGradient id="b" cx=".3" cy=".15" r=".95"><stop offset="0" stop-color="#0d3a4b"/><stop offset="1" stop-color="#02080b"/></radialGradient>
-</defs>
+<defs><radialGradient id="b" cx=".3" cy=".15" r=".95"><stop offset="0" stop-color="#3a4786"/><stop offset="1" stop-color="#0b1028"/></radialGradient></defs>
 <rect width="48" height="48" rx="11" fill="url(#b)"/>
-<g transform="translate(24 24) scale(.82) translate(-24 -24)" fill="url(#g)" stroke="url(#g)" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 9L38 41" stroke-width="5.6" fill="none"/><path d="M25.2 27L10.4 41" stroke-width="5" fill="none"/><circle cx="12.5" cy="9" r="5.63"/><circle cx="18.9" cy="18.1" r="3.33"/><circle cx="25.2" cy="27" r="4.02"/><circle cx="31.6" cy="34.2" r="3.45"/><circle cx="38" cy="41" r="5.75"/><circle cx="18.2" cy="34.4" r="3.22"/><circle cx="10.4" cy="41" r="5.40"/><circle cx="24.2" cy="42.6" r="3.6" fill="#ffe2ae" stroke="#ffe2ae"/></g>
+<g transform="translate(24 24) scale(.46) translate(-148 -60)"><path d="M150.79,43.67c-.18-.48-1.68-1.97-2.07-1.69l-2.37,1.68-16.61,43.17-11.05.04,19.02-48.43c1.61-4.1,7.11-5.67,11.09-5.65s9.2,1.79,10.83,5.95l18.79,47.97-10.89.23-16.73-43.28Z" fill="#fff" stroke="#fff" stroke-miterlimit="10" stroke-width="8.5"/><ellipse cx="148.51" cy="83.73" rx="6.21" ry="6.95" fill="#ffb494"/></g>
 </svg>

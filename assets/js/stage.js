@@ -17,7 +17,7 @@ export const stage = {
 // ?t=4.4 fige l'animation sur cet instant (captures d'écran, tests). C'est aussi l'image de « réduire les animations ».
 const FROZEN = new URLSearchParams(location.search).get('t');
 if (FROZEN !== null && !Number.isNaN(+FROZEN)) stage.reduce = true;
-const STILL = FROZEN !== null && !Number.isNaN(+FROZEN) ? +FROZEN : 4.4;
+const STILL = FROZEN !== null && !Number.isNaN(+FROZEN) ? +FROZEN : 6.9;
 
 const frames = new Set();
 const watchers = new Set();

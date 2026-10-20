@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="110 24 76 72">
+  <!-- Le « A » du logotype officiel BlackPhage : un lambda ouvert et sa goutte, la cible. Tracé identique à blackphage-logo-blanc.svg. -->
+  <path d="M150.79,43.67c-.18-.48-1.68-1.97-2.07-1.69l-2.37,1.68-16.61,43.17-11.05.04,19.02-48.43c1.61-4.1,7.11-5.67,11.09-5.65s9.2,1.79,10.83,5.95l18.79,47.97-10.89.23-16.73-43.28Z" fill="#fff" stroke="#fff" stroke-miterlimit="10" stroke-width="8.5"/>
+  <ellipse cx="148.51" cy="83.73" rx="6.21" ry="6.95" fill="#f6f8ec"/>
+</svg>

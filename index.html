@@ -46,7 +46,7 @@
 <canvas id="scene" class="scene" aria-hidden="true"></canvas>
 <header class="nav" id="nav">
   <div class="nav__in">
-    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
     <nav class="nav__pill glass" id="nav-links" aria-label="Navigation principale">
       <a href="index.html" aria-current="page">Accueil</a>
       <a href="pipeline.html">Pipeline</a>
@@ -71,8 +71,9 @@
       <a class="btn btn--ghost btn--lg" href="a-propos.html#contact">Devenir partenaire</a>
     </div>
   </div>
-  <p class="sr-only">Deux mains de marbre, sous l’eau, se tendent l’une vers l’autre dans des rayons de lumière dorée.</p>
-  <ul class="hero__strip container" aria-label="Repères"><li>Brevets en cours</li><li>Société privée</li><li>Conçu pour le marché américain</li></ul>
+  <p class="sr-only">Un enfant tend le doigt vers un grand poisson translucide qui nage dans l’air, couvert de vagues de lumière. Bougez le pointeur et le poisson vous suit. Touchez-le et une vague de lumière parcourt son corps.</p>
+  <button class="sr-only sr-only--focus" type="button" data-fish-wave>Toucher le poisson</button>
+  <ul class="hero__strip container" aria-label="Repères"><li>Brevets en cours</li><li>Société privée</li><li>Conçu pour les États-Unis et l’Europe</li></ul>
 </section>
 
 <section class="sec idea" id="idea">
@@ -96,7 +97,7 @@
   <circle class="ring__arc" cx="200" cy="200" r="154" fill="none" stroke="url(#ring-g)"/>
   <g class="ring__node" style="--d:0s"><circle cx="200" cy="46" r="7"/><text x="200" y="24" text-anchor="middle">Lire</text></g><g class="ring__node" style="--d:3s"><circle cx="354" cy="200" r="7"/><text x="380" y="205" text-anchor="start">Concevoir</text></g><g class="ring__node" style="--d:6s"><circle cx="200" cy="354" r="7"/><text x="200" y="390" text-anchor="middle">Juger</text></g><g class="ring__node" style="--d:9s"><circle cx="46" cy="200" r="7"/><text x="20" y="205" text-anchor="end">Apprendre</text></g>
   <circle class="ring__dot" r="5"><animateMotion dur="12s" repeatCount="indefinite" path="M200,46 A154,154 0 1 1 199.9,46"/></circle>
-</svg><div class="engine__core" data-mark></div></div>
+</svg><div class="engine__core"><img src="assets/img/symbole.svg" alt="" width="76" height="72"></div></div>
   </div>
 </section>
 
@@ -134,7 +135,7 @@
   <div class="container">
     <div class="end__in glass reveal">
       <h2 class="end__h">La frontière est ouverte.</h2>
-      <p class="lead">Nous parlons aux partenaires pharmaceutiques américains, aux investisseurs et à la presse.</p>
+      <p class="lead">Nous parlons aux partenaires pharmaceutiques, aux investisseurs et à la presse, aux États-Unis comme en Europe.</p>
       <div class="hero__cta">
         <a class="btn btn--light btn--lg" href="a-propos.html#contact">Devenir partenaire<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a>
@@ -146,14 +147,14 @@
 <footer class="foot">
   <div class="container foot__in">
     <div class="foot__brand">
-      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><span class="logo__mark" data-mark></span><span class="wordmark">BLACKPH<i class="lam"></i>GE</span></a>
+      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
       <p class="foot__tag">Repousser la frontière du traitable.</p>
     </div>
     <div><h4>Société</h4><ul><li><a href="a-propos.html">À propos</a></li><li><a href="careers.html">Carrières</a></li></ul></div>
     <div><h4>Programmes</h4><ul data-programs-list><li><a href="pipeline.html">Pipeline</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
     <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a></li></ul></div>
   </div>
-  <div class="container foot__legal"><p>Brevets en cours. Programmes expérimentaux, non approuvés par la FDA ni par aucune autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
+  <div class="container foot__legal"><p>Brevets en cours. Programmes expérimentaux, non approuvés par la FDA, l’EMA ni aucune autre autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
 </footer>
 </body>
 </html>

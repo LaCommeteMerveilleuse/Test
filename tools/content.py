@@ -26,13 +26,13 @@ s('foot_tagline', 'Repousser la frontière du traitable.', 'Push the frontier of
 s('foot_company', 'Société', 'Company')
 s('foot_programs', 'Programmes', 'Programs')
 s('foot_contact', 'Contact', 'Contact')
-s('legal', 'Brevets en cours. Programmes expérimentaux, non approuvés par la FDA ni par aucune autorité.',
-  'Patents pending. Investigational programs, not approved by the FDA or any regulator.')
+s('legal', 'Brevets en cours. Programmes expérimentaux, non approuvés par la FDA, l\'EMA ni aucune autre autorité.',
+  'Patents pending. Investigational programs, not approved by the FDA, the EMA or any other regulator.')
 s('rights', 'Tous droits réservés', 'All rights reserved')
 s('brand_tag', 'Smart Binders', 'Smart Binders')
 s('strip_1', 'Brevets en cours', 'Patents pending')
 s('strip_2', 'Société privée', 'Private company')
-s('strip_3', 'Conçu pour le marché américain', 'Built for the U.S. market')
+s('strip_3', 'Conçu pour les États-Unis et l\'Europe', 'Built for the U.S. and Europe')
 s('cta_pipeline', 'Explorer le pipeline', 'Explore the pipeline')
 s('cta_partner', 'Devenir partenaire', 'Partner with us')
 
@@ -86,7 +86,7 @@ s('lead_next', 'Prochains programmes', 'Next programs')
 s('lead_next_p', 'Confidentiels jusqu\'aux dépôts de brevets.', 'Undisclosed until filings land.')
 
 s('end_h2', 'La frontière est ouverte.', 'The frontier is open.')
-s('end_p', 'Nous parlons aux partenaires pharmaceutiques américains, aux investisseurs et à la presse.', 'We speak with U.S. pharma partners, investors and press.')
+s('end_p', 'Nous parlons aux partenaires pharmaceutiques, aux investisseurs et à la presse, aux États-Unis comme en Europe.', 'We speak with pharma partners, investors and press, in the U.S. and in Europe.')
 
 # ------------------------------------------------------------------ pipeline
 s('pipe_title', 'Pipeline', 'Pipeline')
@@ -106,8 +106,8 @@ s('about_desc', 'BlackPhage est une société privée. Son agent autonome conço
   'BlackPhage is a private company. Its autonomous agent designs pH-dependent protein medicines.')
 s('about_eyebrow', 'À propos', 'About us')
 s('about_h1', 'Nous construisons la frontière du médicament protéique.', 'We build the frontier of protein medicine.')
-s('about_lead', 'BlackPhage est une société privée. Son agent autonome conçoit des Smart Binders, une nouvelle classe de médicaments protéiques dépendants du pH, pour des maladies qui manquent encore de bonnes réponses.',
-  'BlackPhage is a private company. Its autonomous agent designs Smart Binders, a new class of pH-dependent protein medicines, for diseases that still lack good answers.')
+s('about_lead', 'BlackPhage est une société privée. Son agent autonome conçoit des Smart Binders, une nouvelle classe de médicaments protéiques dépendants du pH, pour des maladies qui manquent encore de bonnes réponses. Nous construisons pour les patients des États-Unis et d\'Europe.',
+  'BlackPhage is a private company. Its autonomous agent designs Smart Binders, a new class of pH-dependent protein medicines, for diseases that still lack good answers. We build for patients in the U.S. and Europe.')
 s('drive_eyebrow', 'Ce qui nous porte', 'What drives us')
 s('drive_h2', 'Trois principes.', 'Three principles.')
 s('drive_1', 'La frontière d\'abord', 'Frontier first')
@@ -123,8 +123,8 @@ s('how_2', 'Chaque tour apprend au suivant.', 'Every round teaches the next.')
 s('how_3', 'Privé par défaut. Protégé avant d\'être public.', 'Private by default. Protected before public.')
 s('contact_eyebrow', 'Contact', 'Contact')
 s('contact_h2', 'Devenir partenaire.', 'Partner with us.')
-s('contact_p', 'Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques américains, aux investisseurs et à la presse.',
-  'Tell us what you are building. We answer U.S. pharma partners, investors and press.')
+s('contact_p', 'Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques américains et européens, aux investisseurs et à la presse.',
+  'Tell us what you are building. We answer pharma partners in the U.S. and Europe, investors and press.')
 s('contact_partners', 'Partenaires et investisseurs', 'Partners and investors')
 s('contact_press', 'Presse', 'Press')
 s('contact_careers', 'Recrutement', 'Hiring')
@@ -186,16 +186,16 @@ s('job_3_team', 'Biologie', 'Biology')
 s('job_3', 'Biologie computationnelle', 'Computational biologist')
 s('job_3n', 'Cartographier la biologie des maladies et choisir les cibles qui valent la peine.', 'Map disease biology and choose the targets worth pursuing.')
 s('job_4_team', 'Partenariats', 'Partnerships')
-s('job_4', 'Développement commercial, États-Unis', 'Business development lead, U.S.')
-s('job_4n', 'Ouvrir les portes des partenaires pharmaceutiques et des investisseurs américains.', 'Open doors with U.S. pharma partners and investors.')
+s('job_4', 'Développement commercial, États-Unis et Europe', 'Business development lead, U.S. and Europe')
+s('job_4n', 'Ouvrir les portes des partenaires pharmaceutiques et des investisseurs, aux États-Unis et en Europe.', 'Open doors with pharma partners and investors in the U.S. and Europe.')
 s('car_end_h2', 'Postulez maintenant pour résoudre l\'un des problèmes les plus urgents de la découverte de médicaments.', 'Apply now to solve one of the most urgent real-world problems in drug discovery.')
 s('car_end_p', 'Aucun poste ne vous correspond ? Écrivez-nous quand même et dites-nous ce qui vous donne envie.', 'No role fits? Write to us anyway and tell us what excites you.')
 s('car_end_cta', 'Postuler maintenant', 'Apply now')
 s('mail_subject_apply', 'Candidature', 'Application')
 
 # ------------------------------------------------------------------ divers
-s('art_alt', 'Deux mains de marbre, sous l\'eau, se tendent l\'une vers l\'autre dans des rayons de lumière dorée.',
-  'Two marble hands underwater reach toward each other through shafts of golden light.')
+s('art_alt', 'Un enfant tend le doigt vers un grand poisson translucide qui nage dans l\'air, couvert de vagues de lumière. Bougez le pointeur et le poisson vous suit. Touchez-le et une vague de lumière parcourt son corps.',
+  'A child reaches toward a large translucent fish swimming in the air, covered in waves of light. Move the pointer and the fish follows. Touch it and a wave of light runs across its body.')
 s('facts_label', 'Repères', 'Company facts')
 s('tz_from', 'Sur le marché', 'On the market')
 s('tz_to', 'Avec BlackPhage', 'With BlackPhage')
@@ -203,3 +203,10 @@ s('noscript_list', 'Activez JavaScript pour voir les programmes.', 'Turn on Java
 s('noscript_prog', 'Activez JavaScript pour voir ce programme.', 'Turn on JavaScript to see this program.')
 s('sec_updated', 'Mis à jour', 'Updated')
 s('prog_count', 'programmes', 'programs')
+
+s('fish_touch', 'Toucher le poisson', 'Touch the fish')
+s('brand_eyebrow', 'Identité', 'Identity')
+s('brand_h2', 'Nos logos.', 'Our logos.')
+s('brand_p', 'Pour la presse et les partenaires. Le logo blanc va sur les fonds sombres, le logo noir sur les fonds clairs.', 'For press and partners. Use the white logo on dark backgrounds and the black logo on light ones.')
+s('brand_white', 'Logo blanc, SVG', 'White logo, SVG')
+s('brand_black', 'Logo noir, SVG', 'Black logo, SVG')

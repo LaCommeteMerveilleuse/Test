@@ -1,17 +1,17 @@
 # BlackPhage, site vitrine
 
 Site statique (HTML, CSS, JavaScript, sans étape de build côté navigateur) de BlackPhage, société privée dont l'agent autonome
-conçoit des Smart Binders, des médicaments protéiques dépendants du pH. Brevets en cours, marché américain.
+conçoit des Smart Binders, des médicaments protéiques dépendants du pH. Brevets en cours, marchés américain et européen.
 Il n'y a plus de vente directe : le site présente la société, son pipeline, son équipe et ses offres d'emploi.
 
 ## Pages
 
 | Page | Rôle |
 | --- | --- |
-| `index.html` | Accueil. L'œuvre (deux mains de marbre sous l'eau), l'idée, le moteur, les Smart Binders, le programme phare, le bandeau de contact. |
+| `index.html` | Accueil. L'œuvre (un Petit Prince joue avec un poisson combattant bioluminescent), l'idée, le moteur, les Smart Binders, le programme phare, le bandeau de contact. |
 | `pipeline.html` | Pipeline. Les programmes, lus dans `assets/data/programs.json`, mis à jour par l'agent. |
 | `program.html#glp-1r` | Détail d'un programme : les problèmes du marché, notre réponse, où nous en sommes. Une protéine de verre flotte à côté du titre. |
-| `a-propos.html` | À propos : mission, principes, méthode, contact (partenaires, presse, recrutement). |
+| `a-propos.html` | À propos : mission, principes, méthode, logos officiels (blanc et noir, à télécharger), contact (partenaires, presse, recrutement). |
 | `careers.html` | Carrières : profil recherché, compétences, postes ouverts, candidature. |
 
 Chaque page existe en français (racine) et en anglais (dossier `en/`).
@@ -42,7 +42,8 @@ Remplacez-les avant toute mise en ligne.
 ### Ce que le site affirme
 
 BlackPhage ne publie pas de données scientifiques. Les objectifs de conception (dépendant du pH, moins toxique, plus précis) sont présentés comme des objectifs,
-accompagnés de la mention « Expérimental. Préclinique. Non approuvé par la FDA ni par aucune autorité » (`disclaimer` de chaque programme et pied de page).
+accompagnés de la mention « Expérimental. Préclinique. Non approuvé par la FDA, l'EMA ni aucune autorité » (`disclaimer` de chaque programme et pied de page).
+Le site s'adresse aux partenaires, investisseurs et journalistes des États-Unis **et** d'Europe.
 Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et la littérature publiques : faites-les relire avant publication.
 
 ## Langues
@@ -57,40 +58,47 @@ Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et
 
 ## Identité visuelle
 
-L'idée : **la lumière sous l'eau.** Une eau profonde, des rayons d'or qui descendent de la surface, du verre et de la pierre.
+L'idée : **un enfant, un poisson de lumière, et la brume du soir.** Un ciel d'indigo qui s'éclaircit vers l'horizon, un sol brillant qui reflète tout,
+des lueurs corail. Le Petit Prince (cheveux blonds, tunique verte, grande écharpe dorée qui flotte) joue avec un poisson combattant (Betta) translucide qui nage dans l'air.
 
 | Élément | Où | Rôle |
 | --- | --- | --- |
-| **L'œuvre** | `assets/js/scene.js`, `assets/data/hands.json` | Deux mains de marbre, sous l'eau, cherchent à se toucher (un clin d'œil à *La Création d'Adam*). Seize secondes par cycle : deux tentatives, puis un retrait. Quand les index sont tout près, une étincelle d'or éclate et des braises montent. Les rayons se reflètent dans un sol d'eau noire (miroir ondulé, flou, fondu vers l'obscurité) que le pointeur fait onduler. Rendu three.js, organisé comme une scène react-three-fiber. |
-| **L'abysse** | `assets/js/abyss.js` | Le même décor, plus calme, derrière les autres pages : rayons, caustiques, neige marine. Un petit rendu WebGL2 sans bibliothèque. Les fonctions GLSL (`ABYSS_GLSL`) sont partagées avec l'œuvre, pour que les rayons éclairent aussi la pierre. |
-| **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte les rayons et accroche l'or sur ses arêtes. Elle suit la zone `.phero__art` de la page. |
-| **Le verre** | `assets/js/glass.js`, classe `.glass` | Surfaces translucides avec lisière lumineuse qui suit le pointeur (liquidglass.js). |
-| **Le signe** | `assets/js/mark.js`, `assets/favicon.svg` | Un lambda (le bactériophage) en gouttes de liquide. Une petite goutte, la cible, se glisse entre les deux pieds. |
+| **Le poisson** | `assets/js/fish.js` | Un combattant construit par code, sans fichier de modèle : un corps fin et translucide (écailles qui s'allument, squelette vu par transparence, opercule, œil à iris), de grandes nageoires en voile avec leurs rayons (queue en éventail, dorsale, anale, ventrales en rubans, pectorales qui battent). Chaque nageoire porte une **onde qui court de sa base vers son bord libre**, en travers du plan et dans le plan, et la lumière suit le relief du voile. La bioluminescence se compose de grandes taches, de veines, de vagues régulières qui descendent le corps, d'impulsions qui filent le long des rayons. |
+| **Le jeu** | `assets/js/scene.js` | Le poisson suit le pointeur (inertie, cap, virage). **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires, et l'enfant sursaute de joie. Au repos, le poisson vient de lui-même toucher le doigt de l'enfant. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
+| **L'enfant** | `assets/js/child.js`, `assets/data/child.json`, `tools/child/` | Un petit garçon modélisé par code (champs de distance, marching cubes, décimation), avec un squelette de treize os : le bras se tend vers le museau (cinématique inverse à deux os), la tête suit, le buste se penche, un clic le fait sauter. Huit matières aux parts interpolées (tunique, peau, cheveux, bottes, écharpe, manchettes, pantalon, ceinture), visage peint dans le shader. **L'écharpe** a deux pans animés dans le vertex shader (ondes, torsion, vent qui forcit avec le poisson et les clics). |
+| **La brume** | `assets/js/mist.js` | Le ciel de tout le site : indigo, nappes de lumière qui dérivent, poussières lumineuses. Sur l'accueil, la scène réutilise les mêmes fonctions GLSL (`MIST_GLSL`) ; sur les autres pages, un petit rendu WebGL2 sans bibliothèque. |
+| **Le sol** | `assets/js/scene.js` (passe finale) | Un sol brillant qui reflète la scène en stries horizontales, du halo (bloom) par mipmaps, des rides quand le pointeur le survole, un grain fin. |
+| **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume, s'allume de l'intérieur de la même lumière corail que le poisson et suit la zone `.phero__art` de la page. |
+| **Le verre** | `assets/js/glass.js`, classe `.glass` | Surfaces translucides avec lisière lumineuse qui suit le pointeur. |
+| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » de la page À propos). `symbole.svg` est le « A » du logotype avec son point, utilisé pour le favicon et le moteur de l'accueil. |
 | **La scène** | `assets/js/stage.js` | Une seule boucle d'animation pour tout le site (modèle `useFrame`), pause onglet caché, défilement et pointeur lissés, qualité adaptative. |
 
-Palette : eau `#02080b`, encre `#f5fbfd`, aigue-marine `#8fe3f2`, or `#ffe2ae`, perle `#f6fdff`. Titres en Space Grotesk, accent en Instrument Serif italique
-(le mot *frontier*), texte en Inter, logotype en Montserrat. Le titre de l'accueil lit « Push the frontier of the treatable. »
+Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Titres en Space Grotesk, accent en Instrument Serif italique
+(le mot *frontier*), texte en Inter. Le titre de l'accueil lit « Push the frontier of the treatable. »
+En portrait (téléphone, tablette), le texte occupe le haut de l'écran et l'œuvre la moitié basse.
 
-Sans WebGL, l'accueil garde une image fixe de l'œuvre (`assets/img/fond-accueil.webp`) et les autres pages un dégradé. L'image sert aussi de premier affichage,
-puis fond vers la scène vivante. Avec « réduire les animations », tout est figé sur l'instant où les doigts se rejoignent. Si l'appareil peine, la qualité baisse toute seule
-(résolution, lissage, réfractions).
+Sans WebGL, l'accueil garde une image fixe de l'œuvre (`assets/img/fond-accueil.webp`, et `fond-accueil-portrait.webp` en portrait) et les autres pages un dégradé.
+L'image sert aussi de premier affichage, puis fond vers la scène vivante. Avec « réduire les animations », tout est figé sur l'instant où le museau touche le doigt,
+une vague de lumière sur le corps. Si l'appareil peine, la qualité baisse toute seule (résolution, lissage).
 
-Réglages utiles : `HORIZON`, `TIP_Y` et `GAP` (composition de l'œuvre) en tête de `scene.js`, les couleurs des rayons dans `abyss.js`, la matière de la pierre dans `HAND_FRAG`.
-Ajoutez `?t=4.4` à l'adresse de l'accueil pour figer l'animation sur cet instant (captures d'écran, tests).
+Réglages utiles : `FISH_UNIT`, `FISH_ABOVE`, `FISH_BELOW` et les dispositions `layout()` (grand écran, portrait) en tête de `scene.js` ; les amplitudes d'ondulation des nageoires
+(`kr`, `ka`, `ao`, `ai` par nageoire) dans `FISH_VERT` de `fish.js` ; les couleurs des matières dans `CHILD_FRAG` de `child.js`.
+Ajoutez `?t=6.9` à l'adresse de l'accueil pour figer l'animation sur cet instant (captures d'écran, tests).
 
-## Reconstruire les mains
+## Reconstruire l'enfant
 
-Les deux mains sont modélisées par du code, sans aucun fichier d'artiste : des champs de distance (anatomie de la main), un marching cubes, une décimation,
-puis occlusion ambiante et épaisseur par échantillonnage du champ. Le résultat est quantifié dans `assets/data/hands.json` (environ 1,8 Mo, 60 000 triangles par main).
+Le garçon est modélisé par du code, sans aucun fichier d'artiste : des champs de distance (`tools/child/child.py` : tête, cheveux en mèches, tunique, écharpe, bottes),
+un marching cubes, une décimation, puis occlusion ambiante, huit poids de matière et poids de peau par échantillonnage du champ.
+Le résultat est quantifié dans `assets/data/child.json` (environ 1,2 Mo, 46 000 triangles).
 
 ```bash
 pip install numpy scikit-image scipy fast-simplification
-python3 tools/hands/build.py --h 0.09 --faces 60000     # qualité finale, quelques minutes
-python3 tools/hands/build.py --h 0.14 --faces 40000     # aperçu rapide
+python3 tools/child/build.py --h 0.34 --faces 46000     # qualité finale, une vingtaine de secondes
+python3 tools/child/build.py --h 0.6 --faces 26000      # aperçu rapide
 ```
 
-Les poses (`POSES` dans `tools/hands/build.py`) et l'anatomie (`tools/hands/hand.py`) se règlent à la main. L'image fixe se refait avec une capture de l'accueil
-sans texte (`?t=4.4`).
+Les mèches (`make_locks`), les proportions et les matières se règlent dans `tools/child/child.py` ; l'écharpe flottante est dans `child.js` (`SCARF_VERT`).
+Le poisson n'a pas de fichier de données : tout est dans `fish.js`. L'image fixe se refait avec une capture de l'accueil sans texte (`?t=6.9`).
 
 ## Lancer en local
 

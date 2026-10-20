@@ -1,23 +1,12 @@
-// BlackPhage - le cadre commun des pages : signe, menu, langue, contact, apparitions au défilement, décor.
+// BlackPhage - le cadre commun des pages : menu, langue, contact, apparitions au défilement, décor.
 // L'en-tête et le pied de page sont écrits dans le HTML (tools/build_site.py). Ici, on les rend vivants.
 import { $, $$, loadSite, loadPrograms, copyText } from './site.js';
 import { LANG, L, t, otherLangHref, rememberLang } from './i18n.js';
-import { mountMarkDefs, markSvg } from './mark.js';
 import { initGlass } from './glass.js';
-import { initAbyss } from './abyss.js';
-import { stage } from './stage.js';
+import { initMist } from './mist.js';
 
 const root = document.documentElement;
 setTimeout(() => root.classList.add('reveal-fallback'), 2200);
-
-// ------------------------------------------------------------------ le signe
-mountMarkDefs();
-let intro = false;   // le signe s'assemble une seule fois par session
-try { intro = !sessionStorage.getItem('bp-intro') && !stage.reduce; sessionStorage.setItem('bp-intro', '1'); } catch { /* ignoré */ }
-$$('[data-mark]').forEach((el, i) => {
-  const small = el.classList.contains('logo__mark');
-  el.innerHTML = markSvg({ bold: small, intro: small && intro && i === 0 });
-});
 
 // ------------------------------------------------------------------ langue
 // Le sélecteur calcule son adresse au moment du clic (l'ancre peut avoir changé) et mémorise le choix.
@@ -100,5 +89,5 @@ window.__observeReveals = observeReveals;
 // ------------------------------------------------------------------ couches de l'identité
 initGlass();
 if (!$('.grain')) { const g = document.createElement('div'); g.className = 'grain'; g.setAttribute('aria-hidden', 'true'); document.body.appendChild(g); }
-// l'accueil a sa propre scène (scene.js). Les autres pages reçoivent l'abysse, plus calme.
-if (!document.getElementById('scene')) initAbyss();
+// l'accueil a sa propre scène (scene.js). Les autres pages reçoivent la brume, plus calme.
+if (!document.getElementById('scene')) initMist();

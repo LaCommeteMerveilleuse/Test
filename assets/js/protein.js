@@ -1,10 +1,11 @@
-// BlackPhage - la protéine de la page d'un programme. Une surface organique en verre, plongée dans l'eau :
-// elle réfracte les rayons derrière elle, laisse passer un peu de couleur, accroche l'or de la lumière sur ses bords.
+// BlackPhage - la protéine de la page d'un programme. Une surface organique en verre, dans la brume du soir :
+// elle réfracte le ciel derrière elle, laisse passer un peu de couleur, et s'allume de l'intérieur par endroits,
+// de la même lumière corail que le poisson de l'accueil.
 // Rendu three.js, organisé comme une scène react-three-fiber : un Canvas, des objets, des useFrame.
 // La protéine suit la zone .phero__art de la page : elle défile avec elle et disparaît quand elle sort de l'écran.
 import * as THREE from 'three';
 import { stage, useFrame, onResize } from './stage.js';
-import { ABYSS_GLSL } from './abyss.js';
+import { MIST_GLSL } from './mist.js';
 
 const root = document.documentElement;
 const BASE = root.dataset.base || '';
@@ -14,9 +15,9 @@ attribute vec3 aNormal;
 attribute float aAo;
 uniform float uTime;
 varying vec3 vN; varying vec3 vV; varying float vAo; varying vec3 vP;
-${ABYSS_GLSL}
+${MIST_GLSL}
 // une respiration lente : la surface ondule à peine
-float wave(vec3 q){ float t = uTime; return bp_snoise(q.xy * 1.5 + vec2(t * 0.10, q.z * 1.3)) * 0.7 + bp_snoise(q.yz * 3.2 - vec2(t * 0.14, q.x * 2.1)) * 0.3; }
+float wave(vec3 q){ float t = uTime; return (bp_vnoise(vec3(q.xy * 1.5 + vec2(t * 0.10, q.z * 1.3), t * 0.05)) * 0.7 + bp_vnoise(vec3(q.yz * 3.2 - vec2(t * 0.14, q.x * 2.1), 7.0)) * 0.3) * 2.0 - 1.0; }
 void main(){
   vec3 n = normalize(aNormal);
   float e = 0.04; float d0 = wave(position);
@@ -28,35 +29,12 @@ void main(){
   gl_Position = projectionMatrix * mv;
 }`;
 
-// Un rayon de plus, qui traverse la protéine. Même inclinaison que ceux du décor.
-// uHalo : x et y, centre de la protéine à l'écran (0 à 1) ; z, son rayon en part de la hauteur.
-const RAY = `
-uniform vec3 uHalo;
-float bp_ray(vec2 uv, float aspect, float t){
-  vec2 d = (uv - uHalo.xy) * vec2(aspect, 1.0);
-  float R = uHalo.z;
-  float ang = radians(21.0);
-  float u = dot(d, vec2(cos(ang), sin(ang))) / (R * 0.62);
-  float v = dot(d, vec2(sin(ang), -cos(ang))) / R;          // négatif au-dessus de la protéine, positif en dessous
-  float up = smoothstep(-6.0, -0.3, v);
-  float down = 1.0 - smoothstep(0.3, 2.8, v);
-  float shimmer = 0.84 + 0.16 * bp_snoise(vec2(u * 3.0, v * 0.8 - t * 0.2));
-  return exp(-u * u) * up * down * shimmer;
-}`;
-
 const FRAG = `
 uniform vec2 uRes; uniform float uTime; uniform float uAspect; uniform vec3 uKey;
 varying vec3 vN; varying vec3 vV; varying float vAo; varying vec3 vP;
-${ABYSS_GLSL}
-${RAY}
-// le décor vu à travers le verre : de l'eau profonde et des rayons (version légère de bp_abyss)
-vec3 seen(vec2 uv){
-  vec3 base = mix(vec3(0.002, 0.008, 0.013), vec3(0.008, 0.040, 0.060), smoothstep(0.0, 0.7, uv.y));
-  float sh = bp_shafts(uv, uAspect, uTime) + 1.2 * bp_ray(uv, uAspect, uTime);
-  // vue à travers le verre, la lumière reste froide : l'or est gardé pour les reflets
-  vec3 shaftCol = mix(vec3(0.30, 0.64, 0.84), vec3(0.78, 0.96, 1.0), smoothstep(0.30, 1.15, sh));
-  return (base + shaftCol * sh * 0.40) * 0.9;
-}
+${MIST_GLSL}
+// le ciel vu à travers le verre
+vec3 seen(vec2 uv){ return bp_mist(uv, uAspect, uTime, 0.0, 0.0, 0.2) * 1.15 + vec3(0.04, 0.05, 0.10); }
 void main(){
   vec3 N = normalize(vN); vec3 V = normalize(-vV);
   if (dot(N, V) < 0.0) N = -N;
@@ -65,57 +43,53 @@ void main(){
   float depth = pow(1.0 - clamp(vAo, 0.0, 1.0), 1.25);          // cavités : le verre y est plus épais
   float thick = clamp((1.0 - ndv) * 0.80 + depth * 0.75, 0.0, 1.0);
   vec2 uv = gl_FragCoord.xy / uRes;
-  float sh = bp_shafts(uv, uAspect, uTime) + 1.2 * bp_ray(uv, uAspect, uTime);
 
-  // les rayons passent à travers la matière, décalés par la courbure, avec un peu de dispersion
+  // le ciel passe à travers la matière, décalé par la courbure, avec un peu de dispersion
   vec2 off = N.xy * (0.040 + 0.160 * thick);
   vec3 refr = vec3(seen(uv - off).r, seen(uv - off * 1.10).g, seen(uv - off * 1.21).b);
 
-  // absorption : le verre devient bleu-vert profond là où il est épais
-  vec3 pale = vec3(0.74, 0.96, 1.0);
-  vec3 deep = vec3(0.04, 0.32, 0.50);
+  // absorption : le verre devient indigo là où il est épais
+  vec3 pale = vec3(0.84, 0.88, 1.0);
+  vec3 deep = vec3(0.26, 0.30, 0.72);
   float k = smoothstep(0.10, 0.95, thick);
-  vec3 col = refr * mix(pale, deep, k) * (0.85 + 0.9 * k);
-  col += vec3(0.010, 0.060, 0.085) * (0.4 + 1.1 * thick);       // lueur de l'intérieur
+  vec3 col = refr * mix(pale, deep, k) * (0.90 + 0.9 * k);
+  col += vec3(0.030, 0.040, 0.110) * (0.4 + 1.1 * thick);       // lueur de l'intérieur
 
-  // caustiques sur la surface
-  float cau = bp_caustic(vP.xy * 1.9 + vec2(vP.z * 0.7, 0.0), uTime);
-  col += vec3(0.62, 0.95, 1.0) * cau * 0.05 * (0.4 + 1.2 * sh) * (0.4 + 0.6 * (1.0 - ndv));
+  // l'intérieur s'allume par endroits, comme la peau du poisson : de grandes taches et de fines veines qui dérivent
+  float n1 = bp_fbm(vec3(vP * 1.7 + vec3(uTime * 0.07, 0.0, uTime * 0.03)));
+  float blot = smoothstep(0.46, 0.78, n1);
+  float vein = pow(1.0 - abs(bp_vnoise(vec3(vP * 5.5 + vec3(0.0, uTime * 0.2, 3.0))) * 2.0 - 1.0), 8.0);
+  float bio = blot * (0.35 + 0.65 * thick) + vein * 0.35 * thick;
+  col += mix(vec3(0.86, 0.36, 0.78), vec3(1.0, 0.58, 0.28), smoothstep(0.1, 0.7, bio)) * bio * 0.85;
 
   // film irisé très discret
   vec3 iri = 0.5 + 0.5 * cos(6.28318 * (vec3(0.00, 0.33, 0.67) + ndv * 0.9 + thick * 0.45 + uTime * 0.012));
   col = mix(col, col * (0.55 + 0.75 * iri), 0.07 + 0.20 * fres);
 
-  // reflets nets : l'or des rayons sur les arêtes
+  // reflets nets : la lumière du soir sur les arêtes, tiède du côté du poisson
   vec3 L1 = normalize(uKey);
   vec3 L2 = normalize(vec3(-0.75, -0.25, 0.45));
   float s1 = pow(max(dot(N, normalize(L1 + V)), 0.0), 130.0);
   float s2 = pow(max(dot(N, normalize(L2 + V)), 0.0), 36.0);
   float rim = pow(1.0 - ndv, 3.0);
-  vec3 gold = mix(vec3(0.60, 0.92, 1.0), vec3(1.0, 0.88, 0.64), smoothstep(0.2, 1.0, sh));
-  col += vec3(1.0, 0.94, 0.82) * s1 * (0.9 + 1.2 * sh);
-  col += vec3(0.50, 0.85, 0.95) * s2 * 0.30;
-  col += gold * rim * (0.30 + 1.0 * sh) * 0.9;
+  col += vec3(1.0, 0.92, 0.88) * s1 * 1.0;
+  col += vec3(0.60, 0.70, 1.0) * s2 * 0.34;
+  col += mix(vec3(0.62, 0.72, 1.0), vec3(1.0, 0.66, 0.50), 0.55) * rim * 0.70;
 
-  // arête sombre du verre, qui détache l'objet de l'eau
-  col = mix(col, deep * 0.30, smoothstep(0.72, 1.0, 1.0 - ndv) * 0.35);
+  // arête sombre du verre, qui détache l'objet du fond
+  col = mix(col, deep * 0.32, smoothstep(0.72, 1.0, 1.0 - ndv) * 0.35);
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }`;
 
+// une lueur qui s'ajoute à la page derrière la protéine : alpha 0 avec une couleur, le canevas s'ajoute au lieu de recouvrir
 const HALO_VERT = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const HALO_FRAG = `
-uniform vec2 uRes; uniform float uTime; uniform float uAspect;
+uniform float uAspect; uniform vec3 uHalo;
 varying vec2 vUv;
-${ABYSS_GLSL}
-${RAY}
 void main(){
-  vec2 uv = vUv;
-  float ray = bp_ray(uv, uAspect, uTime);
-  vec2 d = (uv - uHalo.xy) * vec2(uAspect, 1.0);
-  float aura = exp(-pow(length(d) / (uHalo.z * 1.35), 2.0));
-  vec3 gold = vec3(1.0, 0.86, 0.60);
-  // alpha 0 avec une couleur : le canevas s'ajoute à la page au lieu de la recouvrir
-  gl_FragColor = vec4(gold * (ray * 0.34 + aura * 0.09), 0.0);
+  vec2 d = (vUv - uHalo.xy) * vec2(uAspect, 1.0);
+  float aura = exp(-pow(length(d) / (uHalo.z * 1.45), 2.0));
+  gl_FragColor = vec4(vec3(0.95, 0.52, 0.62) * aura * 0.13 + vec3(0.45, 0.55, 1.0) * exp(-pow(length(d) / (uHalo.z * 2.4), 2.0)) * 0.10, 0.0);
 }`;
 
 const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));

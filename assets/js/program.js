@@ -1,5 +1,5 @@
 // BlackPhage - page d'un programme. Le contenu vient de assets/data/programs.json, choisi par l'ancre (program.html#glp-1r).
-// Une protéine de verre flotte dans l'eau à côté du titre (protein.js).
+// Une protéine de verre flotte dans la brume à côté du titre (protein.js).
 import { $, loadPrograms, loadSite, esc, ARROW } from './site.js';
 import { L, t } from './i18n.js';
 import { wireCopy } from './chrome.js';

@@ -119,11 +119,10 @@ def head(name, lg, T, P):
 </head>'''
 
 
-WORDMARK = '<span class="wordmark">BLACKPH<i class="lam"></i>GE</span>'
-
-
-def logo(T, extra=''):
-    return f'<a class="logo{extra}" href="index.html" aria-label="{a(T["home_aria"])}"><span class="logo__mark" data-mark></span>{WORDMARK}</a>'
+def logo(T, P, extra=''):
+    """Le logo officiel (blanc, pour les fonds sombres). Les fichiers ne sont jamais modifiés."""
+    return (f'<a class="logo{extra}" href="index.html" aria-label="{a(T["home_aria"])}">'
+            f'<img class="logo__img" src="{P}assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>')
 
 
 def langswitch(lg, name):
@@ -136,6 +135,7 @@ def langswitch(lg, name):
 
 def header(name, lg, T):
     key = PAGES[name]['key']
+    P = '' if lg == 'fr' else '../'
 
     def link(href, label, k, also=()):
         cur = ' aria-current="page"' if key == k else ''
@@ -144,7 +144,7 @@ def header(name, lg, T):
 
     return f'''<header class="nav" id="nav">
   <div class="nav__in">
-    {logo(T)}
+    {logo(T, P)}
     <nav class="nav__pill glass" id="nav-links" aria-label="{a(T["nav_main"])}">
       {link('index.html', T['nav_home'], 'accueil')}
       {link('pipeline.html', T['nav_pipeline'], 'pipeline', also=('programme',))}
@@ -170,10 +170,11 @@ def program_links(lg):
 
 
 def footer(name, lg, T):
+    P = '' if lg == 'fr' else '../'
     return f'''<footer class="foot">
   <div class="container foot__in">
     <div class="foot__brand">
-      {logo(T)}
+      {logo(T, P)}
       <p class="foot__tag">{h(T['foot_tagline'])}</p>
     </div>
     <div><h4>{h(T['foot_company'])}</h4><ul><li><a href="a-propos.html">{h(T['nav_about'])}</a></li><li><a href="careers.html">{h(T['nav_careers'])}</a></li></ul></div>
@@ -237,6 +238,7 @@ def ring(T):
 
 def build_index(lg):
     T = STR[lg]
+    P = '' if lg == 'fr' else '../'
     steps = ''.join(
         f'<li class="step reveal"><span class="step__n">{i}</span><div><h3>{h(T[f"step_{i}"])}</h3><p>{h(T[f"step_{i}n"])}</p></div></li>'
         for i in range(1, 5))
@@ -257,6 +259,7 @@ def build_index(lg):
     </div>
   </div>
   <p class="sr-only">{h(T['art_alt'])}</p>
+  <button class="sr-only sr-only--focus" type="button" data-fish-wave>{h(T['fish_touch'])}</button>
   <ul class="hero__strip container" aria-label="{a(T['facts_label'])}"><li>{h(T['strip_1'])}</li><li>{h(T['strip_2'])}</li><li>{h(T['strip_3'])}</li></ul>
 </section>
 
@@ -275,7 +278,7 @@ def build_index(lg):
       <p class="lead reveal">{h(T['engine_lead'])}</p>
       <ol class="steps">{steps}</ol>
     </div>
-    <div class="engine__viz reveal" aria-hidden="true">{ring(T)}<div class="engine__core" data-mark></div></div>
+    <div class="engine__viz reveal" aria-hidden="true">{ring(T)}<div class="engine__core"><img src="{P}assets/img/symbole.svg" alt="" width="76" height="72"></div></div>
   </div>
 </section>
 
@@ -365,6 +368,7 @@ def contact_rows(T, lg):
 
 def build_about(lg):
     T = STR[lg]
+    P = '' if lg == 'fr' else '../'
     drive = ''.join(
         f'<article class="card glass reveal"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
         for i, k in ((1, 'compass'), (2, 'precise'), (3, 'heart')))
@@ -376,7 +380,7 @@ def build_about(lg):
       <h1 class="h1">{h(T['about_h1'])}</h1>
       <p class="lead">{h(T['about_lead'])}</p>
     </div>
-    <div class="brandmark" data-mark aria-hidden="true"></div>
+    <div class="brandmark" aria-hidden="true"><img src="{P}assets/img/symbole.svg" alt="" width="228" height="216"></div>
   </div>
 </section>
 
@@ -409,6 +413,20 @@ def build_about(lg):
         <p class="lead">{h(T['contact_p'])}</p>
       </div>
       <ul class="contact__list">{contact_rows(T, lg)}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="logos">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['brand_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['brand_h2'])}</h2>
+      <p class="lead reveal">{h(T['brand_p'])}</p>
+    </div>
+    <div class="logos">
+      <a class="logos__tile logos__tile--dark reveal" href="{P}assets/img/blackphage-logo-blanc.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-blanc.svg" alt="{a(T['brand_white'])}" width="320" height="55"><span>{h(T['brand_white'])}</span></a>
+      <a class="logos__tile logos__tile--light reveal" href="{P}assets/img/blackphage-logo-noir.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-noir.svg" alt="{a(T['brand_black'])}" width="320" height="55"><span>{h(T['brand_black'])}</span></a>
     </div>
   </div>
 </section>'''
