@@ -9,7 +9,7 @@ Marché international. Le site présente la société, sa technologie, son équi
 
 | Page | Rôle |
 | --- | --- |
-| `index.html` | Accueil, qui reprend l'ancienne page À propos. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page. Les sections : le premier écran, qui sommes-nous et l'idée (trois cases pleines), notre modèle Frontier NovaDiff active, les Smart Binders, les trois cibles, puis ce qui nous porte et notre méthode, le contact (partenaires, presse, recrutement, ancre `#contact`) et les logos officiels (blanc et noir). **Quatre sections portent `data-station` (1 à 4) et pilotent le parcours du poisson**, la dernière station est le bas de la page. |
+| `index.html` | Accueil, qui reprend l'ancienne page À propos. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page. Les sections : le premier écran, qui sommes-nous et l'idée (trois cases pleines), notre modèle Frontier NovaDiff active, les Smart Binders, les trois cibles, puis ce qui nous porte (trois principes) et le contact (partenaires et investisseurs, recrutement, ancre `#contact`). Il n'y a ni bloc de logos, ni adresse presse, ni bloc « notre méthode ». **Quatre sections portent `data-station` (1 à 4) et pilotent le parcours du poisson**, la dernière station est le bas de la page. |
 | `tech.html` | Notre technologie (Our tech). NovaDiff active, les Smart Binders, puis les trois cibles et leurs applications potentielles : GLP-1R, myostatine / GDF-8, TfR1 / CD71. Elle remplace l'ancienne page Pipeline. |
 | `program.html#glp-1r` | Détail d'un programme : les problèmes du marché, notre réponse, où nous en sommes. Une protéine de verre flotte à côté du titre. |
 | `careers.html` | Carrières : profil recherché, compétences, postes ouverts, candidature. |
@@ -25,7 +25,7 @@ Trois endroits suffisent.
    les cartes de l'accueil et de la page Our tech sont écrites dans le HTML (elles s'affichent donc sans JavaScript).
    Les champs d'une cible : `name`, `full` (nom complet), `area`, `role` (ce qu'elle fait), `applications` (une liste, affichée comme applications **potentielles**), `approach` (notre approche).
    `"detail": true` ouvre en plus une page `program.html#<id>`, lue dans le fichier au chargement, avec `stage`, `status`, `tagline`, `intro`, `problems`, `answers`, `where`, `disclaimer` (voir `glp-1r`).
-2. **Les coordonnées** : `assets/data/site.json` (partenaires et investisseurs, presse, recrutement). Les adresses y sont **des exemples à remplacer**.
+2. **Les coordonnées** : `assets/data/site.json` (partenaires et investisseurs, recrutement). Les adresses y sont **des exemples à remplacer**.
 3. **Les textes des pages** : `tools/content.py` (chaque clé existe en français et en anglais). Après modification, lancez
 
    ```bash
@@ -70,7 +70,7 @@ de l'ADN, des protéines en rubans, une membrane et son récepteur, et des lueur
 | **La brume** | `assets/js/mist.js` | Le ciel des pages intérieures : indigo, nappes de lumière qui dérivent, poussières lumineuses. Un petit rendu WebGL2 sans bibliothèque. |
 | **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume et s'allume de l'intérieur de la même lumière corail que le poisson. Le même maillage sert de protéine cible dans le monde de l'accueil. |
 | **Le verre** | `assets/js/glass.js`, classe `.glass` | Surfaces translucides avec lisière lumineuse qui suit le pointeur. |
-| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » en bas de l'accueil, à ouvrir pour la presse). `symbole.svg` est le « A » du logotype avec son point, gardé à disposition (le favicon en est dérivé). |
+| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir est gardé à disposition (le site ne l'affiche plus). `symbole.svg` est le « A » du logotype avec son point, gardé à disposition (le favicon en est dérivé). |
 | **La scène** | `assets/js/stage.js` | Une seule boucle d'animation pour tout le site (modèle `useFrame`), pause onglet caché, défilement et pointeur lissés, qualité adaptative. |
 
 Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Le titre de l'accueil lit « Push the frontier of the treatable. »

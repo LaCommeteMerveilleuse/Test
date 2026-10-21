@@ -308,13 +308,6 @@ def build_index(lg):
       <h2 class="h2 reveal">{h(T['drive_h2'])}</h2>
     </div>
     <div class="cards3">{drive_html(T)}</div>
-    <div class="split about__how glass panel reveal">
-      <div>
-        <p class="eyebrow reveal">{h(T['how_eyebrow'])}</p>
-        <h2 class="h2 reveal">{h(T['how_h2'])}</h2>
-      </div>
-      <ul class="ticks">{how_html(T)}</ul>
-    </div>
   </div>
 </section>
 
@@ -330,19 +323,6 @@ def build_index(lg):
     </div>
   </div>
 </section>
-
-<section class="sec sec--tight" id="logos">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">{h(T['brand_eyebrow'])}</p>
-      <h2 class="h2 reveal">{h(T['brand_h2'])}</h2>
-      <p class="lead reveal">{h(T['brand_p'])}</p>
-    </div>
-    <div class="logos">
-      <a class="logos__tile logos__tile--dark reveal" href="{P}assets/img/blackphage-logo-blanc.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-blanc.svg" alt="{a(T['brand_white'])}" width="320" height="55"><span>{h(T['brand_white'])}</span></a>
-      <a class="logos__tile logos__tile--light reveal" href="{P}assets/img/blackphage-logo-noir.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-noir.svg" alt="{a(T['brand_black'])}" width="320" height="55"><span>{h(T['brand_black'])}</span></a>
-    </div>
-  </div>
 </section>'''
     return page('index', lg, main, extra_before_main='<canvas id="scene" class="scene" aria-hidden="true"></canvas>\n')
 
@@ -454,8 +434,8 @@ def build_program(lg):
 
 # ------------------------------------------------------------------ à propos, fusionné dans l'accueil
 def contact_rows(T, lg):
-    rows = [('contact_partners', SITE['email']), ('contact_press', SITE['pressEmail']), ('contact_careers', SITE['careersEmail'])]
-    keys = ['email', 'pressEmail', 'careersEmail']
+    rows = [('contact_partners', SITE['email']), ('contact_careers', SITE['careersEmail'])]
+    keys = ['email', 'careersEmail']
     out = ''
     for (label, addr), k in zip(rows, keys):
         out += (f'<li><span class="contact__k">{h(T[label])}</span>'
@@ -468,10 +448,6 @@ def drive_html(T):
     return ''.join(
         f'<article class="card glass panel reveal" style="--i:{i - 1}"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
         for i, k in ((1, 'compass'), (2, 'precise'), (3, 'heart')))
-
-
-def how_html(T):
-    return ''.join(f'<li class="reveal">{h(T[f"how_{i}"])}</li>' for i in range(1, 4))
 
 
 # ------------------------------------------------------------------ carrières

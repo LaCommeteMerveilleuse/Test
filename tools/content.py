@@ -128,17 +128,11 @@ s('drive_2', 'La précision avant le volume', 'Precision over volume')
 s('drive_2n', 'Une molécule précise vaut mieux que mille molécules grossières.', 'One sharp molecule beats a thousand blunt ones.')
 s('drive_3', 'Les patients fixent la barre', 'Patients set the bar')
 s('drive_3n', 'Chaque choix de conception répond à quelqu\'un qui attend mieux.', 'Every design choice answers to someone waiting for better.')
-s('how_eyebrow', 'Notre méthode', 'How we work')
-s('how_h2', 'L\'agent mène. Les scientifiques décident.', 'Agent-led. Scientist-decided.')
-s('how_1', 'L\'agent propose, les scientifiques tranchent.', 'The agent proposes. Scientists decide.')
-s('how_2', 'Chaque tour apprend au suivant.', 'Every round teaches the next.')
-s('how_3', 'Privé par défaut. Public quand c\'est prêt.', 'Private by default. Public when ready.')
 s('contact_eyebrow', 'Contact', 'Contact')
 s('contact_h2', 'Devenir partenaire.', 'Partner with us.')
 s('contact_p', 'Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques, aux investisseurs et à la presse, partout dans le monde.',
   'Tell us what you are building. We answer pharma partners, investors and press, around the world.')
 s('contact_partners', 'Partenaires et investisseurs', 'Partners and investors')
-s('contact_press', 'Presse', 'Press')
 s('contact_careers', 'Recrutement', 'Hiring')
 
 # ------------------------------------------------------------------ carrières
@@ -211,8 +205,3 @@ s('art_alt', 'Un poisson combattant translucide, couvert de vagues de lumière, 
 s('noscript_prog', 'Activez JavaScript pour voir ce programme.', 'Turn on JavaScript to see this program.')
 
 s('fish_touch', 'Toucher le poisson', 'Touch the fish')
-s('brand_eyebrow', 'Identité', 'Identity')
-s('brand_h2', 'Nos logos.', 'Our logos.')
-s('brand_p', 'Pour la presse et les partenaires. Le logo blanc va sur les fonds sombres, le logo noir sur les fonds clairs.', 'For press and partners. Use the white logo on dark backgrounds and the black logo on light ones.')
-s('brand_white', 'Logo blanc, SVG', 'White logo, SVG')
-s('brand_black', 'Logo noir, SVG', 'Black logo, SVG')
