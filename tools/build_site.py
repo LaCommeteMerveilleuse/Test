@@ -28,7 +28,6 @@ PAGES = {
     'index': dict(key='accueil', title_key='home_title', desc_key='home_desc', three=True, scripts=['chrome.js', 'scene.js']),
     'tech': dict(key='tech', title_key='tech_title', desc_key='tech_desc', three=True, scripts=['chrome.js', 'tech.js']),
     'program': dict(key='programme', title_key='prog_title', desc_key='prog_desc', three=True, scripts=['chrome.js', 'program.js']),
-    'a-propos': dict(key='a-propos', title_key='about_title', desc_key='about_desc', three=False, scripts=['chrome.js']),
     'careers': dict(key='carrieres', title_key='car_title', desc_key='car_desc', three=False, scripts=['chrome.js']),
 }
 
@@ -152,13 +151,12 @@ def header(name, lg, T):
     <nav class="nav__pill glass" id="nav-links" aria-label="{a(T["nav_main"])}">
       {link('index.html', T['nav_home'], 'accueil')}
       {link('tech.html', T['nav_tech'], 'tech', also=('programme',))}
-      {link('a-propos.html', T['nav_about'], 'a-propos')}
       {link('careers.html', T['nav_careers'], 'carrieres')}
-      <a class="btn btn--light nav__cta-m" href="a-propos.html#contact">{h(T['nav_partner'])}</a>
+      <a class="btn btn--light nav__cta-m" href="index.html#contact">{h(T['nav_partner'])}</a>
     </nav>
     <div class="nav__end">
       {langswitch(lg, name)}
-      <a class="btn btn--light nav__cta" href="a-propos.html#contact">{h(T['nav_partner'])}</a>
+      <a class="btn btn--light nav__cta" href="index.html#contact">{h(T['nav_partner'])}</a>
       <button class="nav__burger" type="button" aria-label="{a(T['nav_menu'])}" aria-expanded="false" aria-controls="nav-links"><span></span></button>
     </div>
   </div>
@@ -181,7 +179,7 @@ def footer(name, lg, T):
       {logo(T, P)}
       <p class="foot__tag">{h(T['foot_tagline'])}</p>
     </div>
-    <div><h4>{h(T['foot_company'])}</h4><ul><li><a href="a-propos.html">{h(T['nav_about'])}</a></li><li><a href="careers.html">{h(T['nav_careers'])}</a></li></ul></div>
+    <div><h4>{h(T['foot_company'])}</h4><ul><li><a href="index.html#who">{h(T['foot_who'])}</a></li><li><a href="careers.html">{h(T['nav_careers'])}</a></li></ul></div>
     <div><h4>{h(T['foot_tech'])}</h4><ul data-programs-list><li><a href="tech.html">{h(T['nav_tech'])}</a></li>{program_links(lg)}</ul></div>
     <div><h4>{h(T['foot_contact'])}</h4><ul><li><a data-mail="email" href="mailto:{a(SITE['email'])}">{h(SITE['email'])}</a></li><li>{langswitch(lg, name)}</li></ul></div>
   </div>
@@ -251,27 +249,25 @@ def build_index(lg):
     <p class="hero__lead">{hb(T['home_lead'])}</p>
     <div class="hero__cta">
       <a class="btn btn--light btn--lg" href="tech.html">{h(T['cta_tech'])}{ARROW}</a>
-      <a class="btn btn--ghost btn--lg" href="a-propos.html#contact">{h(T['cta_partner'])}</a>
+      <a class="btn btn--ghost btn--lg" href="index.html#contact">{h(T['cta_partner'])}</a>
     </div>
   </div>
   <p class="sr-only">{h(T['art_alt'])}</p>
   <button class="sr-only sr-only--focus" type="button" data-fish-wave>{h(T['fish_touch'])}</button>
-  <ul class="hero__strip container" aria-label="{a(T['facts_label'])}"><li>{h(T['strip_1'])}</li><li>{h(T['strip_2'])}</li></ul>
 </section>
 
-<section class="sec idea" id="idea">
+<section class="sec idea" id="idea" data-station="1">
   <div class="container">
-    <div class="who">
+    <div class="who" id="who">
       <p class="eyebrow reveal">{h(T['who_eyebrow'])}</p>
       <p class="who__p reveal">{hb(T['who_p'])}</p>
-      <a class="btn btn--ghost reveal" href="a-propos.html">{h(T['who_cta'])}{ARROW}</a>
     </div>
     <h2 class="eyebrow idea__eyebrow reveal">{h(T['idea_eyebrow'])}</h2>
     <ol class="idea__list pillars">{idea}</ol>
   </div>
 </section>
 
-<section class="sec nova" id="nova">
+<section class="sec nova" id="nova" data-station="2">
   <div class="container nova__grid">
     <div class="nova__copy">
       <p class="eyebrow reveal">{h(T['nova_eyebrow'])}</p>
@@ -282,7 +278,7 @@ def build_index(lg):
   </div>
 </section>
 
-<section class="sec binders" id="binders">
+<section class="sec binders" id="binders" data-station="3">
   <div class="container">
     <div class="sec__head">
       <p class="eyebrow reveal">{h(T['class_eyebrow'])}</p>
@@ -293,7 +289,7 @@ def build_index(lg):
   </div>
 </section>
 
-<section class="sec targets" id="targets">
+<section class="sec targets" id="targets" data-station="4">
   <div class="container">
     <div class="sec__head">
       <p class="eyebrow reveal">{h(T['tg_eyebrow'])}</p>
@@ -305,15 +301,46 @@ def build_index(lg):
   </div>
 </section>
 
-<section class="sec end" id="partner">
+<section class="sec sec--tight about" id="about">
   <div class="container">
-    <div class="end__in glass reveal">
-      <h2 class="end__h">{h(T['end_h2'])}</h2>
-      <p class="lead">{h(T['end_p'])}</p>
-      <div class="hero__cta">
-        <a class="btn btn--light btn--lg" href="a-propos.html#contact">{h(T['cta_partner'])}{ARROW}</a>
-        <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:{a(SITE['email'])}">{h(SITE['email'])}</a>
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['drive_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['drive_h2'])}</h2>
+    </div>
+    <div class="cards3">{drive_html(T)}</div>
+    <div class="split about__how glass panel reveal">
+      <div>
+        <p class="eyebrow reveal">{h(T['how_eyebrow'])}</p>
+        <h2 class="h2 reveal">{h(T['how_h2'])}</h2>
       </div>
+      <ul class="ticks">{how_html(T)}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact">
+  <div class="container">
+    <div class="contact glass reveal">
+      <div class="contact__copy">
+        <p class="eyebrow">{h(T['contact_eyebrow'])}</p>
+        <h2 class="h2">{h(T['contact_h2'])}</h2>
+        <p class="lead">{h(T['contact_p'])}</p>
+      </div>
+      <ul class="contact__list">{contact_rows(T, lg)}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="logos">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['brand_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['brand_h2'])}</h2>
+      <p class="lead reveal">{h(T['brand_p'])}</p>
+    </div>
+    <div class="logos">
+      <a class="logos__tile logos__tile--dark reveal" href="{P}assets/img/blackphage-logo-blanc.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-blanc.svg" alt="{a(T['brand_white'])}" width="320" height="55"><span>{h(T['brand_white'])}</span></a>
+      <a class="logos__tile logos__tile--light reveal" href="{P}assets/img/blackphage-logo-noir.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-noir.svg" alt="{a(T['brand_black'])}" width="320" height="55"><span>{h(T['brand_black'])}</span></a>
     </div>
   </div>
 </section>'''
@@ -409,7 +436,7 @@ def build_tech(lg):
       <h2 class="end__h end__h--sm">{h(T['end_h2'])}</h2>
       <p class="lead">{h(T['end_p'])}</p>
       <div class="hero__cta">
-        <a class="btn btn--light btn--lg" href="a-propos.html#contact">{h(T['cta_partner'])}{ARROW}</a>
+        <a class="btn btn--light btn--lg" href="index.html#contact">{h(T['cta_partner'])}{ARROW}</a>
         <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:{a(SITE['email'])}">{h(SITE['email'])}</a>
       </div>
     </div>
@@ -425,7 +452,7 @@ def build_program(lg):
     return page('program', lg, main, extra_before_main='<canvas id="protein" class="protein" aria-hidden="true"></canvas>\n')
 
 
-# ------------------------------------------------------------------ à propos
+# ------------------------------------------------------------------ à propos, fusionné dans l'accueil
 def contact_rows(T, lg):
     rows = [('contact_partners', SITE['email']), ('contact_press', SITE['pressEmail']), ('contact_careers', SITE['careersEmail'])]
     keys = ['email', 'pressEmail', 'careersEmail']
@@ -437,71 +464,14 @@ def contact_rows(T, lg):
     return out
 
 
-def build_about(lg):
-    T = STR[lg]
-    P = '' if lg == 'fr' else '../'
-    drive = ''.join(
-        f'<article class="card glass reveal"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
+def drive_html(T):
+    return ''.join(
+        f'<article class="card glass panel reveal" style="--i:{i - 1}"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"drive_{i}"])}</h3><p>{h(T[f"drive_{i}n"])}</p></article>'
         for i, k in ((1, 'compass'), (2, 'precise'), (3, 'heart')))
-    how = ''.join(f'<li class="reveal">{h(T[f"how_{i}"])}</li>' for i in range(1, 4))
-    main = f'''<section class="pagehead">
-  <div class="container pagehead__grid">
-    <div>
-      <p class="eyebrow">{h(T['about_eyebrow'])}</p>
-      <h1 class="h1">{h(T['about_h1'])}</h1>
-      <p class="lead">{h(T['about_lead'])}</p>
-    </div>
-    <div class="brandmark" aria-hidden="true"><img src="{P}assets/img/symbole.svg" alt="" width="228" height="216"></div>
-  </div>
-</section>
 
-<section class="sec sec--tight">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">{h(T['drive_eyebrow'])}</p>
-      <h2 class="h2 reveal">{h(T['drive_h2'])}</h2>
-    </div>
-    <div class="cards3">{drive}</div>
-  </div>
-</section>
 
-<section class="sec sec--tight">
-  <div class="container split">
-    <div>
-      <p class="eyebrow reveal">{h(T['how_eyebrow'])}</p>
-      <h2 class="h2 reveal">{h(T['how_h2'])}</h2>
-    </div>
-    <ul class="ticks">{how}</ul>
-  </div>
-</section>
-
-<section class="sec" id="contact">
-  <div class="container">
-    <div class="contact glass reveal">
-      <div class="contact__copy">
-        <p class="eyebrow">{h(T['contact_eyebrow'])}</p>
-        <h2 class="h2">{h(T['contact_h2'])}</h2>
-        <p class="lead">{h(T['contact_p'])}</p>
-      </div>
-      <ul class="contact__list">{contact_rows(T, lg)}</ul>
-    </div>
-  </div>
-</section>
-
-<section class="sec sec--tight" id="logos">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">{h(T['brand_eyebrow'])}</p>
-      <h2 class="h2 reveal">{h(T['brand_h2'])}</h2>
-      <p class="lead reveal">{h(T['brand_p'])}</p>
-    </div>
-    <div class="logos">
-      <a class="logos__tile logos__tile--dark reveal" href="{P}assets/img/blackphage-logo-blanc.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-blanc.svg" alt="{a(T['brand_white'])}" width="320" height="55"><span>{h(T['brand_white'])}</span></a>
-      <a class="logos__tile logos__tile--light reveal" href="{P}assets/img/blackphage-logo-noir.svg" target="_blank" rel="noopener"><img src="{P}assets/img/blackphage-logo-noir.svg" alt="{a(T['brand_black'])}" width="320" height="55"><span>{h(T['brand_black'])}</span></a>
-    </div>
-  </div>
-</section>'''
-    return page('a-propos', lg, main)
+def how_html(T):
+    return ''.join(f'<li class="reveal">{h(T[f"how_{i}"])}</li>' for i in range(1, 4))
 
 
 # ------------------------------------------------------------------ carrières
@@ -650,7 +620,7 @@ def check(name, src):
 
 def main():
     check_data()
-    builders = {'index': build_index, 'tech': build_tech, 'program': build_program, 'a-propos': build_about, 'careers': build_careers}
+    builders = {'index': build_index, 'tech': build_tech, 'program': build_program, 'careers': build_careers}
     (ROOT / 'en').mkdir(exist_ok=True)
     out = []
     for lg in ('fr', 'en'):

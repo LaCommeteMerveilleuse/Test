@@ -3,16 +3,15 @@
 Site statique (HTML, CSS, JavaScript, sans étape de build côté navigateur) de BlackPhage, société privée dont l'agent autonome **NovaDiff active**
 (« Autonomous Agent for Next-Generation Biologics », le modèle Frontier de la société) construit des Smart Binders, des protéines dépendantes du pH
 qui changent de conformation pour réduire la toxicité. L'objectif affiché : repousser la durée moyenne de vie en bonne santé au-delà de 100 ans.
-Marchés américain et européen. Le site présente la société, sa technologie, son équipe et ses offres d'emploi.
+Marché international. Le site présente la société, sa technologie, son équipe et ses offres d'emploi.
 
 ## Pages
 
 | Page | Rôle |
 | --- | --- |
-| `index.html` | Accueil. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page. Six sections, une par station : le premier écran, qui sommes-nous et l'idée (trois cases pleines), NovaDiff active, les Smart Binders, les trois cibles, le bandeau de contact. |
+| `index.html` | Accueil, qui reprend l'ancienne page À propos. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page. Les sections : le premier écran, qui sommes-nous et l'idée (trois cases pleines), notre modèle Frontier NovaDiff active, les Smart Binders, les trois cibles, puis ce qui nous porte et notre méthode, le contact (partenaires, presse, recrutement, ancre `#contact`) et les logos officiels (blanc et noir). **Quatre sections portent `data-station` (1 à 4) et pilotent le parcours du poisson**, la dernière station est le bas de la page. |
 | `tech.html` | Notre technologie (Our tech). NovaDiff active, les Smart Binders, puis les trois cibles et leurs applications potentielles : GLP-1R, myostatine / GDF-8, TfR1 / CD71. Elle remplace l'ancienne page Pipeline. |
 | `program.html#glp-1r` | Détail d'un programme : les problèmes du marché, notre réponse, où nous en sommes. Une protéine de verre flotte à côté du titre. |
-| `a-propos.html` | À propos : mission, principes, méthode, logos officiels (blanc et noir, à télécharger), contact (partenaires, presse, recrutement). |
 | `careers.html` | Carrières : profil recherché, compétences, postes ouverts, candidature. |
 
 Chaque page existe en français (racine) et en anglais (dossier `en/`).
@@ -44,7 +43,7 @@ Trois endroits suffisent.
 BlackPhage ne publie pas de données scientifiques. Les objectifs de conception (dépendant du pH, changement de conformation, moins toxique, plus précis) et les applications des trois cibles sont présentés comme des objectifs de recherche,
 accompagnés de la mention « Expérimental. Préclinique. Non approuvé par la FDA, l'EMA ni aucune autorité » (`disclaimer` de GLP-1R, page Our tech et pied de page).
 L'ambition de vie en bonne santé au-delà de 100 ans est écrite comme **un objectif**, jamais comme un résultat.
-Le site s'adresse aux partenaires, investisseurs et journalistes des États-Unis **et** d'Europe.
+Le site vise un marché international : il s'adresse aux partenaires, investisseurs et journalistes du monde entier, sans cibler un pays ni une région.
 Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et la littérature publiques : faites-les relire avant publication.
 
 ## Langues
@@ -65,13 +64,13 @@ de l'ADN, des protéines en rubans, une membrane et son récepteur, et des lueur
 | Élément | Où | Rôle |
 | --- | --- | --- |
 | **Le poisson** | `assets/js/fish.js` | Un combattant construit par code, sans fichier de modèle : un corps fin et translucide (écailles qui s'allument, squelette vu par transparence, opercule), des **yeux de verre** (un liseré violet, un iris doré translucide, une pupille qui laisse voir à travers) et de grandes nageoires en voile avec leurs rayons (queue en éventail, dorsale, anale, ventrales en rubans, pectorales). **Le corps ondule comme en nageant** : une onde court du museau à la queue en grandissant (la tête presque immobile, la queue qui balance le plus), dessinée dans le plan que voit la caméra puisqu'une onde latérale resterait invisible de profil, et chaque section du corps penche avec l'axe, nageoires et yeux compris. Chaque nageoire porte en plus une **onde qui court de sa base vers son bord libre**, en travers du plan et dans le plan, et la lumière suit le relief du voile. La bioluminescence se compose de grandes taches, de veines, de vagues régulières qui descendent le corps et d'impulsions qui filent le long des rayons. |
-| **Le parcours** | `assets/js/scene.js` | **Six stations, une par section de l'accueil.** Le défilement, lissé, avance le poisson le long d'un chemin ; la caméra le suit de profil, c'est le monde qui défile. Il reste à peu près à sa place à l'écran : un léger flottement, un corps qui ondule doucement au repos et plus largement quand on défile, et il penche à peine vers le pointeur.
+| **Le parcours** | `assets/js/scene.js` | **Six stations.** Les stations 1 à 4 sont des sections de l'accueil (attribut `data-station`), la 5 est le bas de la page, la 0 le premier écran. Le défilement, lissé, avance le poisson le long d'un chemin ; la caméra le suit de profil, c'est le monde qui défile. Il reste à peu près à sa place à l'écran : un léger flottement, un corps qui ondule doucement au repos et plus largement quand on défile, et il penche à peine vers le pointeur.
 **Quand on défile, il se déplace un peu dans l'espace** : une dérive lente qui suit l'avancée dans la page (`moveX`, `moveY`, `moveZ`, nulle sur le premier écran, un léger virage du cap avec elle) et une poussée qui suit la vitesse (il file devant lui quand on descend, recule un peu quand on remonte). **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
 | **Le monde** | `assets/js/world.js`, `assets/js/molecules.js` | Tout est du code. Station 1 : l'air libre des petites molécules (eau, benzène, sucre, purine, acide aminé, phosphate) ; 2 : la double hélice d'ADN ; 3 : la boucle du moteur, un anneau de molécules qui tourne ; 4 : la protéine cible, de verre, et ses liants ; 5 : la membrane (deux feuillets de sphères) et ses récepteurs à sept hélices ; 6 : une vue d'ensemble. Les molécules sont instanciées (une commande de dessin par modèle et par tranche du chemin), la brume de profondeur fond les formes lointaines dans le fond, **le poisson éclaire les molécules voisines**, et une voie reste libre autour de lui pour qu'il se lise. Chaque ensemble n'est dessiné que près de l'endroit où il se trouve. |
 | **La brume** | `assets/js/mist.js` | Le ciel des pages intérieures : indigo, nappes de lumière qui dérivent, poussières lumineuses. Un petit rendu WebGL2 sans bibliothèque. |
 | **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume et s'allume de l'intérieur de la même lumière corail que le poisson. Le même maillage sert de protéine cible dans le monde de l'accueil. |
 | **Le verre** | `assets/js/glass.js`, classe `.glass` | Surfaces translucides avec lisière lumineuse qui suit le pointeur. |
-| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » de la page À propos). `symbole.svg` est le « A » du logotype avec son point, utilisé pour le favicon et la page À propos. |
+| **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » en bas de l'accueil, à ouvrir pour la presse). `symbole.svg` est le « A » du logotype avec son point, gardé à disposition (le favicon en est dérivé). |
 | **La scène** | `assets/js/stage.js` | Une seule boucle d'animation pour tout le site (modèle `useFrame`), pause onglet caché, défilement et pointeur lissés, qualité adaptative. |
 
 Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Le titre de l'accueil lit « Push the frontier of the treatable. »

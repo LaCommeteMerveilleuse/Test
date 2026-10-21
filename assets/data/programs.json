@@ -25,8 +25,8 @@
     "en": "In design"
    },
    "role": {
-    "fr": "Un récepteur qui aide à régler l’appétit, la glycémie et le métabolisme. Il a changé la prise en charge de l’obésité et du diabète de type 2.",
-    "en": "A receptor that helps regulate appetite, blood sugar and metabolism. It reshaped the treatment of obesity and type 2 diabetes."
+    "fr": "Un récepteur qui aide à régler l’appétit, la glycémie et le métabolisme. Les médicaments qui le ciblent ont changé la prise en charge de l’obésité et du diabète de type 2.",
+    "en": "A receptor that helps regulate appetite, blood sugar and metabolism. Drugs that target it reshaped the treatment of obesity and type 2 diabetes."
    },
    "applications": [
     {
@@ -168,8 +168,8 @@
      "en": "Preclinical"
     },
     {
-     "fr": "À la recherche de partenaires américains et européens",
-     "en": "Seeking U.S. and European partners"
+     "fr": "À la recherche de partenaires dans le monde entier",
+     "en": "Seeking partners worldwide"
     }
    ],
    "disclaimer": {
@@ -231,13 +231,13 @@
     "en": "Brain and oncology"
    },
    "role": {
-    "fr": "Un récepteur du fer, très présent sur la barrière du cerveau et sur les cellules qui se divisent vite. C’est une porte d’entrée pour les biologiques.",
-    "en": "An iron receptor, abundant on the blood-brain barrier and on fast-dividing cells. It is a doorway for biologics."
+    "fr": "Un récepteur du fer, très présent sur la barrière qui protège le cerveau et sur les cellules qui se divisent vite. Il peut servir de porte d’entrée pour acheminer des médicaments biologiques jusqu’au cerveau ou jusqu’à ces cellules.",
+    "en": "An iron receptor, abundant on the barrier that protects the brain and on fast-dividing cells. It can serve as an entry point to carry biologic drugs into the brain or to those cells."
    },
    "applications": [
     {
-     "fr": "Faire entrer des biologiques dans le cerveau",
-     "en": "Carrying biologics into the brain"
+     "fr": "Acheminer des médicaments biologiques dans le cerveau",
+     "en": "Carrying biologic drugs into the brain"
     },
     {
      "fr": "Maladies neurologiques",

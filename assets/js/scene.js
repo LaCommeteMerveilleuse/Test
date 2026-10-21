@@ -130,14 +130,14 @@ async function start() {
 
   const camera = new THREE.PerspectiveCamera(FOV, 1.6, 10, 12000);
 
-  // ---------------------------------------------------------------- le défilement : une station par section
+  // ---------------------------------------------------------------- le défilement : une station par section repérée (data-station), la dernière au bas de la page
   let anchors = Array.from({ length: STATIONS }, (_, i) => i * 800);
   function measure() {
     const secs = [...document.querySelectorAll('main > section')];
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - innerHeight);
     const a = [0];
     for (let i = 1; i < STATIONS - 1; i++) {
-      const el = secs[Math.min(secs.length - 1, Math.round(i * (secs.length - 1) / (STATIONS - 1)))];
+      const el = document.querySelector(`main > section[data-station="${i}"]`) || secs[Math.min(secs.length - 1, Math.round(i * (secs.length - 1) / (STATIONS - 1)))];
       if (!el || secs.length < 2) { a.push(maxScroll * i / (STATIONS - 1)); continue; }
       const r = el.getBoundingClientRect();
       a.push(r.top + scrollY + r.height * 0.5 - innerHeight * 0.5);
