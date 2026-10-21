@@ -13,7 +13,7 @@ def s(key, fr, en):
 
 # ------------------------------------------------------------------ communs
 s('nav_home', 'Accueil', 'Home')
-s('nav_pipeline', 'Pipeline', 'Pipeline')
+s('nav_tech', 'Notre technologie', 'Our tech')
 s('nav_about', 'À propos', 'About')
 s('nav_careers', 'Carrières', 'Careers')
 s('nav_partner', 'Devenir partenaire', 'Partner with us')
@@ -24,27 +24,30 @@ s('lang_switch_label', 'Switch to English', 'Passer en français')
 s('skip', 'Aller au contenu', 'Skip to content')
 s('foot_tagline', 'Repousser la frontière du traitable.', 'Push the frontier of the treatable.')
 s('foot_company', 'Société', 'Company')
-s('foot_programs', 'Programmes', 'Programs')
+s('foot_tech', 'Technologie', 'Technology')
 s('foot_contact', 'Contact', 'Contact')
-s('legal', 'Brevets en cours. Programmes expérimentaux, non approuvés par la FDA, l\'EMA ni aucune autre autorité.',
-  'Patents pending. Investigational programs, not approved by the FDA, the EMA or any other regulator.')
+s('legal', 'Programmes expérimentaux, non approuvés par la FDA, l\'EMA ni aucune autre autorité.',
+  'Investigational programs, not approved by the FDA, the EMA or any other regulator.')
 s('rights', 'Tous droits réservés', 'All rights reserved')
-s('brand_tag', 'Smart Binders', 'Smart Binders')
-s('strip_1', 'Brevets en cours', 'Patents pending')
-s('strip_2', 'Société privée', 'Private company')
-s('strip_3', 'Conçu pour les États-Unis et l\'Europe', 'Built for the U.S. and Europe')
-s('cta_pipeline', 'Explorer le pipeline', 'Explore the pipeline')
+s('strip_1', 'Société privée', 'Private company')
+s('strip_2', 'Conçu pour les États-Unis et l\'Europe', 'Built for the U.S. and Europe')
+s('cta_tech', 'Découvrir notre technologie', 'Explore our tech')
 s('cta_partner', 'Devenir partenaire', 'Partner with us')
 
 # ------------------------------------------------------------------ accueil
 s('home_title', 'BlackPhage', 'BlackPhage')
-s('home_desc', 'Un agent autonome qui conçoit des médicaments protéiques plus intelligents. Dépendants du pH. Précis. Brevets en cours.',
-  'An autonomous agent that designs smarter protein medicines. pH-dependent. Precise. Patents pending.')
+s('home_desc', 'NovaDiff active, un agent autonome pour les biologiques de nouvelle génération. Des Smart Binders dépendants du pH, plus précis et moins toxiques. Société privée.',
+  'NovaDiff active, an autonomous agent for next-generation biologics. pH-dependent Smart Binders, sharper and less toxic. Private company.')
 s('home_h1_a', 'Repousser la', 'Push the')
 s('home_h1_b', 'frontière', 'frontier')
 s('home_h1_c', 'du traitable.', 'of the treatable.')
-s('home_lead', 'Un agent autonome qui conçoit des médicaments protéiques plus intelligents. Dépendants du pH. Précis. Brevets en cours.',
-  'An autonomous agent that designs smarter protein medicines. pH-dependent. Precise. Patents pending.')
+s('home_lead', 'NovaDiff active est un agent autonome qui construit des Smart Binders. Des protéines dépendantes du pH, plus précises et moins toxiques.',
+  'NovaDiff active is an autonomous agent that builds Smart Binders. pH-dependent proteins, sharper and less toxic.')
+
+s('who_eyebrow', 'Qui sommes-nous', 'Who we are')
+s('who_p', 'BlackPhage est une société de biotechnologie privée. Nous construisons NovaDiff active, un agent autonome pour les biologiques de nouvelle génération. Notre objectif est de repousser la durée moyenne de vie en bonne santé au-delà de 100 ans, pour les patients des États-Unis et d\'Europe.',
+  'BlackPhage is a private biotechnology company. We build NovaDiff active, an autonomous agent for next-generation biologics. Our goal is to push the average healthy lifespan beyond 100 years, for patients in the U.S. and Europe.')
+s('who_cta', 'En savoir plus sur nous', 'More about us')
 
 s('idea_eyebrow', 'L\'idée', 'The idea')
 s('idea_1', 'Comprendre le vivant.', 'Understand life.')
@@ -54,10 +57,10 @@ s('idea_2n', 'Il dessine, évalue et affine de nouvelles protéines.', 'It draft
 s('idea_3', 'Reprendre le contrôle.', 'Take back control.')
 s('idea_3n', 'Chaque variante agit là où elle le doit, et nulle part ailleurs.', 'Every variant acts where it should, and nowhere else.')
 
-s('engine_eyebrow', 'Le moteur', 'The engine')
-s('engine_h2', 'Un agent. Plusieurs pathologies.', 'One agent. Many diseases.')
-s('engine_lead', 'BlackPhage fait tourner une boucle de conception autonome. Elle propose. Elle juge. Elle apprend. Puis elle recommence.',
-  'BlackPhage runs an autonomous design loop. It proposes. It judges. It learns. Then it starts again.')
+s('nova_eyebrow', 'Notre modèle Frontier', 'Our Frontier model')
+s('nova_h2', 'NovaDiff active.', 'NovaDiff active.')
+s('nova_lead', 'Un agent autonome pour les biologiques de nouvelle génération. Il permet de repousser les limites du traitable.',
+  'An autonomous agent for next-generation biologics. It lets us push the limits of the treatable.')
 s('step_1', 'Lire', 'Read')
 s('step_1n', 'Cartographie la biologie de la maladie et de la cible.', 'Maps the disease biology and the target.')
 s('step_2', 'Concevoir', 'Design')
@@ -69,32 +72,51 @@ s('step_4n', 'Réinjecte chaque résultat dans le tour suivant.', 'Feeds every r
 
 s('class_eyebrow', 'Smart Binders', 'Smart Binders')
 s('class_h2', 'Une nouvelle classe de médicaments.', 'A new class of medicine.')
-s('class_lead', 'Des protéines conçues de zéro pour se lier à une seule cible, avec intention.', 'Proteins designed from scratch to bind one target, with intent.')
+s('class_lead', 'NovaDiff active construit des Smart Binders. Ce sont des protéines dépendantes du pH, qui changent de conformation pour réduire la toxicité.',
+  'NovaDiff active builds Smart Binders. They are pH-dependent proteins that change conformation to reduce toxicity.')
 s('pillar_1', 'Dépendant du pH', 'pH-dependent')
-s('pillar_1n', 'Conçu pour s\'activer là où le pH local le permet.', 'Built to switch on where the local pH calls for it.')
-s('pillar_2', 'Plus doux', 'Gentler')
-s('pillar_2n', 'Pensé pour un profil de toxicité plus bas.', 'Designed for a lower toxicity profile.')
-s('pillar_3', 'Précis', 'Precise')
-s('pillar_3n', 'Une sélectivité plus fine au niveau de la cible.', 'Sharper selectivity at the target.')
+s('pillar_1n', 'S\'active là où le pH local le permet.', 'Switches on where the local pH calls for it.')
+s('pillar_2', 'Change de conformation', 'Changes conformation')
+s('pillar_2n', 'Elle se replie selon son milieu pour agir au bon endroit.', 'It refolds with its surroundings to act in the right place.')
+s('pillar_3', 'Moins toxique', 'Less toxic')
+s('pillar_3n', 'Pensé dès l\'origine pour un profil de toxicité plus bas.', 'Designed from the start for a lower toxicity profile.')
 
-s('lead_eyebrow', 'Pipeline', 'Pipeline')
-s('lead_h2', 'Programme phare. GLP-1R.', 'Lead program. GLP-1R.')
-s('lead_p', 'Le récepteur le plus convoité de la médecine. Notre réponse est dépendante du pH, plus douce et plus précise.',
-  'The most wanted receptor in medicine. Our answer is pH-dependent, gentler and sharper.')
-s('lead_cta', 'Voir le programme', 'View the program')
-s('lead_next', 'Prochains programmes', 'Next programs')
-s('lead_next_p', 'Confidentiels jusqu\'aux dépôts de brevets.', 'Undisclosed until filings land.')
+s('tg_eyebrow', 'Nos cibles', 'Our targets')
+s('tg_h2', 'Trois cibles. Un seul agent.', 'Three targets. One agent.')
+s('tg_lead', 'Métabolisme, muscle et cerveau. Trois systèmes qui comptent pour bien vieillir.', 'Metabolism, muscle and brain. Three systems that matter for healthy aging.')
+s('tg_more', 'Applications potentielles', 'Potential applications')
+s('tg_go', 'En savoir plus', 'Learn more')
 
 s('end_h2', 'La frontière est ouverte.', 'The frontier is open.')
 s('end_p', 'Nous parlons aux partenaires pharmaceutiques, aux investisseurs et à la presse, aux États-Unis comme en Europe.', 'We speak with pharma partners, investors and press, in the U.S. and in Europe.')
 
-# ------------------------------------------------------------------ pipeline
-s('pipe_title', 'Pipeline', 'Pipeline')
-s('pipe_desc', 'Les programmes de BlackPhage, mis à jour par notre agent.', 'The BlackPhage programs, updated by our agent.')
-s('pipe_eyebrow', 'Pipeline', 'Pipeline')
-s('pipe_h1', 'Les composés sur lesquels nous travaillons.', 'The compounds we are working on.')
-s('pipe_lead', 'Notre agent ajoute et affine les programmes en continu. Cette page suit.', 'Our agent adds and refines programs continuously. This page follows.')
-s('pipe_note', 'Les programmes suivants restent confidentiels tant que les brevets ne sont pas déposés.', 'Further programs stay private until patents are filed.')
+# ------------------------------------------------------------------ notre technologie
+s('tech_title', 'Notre technologie', 'Our tech')
+s('tech_desc', 'NovaDiff active, un agent autonome pour les biologiques de nouvelle génération, construit des Smart Binders dépendants du pH. Trois cibles, GLP-1R, myostatine et TfR1.',
+  'NovaDiff active, an autonomous agent for next-generation biologics, builds pH-dependent Smart Binders. Three targets, GLP-1R, myostatin and TfR1.')
+s('tech_eyebrow', 'Notre technologie', 'Our tech')
+s('tech_h1', 'Une technologie pour repousser les limites du traitable.', 'Technology built to push the limits of the treatable.')
+s('tech_lead', 'NovaDiff active est notre modèle Frontier. C\'est un agent autonome pour les biologiques de nouvelle génération. Il construit des Smart Binders, des protéines dépendantes du pH qui changent de conformation pour réduire la toxicité.',
+  'NovaDiff active is our Frontier model. It is an autonomous agent for next-generation biologics. It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.')
+s('agent_eyebrow', 'NovaDiff active', 'NovaDiff active')
+s('agent_h2', 'Un agent qui conçoit en boucle.', 'An agent that designs in a loop.')
+s('agent_lead', 'Il lit la biologie de la maladie, dessine des binders à partir de zéro, note chaque candidat sur la précision et la sécurité, puis réinjecte chaque résultat dans le tour suivant.',
+  'It reads the disease biology, drafts binders from scratch, scores each candidate for precision and safety, then feeds every result into the next round.')
+s('sb_eyebrow', 'Smart Binders', 'Smart Binders')
+s('sb_h2', 'Une protéine qui s\'adapte à son milieu.', 'A protein that adapts to its surroundings.')
+s('targets_eyebrow', 'Nos cibles', 'Our targets')
+s('targets_h2', 'Trois cibles et leurs applications potentielles.', 'Three targets and their potential applications.')
+s('targets_lead', 'Chaque cible a sa biologie et son besoin médical. Notre agent construit pour chacune un Smart Binder dépendant du pH.',
+  'Each target has its own biology and its own medical need. Our agent builds a pH-dependent Smart Binder for each one.')
+s('t_apps', 'Applications potentielles', 'Potential applications')
+s('t_approach', 'Notre approche', 'Our approach')
+s('t_view', 'Voir le programme', 'View the program')
+s('goal_eyebrow', 'Notre objectif', 'Our goal')
+s('goal_h2', 'Au-delà de 100 ans en bonne santé.', 'Beyond 100 healthy years.')
+s('goal_p', 'Le métabolisme, le muscle et le cerveau comptent parmi les systèmes qui pèsent le plus sur la façon dont on vieillit. Chacune de nos cibles agit sur l\'un d\'eux. Notre objectif est de repousser la durée moyenne de vie en bonne santé au-delà de 100 ans.',
+  'Metabolism, muscle and brain are among the systems that weigh most on how we age. Each of our targets acts on one of them. Our goal is to push the average healthy lifespan beyond 100 years.')
+s('tech_note', 'Les applications décrites sont des objectifs de recherche. Elles ne sont pas des allégations de sécurité ou d\'efficacité. Programmes expérimentaux, non approuvés par la FDA, l\'EMA ni aucune autre autorité.',
+  'The applications described are research goals. They are not claims of safety or efficacy. Investigational programs, not approved by the FDA, the EMA or any other regulator.')
 
 # ------------------------------------------------------------------ programme
 s('prog_title', 'Programme', 'Program')
@@ -102,12 +124,12 @@ s('prog_desc', 'Un programme BlackPhage en détail. Les limites des traitements 
 
 # ------------------------------------------------------------------ à propos
 s('about_title', 'À propos', 'About us')
-s('about_desc', 'BlackPhage est une société privée. Son agent autonome conçoit des médicaments protéiques dépendants du pH.',
-  'BlackPhage is a private company. Its autonomous agent designs pH-dependent protein medicines.')
+s('about_desc', 'BlackPhage est une société privée. Son agent autonome NovaDiff active construit des Smart Binders, des protéines dépendantes du pH.',
+  'BlackPhage is a private company. Its autonomous agent NovaDiff active builds Smart Binders, pH-dependent proteins.')
 s('about_eyebrow', 'À propos', 'About us')
 s('about_h1', 'Nous construisons la frontière du médicament protéique.', 'We build the frontier of protein medicine.')
-s('about_lead', 'BlackPhage est une société privée. Son agent autonome conçoit des Smart Binders, une nouvelle classe de médicaments protéiques dépendants du pH, pour des maladies qui manquent encore de bonnes réponses. Nous construisons pour les patients des États-Unis et d\'Europe.',
-  'BlackPhage is a private company. Its autonomous agent designs Smart Binders, a new class of pH-dependent protein medicines, for diseases that still lack good answers. We build for patients in the U.S. and Europe.')
+s('about_lead', 'BlackPhage est une société privée. Son agent autonome, NovaDiff active, construit des Smart Binders, des protéines dépendantes du pH qui changent de conformation pour réduire la toxicité. Notre objectif est de repousser la durée moyenne de vie en bonne santé au-delà de 100 ans. Nous construisons pour les patients des États-Unis et d\'Europe.',
+  'BlackPhage is a private company. Its autonomous agent, NovaDiff active, builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity. Our goal is to push the average healthy lifespan beyond 100 years. We build for patients in the U.S. and Europe.')
 s('drive_eyebrow', 'Ce qui nous porte', 'What drives us')
 s('drive_h2', 'Trois principes.', 'Three principles.')
 s('drive_1', 'La frontière d\'abord', 'Frontier first')
@@ -120,7 +142,7 @@ s('how_eyebrow', 'Notre méthode', 'How we work')
 s('how_h2', 'L\'agent mène. Les scientifiques décident.', 'Agent-led. Scientist-decided.')
 s('how_1', 'L\'agent propose, les scientifiques tranchent.', 'The agent proposes. Scientists decide.')
 s('how_2', 'Chaque tour apprend au suivant.', 'Every round teaches the next.')
-s('how_3', 'Privé par défaut. Protégé avant d\'être public.', 'Private by default. Protected before public.')
+s('how_3', 'Privé par défaut. Public quand c\'est prêt.', 'Private by default. Public when ready.')
 s('contact_eyebrow', 'Contact', 'Contact')
 s('contact_h2', 'Devenir partenaire.', 'Partner with us.')
 s('contact_p', 'Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques américains et européens, aux investisseurs et à la presse.',
@@ -134,8 +156,8 @@ s('car_title', 'Carrières', 'Careers')
 s('car_desc', 'Rejoignez BlackPhage et aidez à concevoir une nouvelle classe de médicaments protéiques.', 'Join BlackPhage and help design a new class of protein medicines.')
 s('car_eyebrow', 'Carrières', 'Careers')
 s('car_h1', 'Un impact qui change le monde naît d\'une culture pensée pour l\'innovation.', 'World-changing impact starts with a culture built for innovation.')
-s('car_lead', 'Chez BlackPhage, nous construisons un agent autonome qui conçoit de nouveaux médicaments. Notre équipe réunit biologie, apprentissage automatique et ingénierie, avec une même envie de repousser la frontière du traitable.',
-  'At BlackPhage, we build an autonomous agent that designs new medicines. Our team brings together biology, machine learning and engineering, with one shared drive to move the frontier of the treatable.')
+s('car_lead', 'Chez BlackPhage, nous construisons NovaDiff active, un agent autonome qui conçoit de nouveaux médicaments. Notre équipe réunit biologie, apprentissage automatique et ingénierie, avec une même envie de repousser la frontière du traitable.',
+  'At BlackPhage, we build NovaDiff active, an autonomous agent that designs new medicines. Our team brings together biology, machine learning and engineering, with one shared drive to move the frontier of the treatable.')
 s('why_eyebrow', 'Pourquoi nous rejoindre', 'Why join us')
 s('why_h2', 'Un endroit où vos idées comptent.', 'A place where your ideas count.')
 s('why_1', 'Une équipe petite et affûtée', 'A small, sharp team')
@@ -197,12 +219,7 @@ s('mail_subject_apply', 'Candidature', 'Application')
 s('art_alt', 'Un poisson combattant translucide, couvert de vagues de lumière, nage à travers un monde de molécules, avec de l\'ADN, des protéines, une membrane et son récepteur. Il avance quand vous descendez la page. Touchez-le et une vague de lumière parcourt son corps.',
   'A translucent fighting fish, covered in waves of light, swims through a world of molecules, with DNA, proteins, a membrane and its receptor. It moves forward as you scroll down the page. Touch it and a wave of light runs across its body.')
 s('facts_label', 'Repères', 'Company facts')
-s('tz_from', 'Sur le marché', 'On the market')
-s('tz_to', 'Avec BlackPhage', 'With BlackPhage')
-s('noscript_list', 'Activez JavaScript pour voir les programmes.', 'Turn on JavaScript to see the programs.')
 s('noscript_prog', 'Activez JavaScript pour voir ce programme.', 'Turn on JavaScript to see this program.')
-s('sec_updated', 'Mis à jour', 'Updated')
-s('prog_count', 'programmes', 'programs')
 
 s('fish_touch', 'Toucher le poisson', 'Touch the fish')
 s('brand_eyebrow', 'Identité', 'Identity')

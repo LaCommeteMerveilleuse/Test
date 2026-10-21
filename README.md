@@ -1,15 +1,16 @@
 # BlackPhage, site vitrine
 
-Site statique (HTML, CSS, JavaScript, sans étape de build côté navigateur) de BlackPhage, société privée dont l'agent autonome
-conçoit des Smart Binders, des médicaments protéiques dépendants du pH. Brevets en cours, marchés américain et européen.
-Il n'y a plus de vente directe : le site présente la société, son pipeline, son équipe et ses offres d'emploi.
+Site statique (HTML, CSS, JavaScript, sans étape de build côté navigateur) de BlackPhage, société privée dont l'agent autonome **NovaDiff active**
+(« Autonomous Agent for Next-Generation Biologics », le modèle Frontier de la société) construit des Smart Binders, des protéines dépendantes du pH
+qui changent de conformation pour réduire la toxicité. L'objectif affiché : repousser la durée moyenne de vie en bonne santé au-delà de 100 ans.
+Marchés américain et européen. Le site présente la société, sa technologie, son équipe et ses offres d'emploi.
 
 ## Pages
 
 | Page | Rôle |
 | --- | --- |
-| `index.html` | Accueil. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page, l'idée, le moteur, les Smart Binders, le programme phare, le bandeau de contact. |
-| `pipeline.html` | Pipeline. Les programmes, lus dans `assets/data/programs.json`, mis à jour par l'agent. |
+| `index.html` | Accueil. Un monde moléculaire que traverse un poisson combattant bioluminescent à mesure qu'on descend la page. Six sections, une par station : le premier écran, qui sommes-nous et l'idée (trois cases pleines), NovaDiff active, les Smart Binders, les trois cibles, le bandeau de contact. |
+| `tech.html` | Notre technologie (Our tech). NovaDiff active, les Smart Binders, puis les trois cibles et leurs applications potentielles : GLP-1R, myostatine / GDF-8, TfR1 / CD71. Elle remplace l'ancienne page Pipeline. |
 | `program.html#glp-1r` | Détail d'un programme : les problèmes du marché, notre réponse, où nous en sommes. Une protéine de verre flotte à côté du titre. |
 | `a-propos.html` | À propos : mission, principes, méthode, logos officiels (blanc et noir, à télécharger), contact (partenaires, presse, recrutement). |
 | `careers.html` | Carrières : profil recherché, compétences, postes ouverts, candidature. |
@@ -20,12 +21,11 @@ Chaque page existe en français (racine) et en anglais (dossier `en/`).
 
 Trois endroits suffisent.
 
-1. **Le pipeline** : `assets/data/programs.json`. Chaque programme est un objet avec des champs `{ "fr": "...", "en": "..." }`.
-   Pour ajouter un composé, copiez l'entrée `glp-1r`, changez `id` (l'adresse devient `program.html#<id>`), les textes, et le tour est joué : la page Pipeline,
-   la page du programme, la carte de l'accueil (`teaser`) et le pied de page se mettent à jour sans reconstruire quoi que ce soit.
-   `"detail": false` affiche une carte sans page de détail (utile pour « Prochains programmes », confidentiels jusqu'aux brevets).
-   Les champs : `name`, `area`, `stage`, `status`, `tagline`, `summary`, `teaser` (paires « sur le marché → avec BlackPhage »), `intro`, `problems`, `answers`, `where`, `disclaimer`.
-   Mettez aussi `updated` (date) à jour : elle s'affiche en tête de la page Pipeline.
+1. **Les cibles** : `assets/data/programs.json`. Chaque cible est un objet avec des champs `{ "fr": "...", "en": "..." }`.
+   Pour en ajouter une, copiez l'entrée `gdf-8`, changez `id` (c'est l'ancre de la carte, `tech.html#<id>`) et les textes, puis relancez `python3 tools/build_site.py` :
+   les cartes de l'accueil et de la page Our tech sont écrites dans le HTML (elles s'affichent donc sans JavaScript).
+   Les champs d'une cible : `name`, `full` (nom complet), `area`, `role` (ce qu'elle fait), `applications` (une liste, affichée comme applications **potentielles**), `approach` (notre approche).
+   `"detail": true` ouvre en plus une page `program.html#<id>`, lue dans le fichier au chargement, avec `stage`, `status`, `tagline`, `intro`, `problems`, `answers`, `where`, `disclaimer` (voir `glp-1r`).
 2. **Les coordonnées** : `assets/data/site.json` (partenaires et investisseurs, presse, recrutement). Les adresses y sont **des exemples à remplacer**.
 3. **Les textes des pages** : `tools/content.py` (chaque clé existe en français et en anglais). Après modification, lancez
 
@@ -34,15 +34,16 @@ Trois endroits suffisent.
    ```
 
    Le script réécrit les dix pages (`*.html` et `en/*.html`). Il refuse d'écrire si un texte visible contient un tiret long, un point-virgule ou un deux-points,
-   ou si un champ du pipeline n'existe pas dans les deux langues.
+   ou si un champ des cibles n'existe pas dans les deux langues.
 
-**Les postes de `careers.html`, les adresses e-mail, les statuts et dates du pipeline, et la carte « Prochains programmes » sont des exemples.**
-Remplacez-les avant toute mise en ligne.
+**Les postes de `careers.html`, les adresses e-mail, le statut de GLP-1R et les textes scientifiques des trois cibles (ce qu'elles font, leurs applications potentielles, notre approche) sont des exemples
+à faire valider par les scientifiques.** Remplacez-les avant toute mise en ligne. Le site ne parle pas de brevets : aucune mention n'est écrite.
 
 ### Ce que le site affirme
 
-BlackPhage ne publie pas de données scientifiques. Les objectifs de conception (dépendant du pH, moins toxique, plus précis) sont présentés comme des objectifs,
-accompagnés de la mention « Expérimental. Préclinique. Non approuvé par la FDA, l'EMA ni aucune autorité » (`disclaimer` de chaque programme et pied de page).
+BlackPhage ne publie pas de données scientifiques. Les objectifs de conception (dépendant du pH, changement de conformation, moins toxique, plus précis) et les applications des trois cibles sont présentés comme des objectifs de recherche,
+accompagnés de la mention « Expérimental. Préclinique. Non approuvé par la FDA, l'EMA ni aucune autorité » (`disclaimer` de GLP-1R, page Our tech et pied de page).
+L'ambition de vie en bonne santé au-delà de 100 ans est écrite comme **un objectif**, jamais comme un résultat.
 Le site s'adresse aux partenaires, investisseurs et journalistes des États-Unis **et** d'Europe.
 Les constats sur la classe thérapeutique actuelle s'appuient sur les notices et la littérature publiques : faites-les relire avant publication.
 
@@ -64,7 +65,8 @@ de l'ADN, des protéines en rubans, une membrane et son récepteur, et des lueur
 | Élément | Où | Rôle |
 | --- | --- | --- |
 | **Le poisson** | `assets/js/fish.js` | Un combattant construit par code, sans fichier de modèle : un corps fin et translucide (écailles qui s'allument, squelette vu par transparence, opercule), des **yeux de verre** (un liseré violet, un iris doré translucide, une pupille qui laisse voir à travers) et de grandes nageoires en voile avec leurs rayons (queue en éventail, dorsale, anale, ventrales en rubans, pectorales). **Le corps ondule comme en nageant** : une onde court du museau à la queue en grandissant (la tête presque immobile, la queue qui balance le plus), dessinée dans le plan que voit la caméra puisqu'une onde latérale resterait invisible de profil, et chaque section du corps penche avec l'axe, nageoires et yeux compris. Chaque nageoire porte en plus une **onde qui court de sa base vers son bord libre**, en travers du plan et dans le plan, et la lumière suit le relief du voile. La bioluminescence se compose de grandes taches, de veines, de vagues régulières qui descendent le corps et d'impulsions qui filent le long des rayons. |
-| **Le parcours** | `assets/js/scene.js` | **Six stations, une par section de l'accueil.** Le défilement, lissé, avance le poisson le long d'un chemin ; la caméra le suit de profil, c'est le monde qui défile. Il reste à sa place à l'écran : un léger flottement, un corps qui ondule doucement au repos et plus largement quand on défile, et il penche à peine vers le pointeur. **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
+| **Le parcours** | `assets/js/scene.js` | **Six stations, une par section de l'accueil.** Le défilement, lissé, avance le poisson le long d'un chemin ; la caméra le suit de profil, c'est le monde qui défile. Il reste à peu près à sa place à l'écran : un léger flottement, un corps qui ondule doucement au repos et plus largement quand on défile, et il penche à peine vers le pointeur.
+**Quand on défile, il se déplace un peu dans l'espace** : une dérive lente qui suit l'avancée dans la page (`moveX`, `moveY`, `moveZ`, nulle sur le premier écran, un léger virage du cap avec elle) et une poussée qui suit la vitesse (il file devant lui quand on descend, recule un peu quand on remonte). **Un clic ou une touche sur lui lance une vague de bioluminescence** qui part du point touché, traverse le corps puis s'allume dans les nageoires. Un bouton caché (`data-fish-wave`, visible au focus) permet le même geste au clavier. Rendu three.js, organisé comme une scène react-three-fiber. |
 | **Le monde** | `assets/js/world.js`, `assets/js/molecules.js` | Tout est du code. Station 1 : l'air libre des petites molécules (eau, benzène, sucre, purine, acide aminé, phosphate) ; 2 : la double hélice d'ADN ; 3 : la boucle du moteur, un anneau de molécules qui tourne ; 4 : la protéine cible, de verre, et ses liants ; 5 : la membrane (deux feuillets de sphères) et ses récepteurs à sept hélices ; 6 : une vue d'ensemble. Les molécules sont instanciées (une commande de dessin par modèle et par tranche du chemin), la brume de profondeur fond les formes lointaines dans le fond, **le poisson éclaire les molécules voisines**, et une voie reste libre autour de lui pour qu'il se lise. Chaque ensemble n'est dessiné que près de l'endroit où il se trouve. |
 | **La brume** | `assets/js/mist.js` | Le ciel des pages intérieures : indigo, nappes de lumière qui dérivent, poussières lumineuses. Un petit rendu WebGL2 sans bibliothèque. |
 | **La protéine** | `assets/js/protein.js`, `assets/data/surface.json` | Sur la page d'un programme, une surface en verre réfracte la brume et s'allume de l'intérieur de la même lumière corail que le poisson. Le même maillage sert de protéine cible dans le monde de l'accueil. |
@@ -72,8 +74,23 @@ de l'ADN, des protéines en rubans, une membrane et son récepteur, et des lueur
 | **Le logo** | `assets/img/blackphage-logo-blanc.svg`, `blackphage-logo-noir.svg`, `symbole.svg`, `assets/favicon.svg` | Les fichiers officiels, **jamais modifiés** : le blanc sur fond sombre (en-tête, pied de page), le noir sur fond clair (bloc « logos » de la page À propos). `symbole.svg` est le « A » du logotype avec son point, utilisé pour le favicon et la page À propos. |
 | **La scène** | `assets/js/stage.js` | Une seule boucle d'animation pour tout le site (modèle `useFrame`), pause onglet caché, défilement et pointeur lissés, qualité adaptative. |
 
-Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Titres en Space Grotesk, accent en Instrument Serif italique
-(le mot *frontier*), texte en Inter. Le titre de l'accueil lit « Push the frontier of the treatable. »
+Palette : indigo `#151a3c`, encre `#f6f7ff`, iris `#b9c2ff`, pêche `#ffdac9`, corail `#ff9f82`. Le titre de l'accueil lit « Push the frontier of the treatable. »
+Les cases de l'idée, des Smart Binders et des cibles sont **pleines** (classe `.panel`, fond opaque), le reste de l'interface reste en verre translucide (`.glass`).
+
+### Typographie
+
+Tout le texte est en **Neue Haas Grotesk Text Pro**, en gras (700) pour les titres, en romain (400) pour le texte et en demi-gras (500) pour les étiquettes et les boutons.
+C'est une police sous licence (Monotype) : **elle n'est pas dans le dépôt**. Elle s'affiche si elle est installée sur l'appareil de la personne.
+Sinon, **Inter** (libre, embarquée dans `assets/fonts`) prend le relais, puis Helvetica Neue, Helvetica et Arial. Pour embarquer Neue Haas Grotesk Text Pro,
+il faut une licence web : placez les fichiers `woff2` dans `assets/fonts/` et ajoutez, en tête de `assets/css/site.css` (avant la déclaration d'Inter), par exemple
+
+```css
+@font-face { font-family: 'Neue Haas Grotesk Text Pro'; font-weight: 400; font-display: swap; src: url('../fonts/NeueHaasGroteskText-55Roman.woff2') format('woff2'); }
+@font-face { font-family: 'Neue Haas Grotesk Text Pro'; font-weight: 500; font-display: swap; src: url('../fonts/NeueHaasGroteskText-65Medium.woff2') format('woff2'); }
+@font-face { font-family: 'Neue Haas Grotesk Text Pro'; font-weight: 700; font-display: swap; src: url('../fonts/NeueHaasGroteskText-75Bold.woff2') format('woff2'); }
+```
+
+(les noms de fichiers sont ceux de votre licence). La pile de polices est la variable `--sans` de `site.css`.
 Un voile sombre s'installe entre le monde et le texte quand on quitte le premier écran (variable CSS `--veil`, posée par `scene.js`).
 En portrait (téléphone, tablette), le texte occupe le haut de l'écran et le poisson la moitié basse.
 
@@ -96,4 +113,4 @@ Un double-clic sur `index.html` ne fonctionne pas : le navigateur bloque le char
 
 ## Licences
 
-Polices Space Grotesk, Instrument Serif, Inter et Montserrat sous licence OFL (dossier `assets/fonts`). three.js sous licence MIT (`assets/vendor/three`).
+Police Inter sous licence OFL (dossier `assets/fonts`). Neue Haas Grotesk Text Pro n'est pas incluse (licence Monotype, voir Typographie). three.js sous licence MIT (`assets/vendor/three`).

@@ -176,7 +176,7 @@ async function start() {
   // ---------------------------------------------------------------- le poisson : état, clics
   const F = {
     pos: new THREE.Vector3(), fwd: new THREE.Vector3(-1, 0, 0.2).normalize(), want: new THREE.Vector3(),
-    lean: new THREE.Vector2(), phase: 0, fin: 0, amp: 0.085, bend: 0, roll: 0, energy: 0.1, hover: 0, lastYaw: 0, u: 0, du: 0,
+    lean: new THREE.Vector2(), phase: 0, fin: 0, amp: 0.085, bend: 0, roll: 0, energy: 0.1, hover: 0, lastYaw: 0, u: 0, du: 0, dv: 0,
   };
   const rig = {};
   const tmp = new THREE.Vector3(); const tmp2 = new THREE.Vector3(); const tmp3 = new THREE.Vector3();
@@ -215,6 +215,8 @@ async function start() {
     }
     return bd < 0 ? best : -1;
   }
+  // pour les tests : où est le milieu du corps à l'écran, et où l'on en est dans le monde
+  window.__fishAt = () => { updateProjection(); return { x: proj[2].x, y: proj[2].y, r: proj[2].r, u: F.u }; };
 
   // ---------------------------------------------------------------- pointeur
   const ptr = { moved: -99, touch: false, over: false };
@@ -271,14 +273,21 @@ async function start() {
     F.lean.x += ((pointerOn ? clamp(px * 22, -12, 12) : 0) - F.lean.x) * (1 - Math.exp(-1.4 * dt));
     F.lean.y += ((pointerOn ? clamp(-py * 14, -8, 8) : 0) - F.lean.y) * (1 - Math.exp(-1.4 * dt));
     const drift = reduce ? 0 : 1;
+    // quand on défile, il se déplace un peu dans l'espace : une dérive qui suit l'avancée dans la page (nulle sur le premier écran),
+    // et une poussée qui suit la vitesse (il file devant lui quand on descend, il recule un peu quand on remonte)
+    F.dv += (clamp(duDt / 0.9, -1, 1) - F.dv) * (1 - Math.exp(-3 * dt));
+    const au = F.u;
+    const moveX = Math.sin(au * 1.55) * 9 + Math.sin(au * 3.1) * 3 - F.dv * 12;
+    const moveY = Math.sin(au * 1.2) * 7 + Math.sin(au * 2.6) * 2.5 + F.dv * 3;
+    const moveZ = Math.sin(au * 1.0) * 22;
     F.pos.copy(rig.fishPos)
-      .addScaledVector(rig.right, F.lean.x + drift * (Math.sin(t * 0.27) * 3.5 + Math.sin(t * 0.71) * 1.2))
-      .addScaledVector(UP, F.lean.y + drift * (Math.sin(t * 0.43) * 2.6 + Math.sin(t * 0.97) * 0.8))
-      .addScaledVector(rig.B, drift * Math.sin(t * 0.31) * 3);
+      .addScaledVector(rig.right, F.lean.x + moveX + drift * (Math.sin(t * 0.27) * 3.5 + Math.sin(t * 0.71) * 1.2))
+      .addScaledVector(UP, F.lean.y + moveY + drift * (Math.sin(t * 0.43) * 2.6 + Math.sin(t * 0.97) * 0.8))
+      .addScaledVector(rig.B, moveZ + drift * Math.sin(t * 0.31) * 3);
 
-    // le cap : le long du chemin, avec un peu de face pour garder le volume
-    F.want.copy(rig.T); F.want.y = clamp(F.want.y, -0.32, 0.32); F.want.normalize();
-    F.want.multiplyScalar(Math.cos(0.22)).addScaledVector(rig.B, Math.sin(0.22)).normalize();
+    // le cap : le long du chemin, avec un peu de face pour garder le volume, et un léger virage qui suit l'avancée
+    F.want.copy(rig.T); F.want.y = clamp(F.want.y + Math.sin(au * 0.9) * 0.05, -0.32, 0.32); F.want.normalize();
+    F.want.multiplyScalar(Math.cos(0.22)).addScaledVector(rig.B, Math.sin(0.22) + Math.sin(au * 1.1) * 0.08).normalize();
     if (first || reduce) F.fwd.copy(F.want); else F.fwd.lerp(F.want, 1 - Math.exp(-3 * dt)).normalize();
     const yaw = Math.atan2(F.fwd.z, F.fwd.x);
     let dy = yaw - F.lastYaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));

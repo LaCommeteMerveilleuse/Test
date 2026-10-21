@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-lang="en" data-base="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Our tech · BlackPhage</title>
+  <meta name="description" content="NovaDiff active, an autonomous agent for next-generation biologics, builds pH-dependent Smart Binders. Three targets, GLP-1R, myostatin and TfR1.">
+  <meta name="theme-color" content="#151a3c">
+  <meta property="og:title" content="Our tech · BlackPhage">
+  <meta property="og:description" content="NovaDiff active, an autonomous agent for next-generation biologics, builds pH-dependent Smart Binders. Three targets, GLP-1R, myostatin and TfR1.">
+  <meta property="og:type" content="website">
+  <!-- langue:debut -->
+  <link rel="alternate" hreflang="fr" href="../tech.html">
+  <link rel="alternate" hreflang="en" href="tech.html">
+  <link rel="alternate" hreflang="x-default" href="tech.html">
+  <script>
+(function () { try {
+  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
+  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
+  var want = localStorage.getItem('bp-lang');
+  if (want !== 'fr' && want !== 'en') {
+    if (sessionStorage.getItem('bp-auto')) return;
+    sessionStorage.setItem('bp-auto', '1');
+    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+    want = /^fr/i.test(l) ? 'fr' : 'en';
+  }
+  if (want === here) return;
+  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
+  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
+} catch (e) {} })();
+</script>
+  <!-- langue:fin -->
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script type="importmap">{ "imports": { "three": "../assets/vendor/three/three.module.min.js" } }</script>
+  <script>document.documentElement.classList.add('js')</script>
+  <script type="module" src="../assets/js/chrome.js"></script>
+  <script type="module" src="../assets/js/tech.js"></script>
+</head>
+<body data-page="tech" class="page-inner">
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="protein" class="protein" aria-hidden="true"></canvas>
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a class="logo" href="index.html" aria-label="BlackPhage, home"><img class="logo__img" src="../assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
+    <nav class="nav__pill glass" id="nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="tech.html" aria-current="page">Our tech</a>
+      <a href="a-propos.html">About</a>
+      <a href="careers.html">Careers</a>
+      <a class="btn btn--light nav__cta-m" href="a-propos.html#contact">Partner with us</a>
+    </nav>
+    <div class="nav__end">
+      <a class="langswitch" href="../tech.html" hreflang="fr" lang="fr" aria-label="Passer en français"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="">FR</span><span class="is-on">EN</span></a>
+      <a class="btn btn--light nav__cta" href="a-propos.html#contact">Partner with us</a>
+      <button class="nav__burger" type="button" aria-label="Open the menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="pagehead">
+  <div class="container pagehead__grid pagehead__grid--art">
+    <div>
+      <p class="eyebrow">Our tech</p>
+      <h1 class="h1 h1--wide">Technology built to push the limits of the treatable.</h1>
+      <p class="lead"><strong class="brandname">NovaDiff active</strong> is our Frontier model. It is an autonomous agent for next-generation biologics. It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.</p>
+    </div>
+    <div class="phero__art pagehead__art" aria-hidden="true"></div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="agent">
+  <div class="container split">
+    <div>
+      <p class="eyebrow reveal">NovaDiff active</p>
+      <h2 class="h2 reveal">An agent that designs in a loop.</h2>
+      <p class="lead reveal">It reads the disease biology, drafts binders from scratch, scores each candidate for precision and safety, then feeds every result into the next round.</p>
+    </div>
+    <ol class="steps"><li class="step reveal"><span class="step__n">1</span><div><h3>Read</h3><p>Maps the disease biology and the target.</p></div></li><li class="step reveal"><span class="step__n">2</span><div><h3>Design</h3><p>Drafts Smart Binders from scratch.</p></div></li><li class="step reveal"><span class="step__n">3</span><div><h3>Judge</h3><p>Scores each candidate for precision and safety.</p></div></li><li class="step reveal"><span class="step__n">4</span><div><h3>Learn</h3><p>Feeds every result into the next round.</p></div></li></ol>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="binders">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">Smart Binders</p>
+      <h2 class="h2 reveal">A protein that adapts to its surroundings.</h2>
+      <p class="lead reveal"><strong class="brandname">NovaDiff active</strong> builds Smart Binders. They are pH-dependent proteins that change conformation to reduce toxicity.</p>
+    </div>
+    <div class="pillars"><article class="pillar glass panel reveal" style="--i:0"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.5c3.9 4.8 7.2 8.5 7.2 12.3a7.2 7.2 0 0 1-14.4 0c0-3.8 3.3-7.5 7.2-12.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.6 16.6c1.6-1.3 3.1-1.3 4.7 0s3.1 1.3 4.7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>pH-dependent</h3><p>Switches on where the local pH calls for it.</p></article><article class="pillar glass panel reveal" style="--i:1"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Changes conformation</h3><p>It refolds with its surroundings to act in the right place.</p></article><article class="pillar glass panel reveal" style="--i:2"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.6 22 6.8v6.2c0 4.8-3.3 8.7-8 10.6-4.7-1.9-8-5.8-8-10.6V6.8l8-3.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 14.2c1.3 1.5 2.5 2.2 4 2.2s2.7-.7 4-2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Less toxic</h3><p>Designed from the start for a lower toxicity profile.</p></article></div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="targets">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">Our targets</p>
+      <h2 class="h2 reveal">Three targets and their potential applications.</h2>
+      <p class="lead reveal">Each target has its own biology and its own medical need. Our agent builds a pH-dependent Smart Binder for each one.</p>
+    </div>
+    <div class="tcards"><article class="tcard glass panel reveal" id="glp-1r">
+  <div class="tcard__head">
+    <p class="tcard__n">01</p>
+    <p class="eyebrow">Metabolic</p>
+    <h3 class="tcard__name">GLP-1R</h3>
+    <p class="tcard__full">Glucagon-like peptide-1 receptor</p>
+  </div>
+  <div class="tcard__body">
+    <p class="tcard__role">A receptor that helps regulate appetite, blood sugar and metabolism. It reshaped the treatment of obesity and type 2 diabetes.</p>
+    <h4 class="tcard__sub">Potential applications</h4>
+    <ul class="where tcard__apps"><li class="reveal" style="--i:0"><span class="where__dot" aria-hidden="true"></span>Obesity and weight management</li><li class="reveal" style="--i:1"><span class="where__dot" aria-hidden="true"></span>Type 2 diabetes</li><li class="reveal" style="--i:2"><span class="where__dot" aria-hidden="true"></span>Cardiometabolic health</li></ul>
+    <h4 class="tcard__sub">Our approach</h4>
+    <p class="tcard__approach">A pH-dependent Smart Binder, for sharper activation and lower toxicity.</p>
+    <a class="btn btn--ghost" href="program.html#glp-1r">View the program<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </div>
+</article><article class="tcard glass panel reveal" id="gdf-8">
+  <div class="tcard__head">
+    <p class="tcard__n">02</p>
+    <p class="eyebrow">Muscle</p>
+    <h3 class="tcard__name">Myostatin / GDF-8</h3>
+    <p class="tcard__full">Growth differentiation factor 8</p>
+  </div>
+  <div class="tcard__body">
+    <p class="tcard__role">A protein that holds back muscle growth. Blocking it could help preserve, even build, muscle mass.</p>
+    <h4 class="tcard__sub">Potential applications</h4>
+    <ul class="where tcard__apps"><li class="reveal" style="--i:0"><span class="where__dot" aria-hidden="true"></span>Preserving muscle during weight loss</li><li class="reveal" style="--i:1"><span class="where__dot" aria-hidden="true"></span>Age-related sarcopenia and frailty</li><li class="reveal" style="--i:2"><span class="where__dot" aria-hidden="true"></span>Muscle diseases and cachexia</li></ul>
+    <h4 class="tcard__sub">Our approach</h4>
+    <p class="tcard__approach">A Smart Binder designed for sharper precision and lower toxicity.</p>
+    
+  </div>
+</article><article class="tcard glass panel reveal" id="tfr1">
+  <div class="tcard__head">
+    <p class="tcard__n">03</p>
+    <p class="eyebrow">Brain and oncology</p>
+    <h3 class="tcard__name">TfR1 / CD71</h3>
+    <p class="tcard__full">Transferrin receptor 1</p>
+  </div>
+  <div class="tcard__body">
+    <p class="tcard__role">An iron receptor, abundant on the blood-brain barrier and on fast-dividing cells. It is a doorway for biologics.</p>
+    <h4 class="tcard__sub">Potential applications</h4>
+    <ul class="where tcard__apps"><li class="reveal" style="--i:0"><span class="where__dot" aria-hidden="true"></span>Carrying biologics into the brain</li><li class="reveal" style="--i:1"><span class="where__dot" aria-hidden="true"></span>Neurological diseases</li><li class="reveal" style="--i:2"><span class="where__dot" aria-hidden="true"></span>Cancers that overexpress TfR1</li></ul>
+    <h4 class="tcard__sub">Our approach</h4>
+    <p class="tcard__approach">A pH-dependent Smart Binder, designed to bind at the surface then release inside the cell.</p>
+    
+  </div>
+</article></div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="goal">
+  <div class="container">
+    <div class="goal glass panel reveal">
+      <p class="eyebrow">Our goal</p>
+      <h2 class="goal__h">Beyond 100 healthy years.</h2>
+      <p class="lead">Metabolism, muscle and brain are among the systems that weigh most on how we age. Each of our targets acts on one of them. Our goal is to push the average healthy lifespan beyond 100 years.</p>
+    </div>
+    <p class="disclaimer">The applications described are research goals. They are not claims of safety or efficacy. Investigational programs, not approved by the FDA, the EMA or any other regulator.</p>
+  </div>
+</section>
+
+<section class="sec end">
+  <div class="container">
+    <div class="end__in glass reveal">
+      <h2 class="end__h end__h--sm">The frontier is open.</h2>
+      <p class="lead">We speak with pharma partners, investors and press, in the U.S. and in Europe.</p>
+      <div class="hero__cta">
+        <a class="btn btn--light btn--lg" href="a-propos.html#contact">Partner with us<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="foot">
+  <div class="container foot__in">
+    <div class="foot__brand">
+      <a class="logo" href="index.html" aria-label="BlackPhage, home"><img class="logo__img" src="../assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
+      <p class="foot__tag">Push the frontier of the treatable.</p>
+    </div>
+    <div><h4>Company</h4><ul><li><a href="a-propos.html">About</a></li><li><a href="careers.html">Careers</a></li></ul></div>
+    <div><h4>Technology</h4><ul data-programs-list><li><a href="tech.html">Our tech</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
+    <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="../tech.html" hreflang="fr" lang="fr" aria-label="Passer en français"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="">FR</span><span class="is-on">EN</span></a></li></ul></div>
+  </div>
+  <div class="container foot__legal"><p>Investigational programs, not approved by the FDA, the EMA or any other regulator.</p><p>© 2026 BlackPhage. All rights reserved.</p></div>
+</footer>
+</body>
+</html>

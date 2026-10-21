@@ -12,7 +12,7 @@ function missing() {
   root.classList.add('prog-miss');
   document.title = `${t('not_found')} · BlackPhage`;
   box.innerHTML = `<section class="pagehead"><div class="container">
-  <a class="back" href="pipeline.html">${BACK}${esc(t('back_pipeline'))}</a>
+  <a class="back" href="tech.html#targets">${BACK}${esc(t('back_tech'))}</a>
   <h1 class="h1">${esc(t('not_found'))}</h1><p class="lead">${esc(t('not_found_p'))}</p></div></section>`;
 }
 
@@ -28,7 +28,7 @@ function view(p, site) {
 <section class="phero">
   <div class="container phero__grid">
     <div class="phero__copy">
-      <a class="back" href="pipeline.html">${BACK}${esc(t('back_pipeline'))}</a>
+      <a class="back" href="tech.html#targets">${BACK}${esc(t('back_tech'))}</a>
       <p class="eyebrow">${esc(L(p.stage))}</p>
       <h1 class="phero__name">${esc(name)}</h1>
       <p class="phero__tag">${esc(L(p.tagline))}</p>
@@ -80,7 +80,7 @@ function view(p, site) {
       <p class="lead">${esc(t('cta_p', { name }))}</p>
       <div class="hero__cta">
         <a class="btn btn--light btn--lg" href="mailto:${esc(site.email)}?subject=${subject}">${esc(t('cta_btn'))}${ARROW}</a>
-        <a class="btn btn--ghost btn--lg" href="pipeline.html">${esc(t('cta_all'))}</a>
+        <a class="btn btn--ghost btn--lg" href="tech.html#targets">${esc(t('cta_all'))}</a>
       </div>
       <p class="mailrow"><a href="mailto:${esc(site.email)}?subject=${subject}">${esc(site.email)}</a><button class="copy" type="button" data-copy="${esc(site.email)}"></button></p>
     </div>

@@ -25,8 +25,8 @@ PROGRAMS = json.loads((ROOT / 'assets/data/programs.json').read_text(encoding='u
 # ------------------------------------------------------------------ pages
 # key : valeur de data-page sur <body>. three : la page charge une scène three.js (table d'import).
 PAGES = {
-    'index': dict(key='accueil', title_key='home_title', desc_key='home_desc', three=True, scripts=['chrome.js', 'home.js', 'scene.js']),
-    'pipeline': dict(key='pipeline', title_key='pipe_title', desc_key='pipe_desc', three=False, scripts=['chrome.js', 'pipeline.js']),
+    'index': dict(key='accueil', title_key='home_title', desc_key='home_desc', three=True, scripts=['chrome.js', 'scene.js']),
+    'tech': dict(key='tech', title_key='tech_title', desc_key='tech_desc', three=True, scripts=['chrome.js', 'tech.js']),
     'program': dict(key='programme', title_key='prog_title', desc_key='prog_desc', three=True, scripts=['chrome.js', 'program.js']),
     'a-propos': dict(key='a-propos', title_key='about_title', desc_key='about_desc', three=False, scripts=['chrome.js']),
     'careers': dict(key='carrieres', title_key='car_title', desc_key='car_desc', three=False, scripts=['chrome.js']),
@@ -60,6 +60,7 @@ ICONS = {
     'compass': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m18.6 9.4-2.3 6.9-6.9 2.3 2.3-6.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
     'heart': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.2s-8.4-5-8.4-11.3a4.7 4.7 0 0 1 8.4-2.9 4.7 4.7 0 0 1 8.4 2.9c0 6.3-8.4 11.3-8.4 11.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>',
     'team': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="10.5" cy="10.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="19.5" cy="11.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 22.5c.5-4 3-6 6.7-6s6.2 2 6.7 6M17.5 16.6c3.2-.5 6 .9 6.7 5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+    'fold': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     'globe': '<svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 14h19M14 4.5c-4 4.4-4 14.6 0 19M14 4.5c4 4.4 4 14.6 0 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
     'grow': '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.5V8.5M8.2 14.2 14 8.4l5.8 5.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 23.5h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
 }
@@ -75,6 +76,11 @@ def h(s):
 
 def a(s):
     return escape(s, quote=True)
+
+
+def hb(s):
+    """Comme h(), et le nom de l'agent est mis en valeur."""
+    return h(s).replace('NovaDiff active', '<strong class="brandname">NovaDiff active</strong>')
 
 
 def L(o, lg):
@@ -110,9 +116,7 @@ def head(name, lg, T, P):
   <meta property="og:type" content="website">
   {lang_block(name, lg)}
   <link rel="icon" href="{P}assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="{P}assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="{P}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{P}assets/fonts/instrumentserif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{P}assets/css/site.css">{importmap}
   <script>document.documentElement.classList.add('js')</script>
   {scripts}
@@ -147,7 +151,7 @@ def header(name, lg, T):
     {logo(T, P)}
     <nav class="nav__pill glass" id="nav-links" aria-label="{a(T["nav_main"])}">
       {link('index.html', T['nav_home'], 'accueil')}
-      {link('pipeline.html', T['nav_pipeline'], 'pipeline', also=('programme',))}
+      {link('tech.html', T['nav_tech'], 'tech', also=('programme',))}
       {link('a-propos.html', T['nav_about'], 'a-propos')}
       {link('careers.html', T['nav_careers'], 'carrieres')}
       <a class="btn btn--light nav__cta-m" href="a-propos.html#contact">{h(T['nav_partner'])}</a>
@@ -178,7 +182,7 @@ def footer(name, lg, T):
       <p class="foot__tag">{h(T['foot_tagline'])}</p>
     </div>
     <div><h4>{h(T['foot_company'])}</h4><ul><li><a href="a-propos.html">{h(T['nav_about'])}</a></li><li><a href="careers.html">{h(T['nav_careers'])}</a></li></ul></div>
-    <div><h4>{h(T['foot_programs'])}</h4><ul data-programs-list><li><a href="pipeline.html">{h(T['nav_pipeline'])}</a></li>{program_links(lg)}</ul></div>
+    <div><h4>{h(T['foot_tech'])}</h4><ul data-programs-list><li><a href="tech.html">{h(T['nav_tech'])}</a></li>{program_links(lg)}</ul></div>
     <div><h4>{h(T['foot_contact'])}</h4><ul><li><a data-mail="email" href="mailto:{a(SITE['email'])}">{h(SITE['email'])}</a></li><li>{langswitch(lg, name)}</li></ul></div>
   </div>
   <div class="container foot__legal"><p>{h(T['legal'])}</p><p>© {date.today().year} BlackPhage. {h(T['rights'])}.</p></div>
@@ -207,57 +211,73 @@ def page(name, lg, main, extra_before_main=''):
 
 
 # ------------------------------------------------------------------ accueil
-def teaser_pairs(lg, T):
-    lead = next((p for p in PROGRAMS['programs'] if p.get('detail')), None)
-    if not lead:
-        return ''
-    rows = ''.join(
-        f'<li class="pair"><span class="pair__from">{h(L(x["from"], lg))}</span>{ARROW}<span class="pair__to">{h(L(x["to"], lg))}</span></li>'
-        for x in lead.get('teaser', []))
-    return rows
+def steps_html(T):
+    return ''.join(
+        f'<li class="step reveal"><span class="step__n">{i}</span><div><h3>{h(T[f"step_{i}"])}</h3><p>{h(T[f"step_{i}n"])}</p></div></li>'
+        for i in range(1, 5))
+
+
+def pillars_html(T):
+    """Les trois qualités d'un Smart Binder, en cases pleines."""
+    return ''.join(
+        f'<article class="pillar glass panel reveal" style="--i:{i - 1}"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"pillar_{i}"])}</h3><p>{h(T[f"pillar_{i}n"])}</p></article>'
+        for i, k in ((1, 'ph'), (2, 'fold'), (3, 'gentle')))
+
+
+def home_targets(lg, T):
+    """Les cartes des trois cibles, d'après assets/data/programs.json."""
+    out = ''
+    for i, p in enumerate(PROGRAMS['programs']):
+        apps = ''.join(f'<li>{h(L(x, lg))}</li>' for x in p['applications'])
+        out += (f'<article class="target glass panel reveal" style="--i:{i}">'
+                f'<p class="target__area">{h(L(p["area"], lg))}</p>'
+                f'<h3 class="target__name">{h(L(p["name"], lg))}</h3>'
+                f'<p class="target__full">{h(L(p["full"], lg))}</p>'
+                f'<p class="target__sub">{h(T["tg_more"])}</p>'
+                f'<ul class="target__apps">{apps}</ul>'
+                f'<a class="target__go" href="tech.html#{a(p["id"])}">{h(T["tg_go"])}{ARROW}</a></article>')
+    return out
 
 
 def build_index(lg):
     T = STR[lg]
     P = '' if lg == 'fr' else '../'
-    steps = ''.join(
-        f'<li class="step reveal"><span class="step__n">{i}</span><div><h3>{h(T[f"step_{i}"])}</h3><p>{h(T[f"step_{i}n"])}</p></div></li>'
-        for i in range(1, 5))
     idea = ''.join(
-        f'<li class="idea__row reveal"><span class="idea__n">0{i}</span><p class="idea__h">{h(T[f"idea_{i}"])}</p><p class="idea__p">{h(T[f"idea_{i}n"])}</p></li>'
+        f'<li class="pillar glass panel reveal" style="--i:{i - 1}"><span class="idea__n">0{i}</span><h3 class="idea__h">{h(T[f"idea_{i}"])}</h3><p class="idea__p">{h(T[f"idea_{i}n"])}</p></li>'
         for i in range(1, 4))
-    pillars = ''.join(
-        f'<article class="pillar glass reveal"><span class="pillar__ico">{ICONS[k]}</span><h3>{h(T[f"pillar_{i}"])}</h3><p>{h(T[f"pillar_{i}n"])}</p></article>'
-        for i, k in ((1, 'ph'), (2, 'gentle'), (3, 'precise')))
-    lead = next(p for p in PROGRAMS['programs'] if p.get('detail'))
     main = f'''<section class="hero" id="top">
   <div class="hero__copy container">
     <h1 class="hero__title"><span class="hero__line">{h(T['home_h1_a'])} <em class="accent">{h(T['home_h1_b'])}</em></span> <span class="hero__line">{h(T['home_h1_c'])}</span></h1>
-    <p class="hero__lead">{h(T['home_lead'])}</p>
+    <p class="hero__lead">{hb(T['home_lead'])}</p>
     <div class="hero__cta">
-      <a class="btn btn--light btn--lg" href="pipeline.html">{h(T['cta_pipeline'])}{ARROW}</a>
+      <a class="btn btn--light btn--lg" href="tech.html">{h(T['cta_tech'])}{ARROW}</a>
       <a class="btn btn--ghost btn--lg" href="a-propos.html#contact">{h(T['cta_partner'])}</a>
     </div>
   </div>
   <p class="sr-only">{h(T['art_alt'])}</p>
   <button class="sr-only sr-only--focus" type="button" data-fish-wave>{h(T['fish_touch'])}</button>
-  <ul class="hero__strip container" aria-label="{a(T['facts_label'])}"><li>{h(T['strip_1'])}</li><li>{h(T['strip_2'])}</li><li>{h(T['strip_3'])}</li></ul>
+  <ul class="hero__strip container" aria-label="{a(T['facts_label'])}"><li>{h(T['strip_1'])}</li><li>{h(T['strip_2'])}</li></ul>
 </section>
 
 <section class="sec idea" id="idea">
   <div class="container">
-    <h2 class="eyebrow reveal">{h(T['idea_eyebrow'])}</h2>
-    <ol class="idea__list">{idea}</ol>
+    <div class="who">
+      <p class="eyebrow reveal">{h(T['who_eyebrow'])}</p>
+      <p class="who__p reveal">{hb(T['who_p'])}</p>
+      <a class="btn btn--ghost reveal" href="a-propos.html">{h(T['who_cta'])}{ARROW}</a>
+    </div>
+    <h2 class="eyebrow idea__eyebrow reveal">{h(T['idea_eyebrow'])}</h2>
+    <ol class="idea__list pillars">{idea}</ol>
   </div>
 </section>
 
-<section class="sec engine" id="engine">
-  <div class="container engine__grid">
-    <div class="engine__copy">
-      <p class="eyebrow reveal">{h(T['engine_eyebrow'])}</p>
-      <h2 class="h2 reveal">{h(T['engine_h2'])}</h2>
-      <p class="lead reveal">{h(T['engine_lead'])}</p>
-      <ol class="steps">{steps}</ol>
+<section class="sec nova" id="nova">
+  <div class="container nova__grid">
+    <div class="nova__copy">
+      <p class="eyebrow reveal">{h(T['nova_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['nova_h2'])}</h2>
+      <p class="lead reveal">{h(T['nova_lead'])}</p>
+      <ol class="steps">{steps_html(T)}</ol>
     </div>
   </div>
 </section>
@@ -267,28 +287,21 @@ def build_index(lg):
     <div class="sec__head">
       <p class="eyebrow reveal">{h(T['class_eyebrow'])}</p>
       <h2 class="h2 reveal">{h(T['class_h2'])}</h2>
-      <p class="lead reveal">{h(T['class_lead'])}</p>
+      <p class="lead reveal">{hb(T['class_lead'])}</p>
     </div>
-    <div class="pillars">{pillars}</div>
+    <div class="pillars">{pillars_html(T)}</div>
   </div>
 </section>
 
-<section class="sec spotlight" id="program">
+<section class="sec targets" id="targets">
   <div class="container">
-    <article class="spot glass reveal">
-      <span class="spot__bg" aria-hidden="true"></span>
-      <div class="spot__copy">
-        <p class="eyebrow">{h(T['lead_eyebrow'])}</p>
-        <h2 class="spot__name">{h(L(lead['name'], lg))}</h2>
-        <p class="lead">{h(T['lead_p'])}</p>
-        <a class="btn btn--light" href="program.html#{a(lead['id'])}">{h(T['lead_cta'])}{ARROW}</a>
-      </div>
-      <div class="spot__pairs">
-        <div class="spot__cols"><span>{h(T['tz_from'])}</span><span>{h(T['tz_to'])}</span></div>
-        <ul data-teaser>{teaser_pairs(lg, T)}</ul>
-      </div>
-    </article>
-    <p class="spot__next reveal"><span class="dotlive" aria-hidden="true"></span>{h(T['lead_next'])}. {h(T['lead_next_p'])}</p>
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['tg_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['tg_h2'])}</h2>
+      <p class="lead reveal">{h(T['tg_lead'])}</p>
+    </div>
+    <div class="targets__grid">{home_targets(lg, T)}</div>
+    <div class="targets__cta reveal"><a class="btn btn--light btn--lg" href="tech.html">{h(T['cta_tech'])}{ARROW}</a></div>
   </div>
 </section>
 
@@ -307,24 +320,102 @@ def build_index(lg):
     return page('index', lg, main, extra_before_main='<canvas id="scene" class="scene" aria-hidden="true"></canvas>\n')
 
 
-# ------------------------------------------------------------------ pipeline
-def build_pipeline(lg):
+# ------------------------------------------------------------------ notre technologie
+def tech_targets(lg, T):
+    """Une grande carte par cible : ce qu'elle fait, ses applications potentielles, notre approche."""
+    out = ''
+    for i, p in enumerate(PROGRAMS['programs'], 1):
+        apps = ''.join(f'<li class="reveal" style="--i:{j}"><span class="where__dot" aria-hidden="true"></span>{h(L(x, lg))}</li>' for j, x in enumerate(p['applications']))
+        link = f'<a class="btn btn--ghost" href="program.html#{a(p["id"])}">{h(T["t_view"])}{ARROW}</a>' if p.get('detail') else ''
+        out += f'''<article class="tcard glass panel reveal" id="{a(p['id'])}">
+  <div class="tcard__head">
+    <p class="tcard__n">0{i}</p>
+    <p class="eyebrow">{h(L(p['area'], lg))}</p>
+    <h3 class="tcard__name">{h(L(p['name'], lg))}</h3>
+    <p class="tcard__full">{h(L(p['full'], lg))}</p>
+  </div>
+  <div class="tcard__body">
+    <p class="tcard__role">{h(L(p['role'], lg))}</p>
+    <h4 class="tcard__sub">{h(T['t_apps'])}</h4>
+    <ul class="where tcard__apps">{apps}</ul>
+    <h4 class="tcard__sub">{h(T['t_approach'])}</h4>
+    <p class="tcard__approach">{h(L(p['approach'], lg))}</p>
+    {link}
+  </div>
+</article>'''
+    return out
+
+
+def build_tech(lg):
     T = STR[lg]
     main = f'''<section class="pagehead">
-  <div class="container">
-    <p class="eyebrow">{h(T['pipe_eyebrow'])}</p>
-    <h1 class="h1">{h(T['pipe_h1'])}</h1>
-    <p class="lead">{h(T['pipe_lead'])}</p>
-    <p class="pagehead__meta" data-updated></p>
+  <div class="container pagehead__grid pagehead__grid--art">
+    <div>
+      <p class="eyebrow">{h(T['tech_eyebrow'])}</p>
+      <h1 class="h1 h1--wide">{h(T['tech_h1'])}</h1>
+      <p class="lead">{hb(T['tech_lead'])}</p>
+    </div>
+    <div class="phero__art pagehead__art" aria-hidden="true"></div>
   </div>
 </section>
-<section class="sec sec--tight">
+
+<section class="sec sec--tight" id="agent">
+  <div class="container split">
+    <div>
+      <p class="eyebrow reveal">{h(T['agent_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['agent_h2'])}</h2>
+      <p class="lead reveal">{h(T['agent_lead'])}</p>
+    </div>
+    <ol class="steps">{steps_html(T)}</ol>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="binders">
   <div class="container">
-    <div class="plist" id="plist" aria-live="polite"><noscript><p class="note">{h(T['noscript_list'])}</p></noscript></div>
-    <p class="note">{h(T['pipe_note'])}</p>
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['sb_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['sb_h2'])}</h2>
+      <p class="lead reveal">{hb(T['class_lead'])}</p>
+    </div>
+    <div class="pillars">{pillars_html(T)}</div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="targets">
+  <div class="container">
+    <div class="sec__head">
+      <p class="eyebrow reveal">{h(T['targets_eyebrow'])}</p>
+      <h2 class="h2 reveal">{h(T['targets_h2'])}</h2>
+      <p class="lead reveal">{h(T['targets_lead'])}</p>
+    </div>
+    <div class="tcards">{tech_targets(lg, T)}</div>
+  </div>
+</section>
+
+<section class="sec sec--tight" id="goal">
+  <div class="container">
+    <div class="goal glass panel reveal">
+      <p class="eyebrow">{h(T['goal_eyebrow'])}</p>
+      <h2 class="goal__h">{h(T['goal_h2'])}</h2>
+      <p class="lead">{h(T['goal_p'])}</p>
+    </div>
+    <p class="disclaimer">{h(T['tech_note'])}</p>
+  </div>
+</section>
+
+<section class="sec end">
+  <div class="container">
+    <div class="end__in glass reveal">
+      <h2 class="end__h end__h--sm">{h(T['end_h2'])}</h2>
+      <p class="lead">{h(T['end_p'])}</p>
+      <div class="hero__cta">
+        <a class="btn btn--light btn--lg" href="a-propos.html#contact">{h(T['cta_partner'])}{ARROW}</a>
+        <a class="btn btn--ghost btn--lg" data-mail="email" href="mailto:{a(SITE['email'])}">{h(SITE['email'])}</a>
+      </div>
+    </div>
   </div>
 </section>'''
-    return page('pipeline', lg, main)
+    return page('tech', lg, main, extra_before_main='<canvas id="protein" class="protein" aria-hidden="true"></canvas>\n')
 
 
 # ------------------------------------------------------------------ programme
@@ -559,7 +650,7 @@ def check(name, src):
 
 def main():
     check_data()
-    builders = {'index': build_index, 'pipeline': build_pipeline, 'program': build_program, 'a-propos': build_about, 'careers': build_careers}
+    builders = {'index': build_index, 'tech': build_tech, 'program': build_program, 'a-propos': build_about, 'careers': build_careers}
     (ROOT / 'en').mkdir(exist_ok=True)
     out = []
     for lg in ('fr', 'en'):
