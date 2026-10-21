@@ -47,8 +47,8 @@
     "en": "A pH-dependent Smart Binder, for sharper activation and lower toxicity."
    },
    "tagline": {
-    "fr": "Le récepteur qui a changé la médecine. Pas encore terminé.",
-    "en": "The receptor that changed medicine. Not yet finished."
+    "fr": "La cible de médicaments qui ont changé la médecine. Le travail continue.",
+    "en": "The target of drugs that changed medicine. The work continues."
    },
    "intro": {
     "fr": "Les médicaments ciblant GLP-1R ont transformé la prise en charge de l’obésité et du diabète de type 2. La demande est immense. Les compromis aussi.",
@@ -62,7 +62,7 @@
      },
      "p": {
       "fr": "Le récepteur est présent dans l’intestin, le cerveau, le pancréas et le cœur. Les traitements actuels les activent tous.",
-      "en": "The receptor lives in gut, brain, pancreas and heart. Today’s drugs hit them all."
+      "en": "The receptor is found in the gut, brain, pancreas and heart. Today’s drugs activate all of them."
      }
     },
     {
@@ -97,12 +97,12 @@
     },
     {
      "h": {
-      "fr": "Des étiquettes lourdes.",
-      "en": "Heavy labels."
+      "fr": "Des notices chargées.",
+      "en": "Heavy warnings."
      },
      "p": {
-      "fr": "Les avertissements sur le pancréas, la vésicule et la thyroïde pèsent sur chaque prescription.",
-      "en": "Warnings on pancreas, gallbladder and thyroid shape every prescription."
+      "fr": "Les mises en garde sur le pancréas, la vésicule biliaire et la thyroïde pèsent sur chaque prescription.",
+      "en": "Warnings about the pancreas, gallbladder and thyroid shape every prescription."
      }
     },
     {
@@ -153,8 +153,8 @@
       "en": "Designed by NovaDiff active."
      },
      "p": {
-      "fr": "Chaque variante est évaluée, apprise et améliorée en boucle fermée.",
-      "en": "Every variant is scored, learned from and improved in a closed loop."
+      "fr": "Chaque variante est évaluée puis améliorée en boucle fermée. Chaque résultat nourrit le cycle suivant.",
+      "en": "Every variant is scored then improved in a closed loop. Every result feeds the next cycle."
      }
     }
    ],
@@ -181,8 +181,8 @@
    "id": "gdf-8",
    "detail": false,
    "name": {
-    "fr": "Myostatine / GDF-8",
-    "en": "Myostatin / GDF-8"
+    "fr": "Myostatine / GDF-8",
+    "en": "Myostatin / GDF-8"
    },
    "full": {
     "fr": "Facteur de croissance et de différenciation 8",
@@ -219,8 +219,8 @@
    "id": "tfr1",
    "detail": false,
    "name": {
-    "fr": "TfR1 / CD71",
-    "en": "TfR1 / CD71"
+    "fr": "TfR1 / CD71",
+    "en": "TfR1 / CD71"
    },
    "full": {
     "fr": "Récepteur 1 de la transferrine",

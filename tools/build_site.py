@@ -259,7 +259,7 @@ def build_index(lg):
 <section class="sec idea" id="idea" data-station="1">
   <div class="container">
     <div class="who" id="who">
-      <p class="eyebrow reveal">{h(T['who_eyebrow'])}</p>
+      <h2 class="eyebrow reveal">{h(T['who_eyebrow'])}</h2>
       <p class="who__p reveal">{hb(T['who_p'])}</p>
     </div>
     <h2 class="eyebrow idea__eyebrow reveal">{h(T['idea_eyebrow'])}</h2>
@@ -322,7 +322,6 @@ def build_index(lg):
       <ul class="contact__list">{contact_rows(T, lg)}</ul>
     </div>
   </div>
-</section>
 </section>'''
     return page('index', lg, main, extra_before_main='<canvas id="scene" class="scene" aria-hidden="true"></canvas>\n')
 

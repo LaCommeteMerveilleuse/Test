@@ -43,8 +43,8 @@ s('home_lead', 'Notre agent NovaDiff active est conçu spécialement pour la con
   'Our agent NovaDiff active is designed specifically to build Smart Binders. pH-dependent proteins, sharper and less toxic.')
 
 s('who_eyebrow', 'Qui sommes-nous', 'Who we are')
-s('who_p', 'BlackPhage est une société de biotechnologie privée. Notre agent autonome, NovaDiff active, est un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments, avec pour objectifs la médecine personnalisée et une durée moyenne de vie en bonne santé repoussée au-delà de 100 ans.',
-  'BlackPhage is a private biotechnology company. Our autonomous agent, NovaDiff active, is an in-house model designed specifically to push the current frontiers of drug design, with the goals of personalized medicine and an average healthy lifespan pushed beyond 100 years.')
+s('who_p', 'BlackPhage est une société de biotechnologie privée. Notre agent autonome, NovaDiff active, est un modèle interne. Il est conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et une durée moyenne de vie en bonne santé au-delà de 100 ans.',
+  'BlackPhage is a private biotechnology company. Our autonomous agent, NovaDiff active, is an in-house model. It is designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.')
 
 s('idea_eyebrow', 'L\'idée', 'The idea')
 s('idea_1', 'Comprendre le vivant.', 'Understand life.')
@@ -172,7 +172,7 @@ for i, (fr, en) in enumerate([
     ('Biologie computationnelle', 'Computational biology'),
     ('Biochimie et biologie moléculaire', 'Biochemistry and molecular biology'),
     ('Ingénierie logicielle', 'Software engineering'),
-    ('Propriété intellectuelle et réglementaire', 'IP and regulatory strategy'),
+    ('Propriété intellectuelle et affaires réglementaires', 'IP and regulatory affairs'),
     ('Partenariats et développement commercial', 'Partnerships and business development'),
     ('Communication claire', 'Clear communication'),
 ], 1):

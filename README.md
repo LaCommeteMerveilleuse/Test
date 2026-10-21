@@ -32,7 +32,7 @@ Trois endroits suffisent.
    python3 tools/build_site.py
    ```
 
-   Le script réécrit les dix pages (`*.html` et `en/*.html`). Il refuse d'écrire si un texte visible contient un tiret long, un point-virgule ou un deux-points,
+   Le script réécrit les huit pages (`index.html`, `tech.html`, `program.html`, `careers.html` et leurs copies dans `en/`). Il refuse d'écrire si un texte visible contient un tiret long, un point-virgule ou un deux-points,
    ou si un champ des cibles n'existe pas dans les deux langues.
 
 **Les postes de `careers.html`, les adresses e-mail, le statut de GLP-1R et les textes scientifiques des trois cibles (ce qu'elles font, leurs applications potentielles, notre approche) sont des exemples
