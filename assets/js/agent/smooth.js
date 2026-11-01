@@ -125,37 +125,49 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
     byK[5].group.add(m); byK[5].meshes.push(m); byK[5].cell = 0.03; byK[5].ready = true;
   }
 
-  // les maillages, calculés dans un worker
-  let worker = null;
-  try { worker = new Worker(new URL('./mesh.worker.js', import.meta.url), { type: 'module' }); } catch (e) { console.warn('maillages lisses indisponibles', e && e.message); }
-  const stats = { ms: {} };
+  // les maillages, calculés dans un worker (sinon, en dernier recours, sur le fil principal, un objet à la fois)
+  const stats = { ms: {}, where: 'worker' };
+  const hFor = { brain: weak ? 0.02 : 0.015, robot: weak ? 0.018 : 0.0125, split: weak ? 0.018 : 0.0125 };
+  const order = [[0, 'brain'], [2, 'robot'], [1, 'split']];
+  const cubesOf = (k) => {
+    const sh = shapes[k]; const m = sh.count === undefined ? sh.tag.length : sh.count;
+    byK[k].cell = sh.cube * 1.6;
+    return { pos: sh.pos.slice(0, m * 3), tag: sh.tag.slice(0, m), phase: sh.phase ? sh.phase.slice(0, m) : undefined, cube: sh.cube, frame: sh.frame };
+  };
+  const addParts = (k, kind, parts, ms) => {
+    const slot = byK[k]; stats.ms[kind] = Math.round(ms);
+    for (const p of parts) {
+      const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeMaterial(THREE, env, kind === 'brain' ? { pulse: true, clearcoat: 0.35, envIntensity: 0.75 } : kind === 'robot' ? { clearcoat: 0.9, envIntensity: 0.95 } : { clearcoat: 0.7, envIntensity: 0.9 }));
+      mesh.frustumCulled = false;
+      mesh.material.userData.u.uCell.value = slot.cell;
+      slot.group.add(mesh); slot.meshes.push(mesh);
+    }
+    slot.ready = true; onReady(k);
+  };
+  let worker = null; let fell = false;
+  const onMain = async () => {
+    if (fell) return; fell = true; stats.where = 'main';
+    const { buildSmooth } = await import('./smooth-build.js');
+    for (const [k, kind] of order) {
+      if (byK[k].ready) continue;
+      await new Promise((r) => setTimeout(r, 300));
+      const t0 = performance.now();
+      try { addParts(k, kind, await buildSmooth(kind, cubesOf(k), rgbSRGB, hFor[kind]), performance.now() - t0); } catch (e) { console.warn('maillage', kind, e && e.message); }
+    }
+  };
+  try { worker = new Worker(new URL('./mesh.worker.js', import.meta.url), { type: 'module' }); } catch (e) { console.warn('worker des maillages indisponible', e && e.message); worker = null; }
   if (worker) {
     const pending = new Map();
     worker.onmessage = (e) => {
       const { id, kind, parts, error, ms } = e.data;
       const k = pending.get(id); pending.delete(id);
-      if (error) { console.warn('maillage', kind, error); return; }
-      const slot = byK[k]; stats.ms[kind] = Math.round(ms);
-      for (const p of parts) {
-        const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeMaterial(THREE, env, kind === 'brain' ? { pulse: true, clearcoat: 0.35, envIntensity: 0.75 } : kind === 'robot' ? { clearcoat: 0.9, envIntensity: 0.95 } : { clearcoat: 0.7, envIntensity: 0.9 }));
-        mesh.frustumCulled = false;
-        mesh.material.userData.u.uCell.value = slot.cell;
-        slot.group.add(mesh); slot.meshes.push(mesh);
-      }
-      slot.ready = true; onReady(k);
+      if (error) { console.warn('maillage', kind, error); onMain(); return; }
+      addParts(k, kind, parts, ms);
     };
-    worker.onerror = (e) => console.warn('worker des maillages', e && e.message);
+    worker.onerror = (e) => { console.warn('worker des maillages', e && e.message); worker && worker.terminate(); worker = null; onMain(); };
     let id = 0;
-    const hFor = { brain: weak ? 0.02 : 0.015, robot: weak ? 0.018 : 0.0125, split: weak ? 0.018 : 0.0125 };
-    const order = [[0, 'brain'], [2, 'robot'], [1, 'split']];
-    for (const [k, kind] of order) {
-      const sh = shapes[k]; const m = sh.count === undefined ? sh.tag.length : sh.count;
-      byK[k].cell = sh.cube * 1.6;
-      const cubes = { pos: sh.pos.slice(0, m * 3), tag: sh.tag.slice(0, m), phase: sh.phase ? sh.phase.slice(0, m) : undefined, cube: sh.cube, frame: sh.frame };
-      pending.set(++id, k);
-      worker.postMessage({ id, kind, cubes, palette: rgbSRGB, h: hFor[kind] });
-    }
-  }
+    for (const [k, kind] of order) { pending.set(++id, k); worker.postMessage({ id, kind, cubes: cubesOf(k), palette: rgbSRGB, h: hFor[kind] }); }
+  } else onMain();
 
   const place = (k, a) => {
     const s = byK[k]; if (!s || !a) return;

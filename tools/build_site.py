@@ -352,7 +352,7 @@ def build_careers():
     jobs = ''
     for i in range(1, 5):
         subject = a(STR['en']['mail_subject_apply'] + ' ' + STR['en'][f'job_{i}'])
-        jobs += (f'<article class="job reveal-line" style="--i:{i - 1}"><div><p class="tag">{en(f"job_{i}_team")} · {en("job_full")}</p>{tx(f"job_{i}", "h3")}{tx(f"job_{i}n", "p", "card__p")}</div>'
+        jobs += (f'<article class="job reveal-line" style="--i:{i - 1}"><div><p class="tag">{tx(f"job_{i}_team")} · {tx("job_full")}</p>{tx(f"job_{i}", "h3")}{tx(f"job_{i}n", "p", "card__p")}</div>'
                  f'<a class="btn btn--light" data-mail="careersEmail" data-subject="{subject}" href="mailto:{a(SITE["careersEmail"])}?subject={subject}"><span data-i18n="job_apply">{en("job_apply")}</span>{ARROW}</a></article>')
     sbb_subject = a(STR['en']['mail_subject_apply'] + ' ' + STR['en']['sbb_title'])
     sbb_meta = ''.join(f'<div>{tx(f"sbb_m{k}_k", "dt")}{tx(f"sbb_m{k}_v", "dd")}</div>' for k in range(1, 5))
@@ -361,7 +361,7 @@ def build_careers():
         lis = ''.join(tx(f'sbb_s{k}_{j}', 'li') for j in range(1, 6) if f'sbb_s{k}_{j}' in STR['en'])
         sbb_secs += f'<section class="jobx__sec">{tx(f"sbb_s{k}_h", "h4")}<ul>{lis}</ul></section>'
     featured = f'''<article class="jobx reveal" id="serial-biotech-builder">
-    <p class="tag">{en("sbb_eyebrow")} · {en("sbb_team")} · {en("job_full")}</p>
+    <p class="tag">{tx("sbb_eyebrow")} · {tx("sbb_team")} · {tx("job_full")}</p>
     {tx("sbb_title", "h3", "jobx__title")}
     {tx("sbb_lead", "p", "jobx__lead")}
     <dl class="jobx__meta">{sbb_meta}</dl>
