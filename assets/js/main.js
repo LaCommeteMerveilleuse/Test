@@ -8,6 +8,7 @@ import { initFlow } from './fx/flow.js';
 import { initContact } from './fx/contact.js';
 import { initTrail } from './fx/trail.js';
 import { initModals } from './fx/modal.js';
+import { initArts } from './fx/arts.js';
 
 const root = document.documentElement;
 const q = new URLSearchParams(location.search);
@@ -25,6 +26,7 @@ window.__trail = trail;
 initBackground();
 initFlow();
 initContact(trail);
+initArts();
 const heroEl = document.querySelector('.hero');
 if (heroEl) requestAnimationFrame(() => heroEl.classList.add('is-in'));       // le titre est là tout de suite : plus d'animation d'ouverture
 

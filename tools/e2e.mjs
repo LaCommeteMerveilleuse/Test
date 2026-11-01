@@ -189,6 +189,23 @@ async function scrollTo(page, y, wait = 700) {
   await page.keyboard.press('Escape'); await sleep(400);
   ok(await page.evaluate(() => !document.getElementById('contact-modal').classList.contains('is-open')), 'Échap ferme le contact');
 
+  // les articles : une flèche de chaque côté, défilement manuel d'une carte à la fois, rien ne bouge seul
+  geo = await G(); await scrollTo(page, geo.articles, 900);
+  const ar0 = await page.evaluate(() => { const sc = document.querySelector('.arts__scroll'); const p = document.querySelector('.arts__nav--prev'); const n = document.querySelector('.arts__nav--next'); const b = sc.getBoundingClientRect(); return { cards: document.querySelectorAll('.arts .acard').length, l: sc.scrollLeft, pd: p.disabled, nd: n.disabled, pl: p.getBoundingClientRect().left - b.left, nr: b.right - n.getBoundingClientRect().right, anim: getComputedStyle(document.querySelector('.arts__track')).animationName }; });
+  ok(ar0.cards === 7 && ar0.anim === 'none', 'articles : sept cartes, aucun défilement automatique');
+  ok(ar0.l === 0 && ar0.pd && !ar0.nd, 'articles : au départ la flèche de gauche est grisée, celle de droite active');
+  ok(ar0.pl < 60 && ar0.nr < 60, 'articles : une flèche de chaque côté de la rangée');
+  await page.click('.arts__nav--next'); await sleep(900);
+  const ar1 = await page.evaluate(() => ({ l: document.querySelector('.arts__scroll').scrollLeft, pd: document.querySelector('.arts__nav--prev').disabled }));
+  ok(ar1.l > 150 && !ar1.pd, 'articles : la flèche de droite fait défiler et réveille celle de gauche');
+  await sleep(1200);
+  ok(await page.evaluate((l) => Math.abs(document.querySelector('.arts__scroll').scrollLeft - l) < 2, ar1.l), 'articles : la rangée reste immobile entre deux clics');
+  for (let k = 0; k < 6; k++) { if (await page.evaluate(() => document.querySelector('.arts__nav--next').disabled)) break; await page.click('.arts__nav--next'); await sleep(700); }
+  ok(await page.evaluate(() => document.querySelector('.arts__nav--next').disabled), 'articles : au bout de la rangée la flèche de droite se grise');
+  await page.click('.arts__nav--prev'); await sleep(800);
+  ok(await page.evaluate(() => !document.querySelector('.arts__nav--next').disabled), 'articles : la flèche de gauche ramène en arrière');
+  await page.evaluate(() => { document.querySelector('.arts__scroll').scrollLeft = 0; }); await sleep(300);
+
   // la lecture d'un article
   geo = await G(); await scrollTo(page, geo.articles, 900);
   await page.evaluate(() => document.querySelector('.acard').click()); await sleep(600);

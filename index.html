@@ -121,7 +121,9 @@
 
 <section class="sec articles" id="articles" data-tone="warm2">
   <div class="container"><header class="sec__head center"><p class="eyebrow reveal" data-i18n="art_eyebrow">Blog</p><h2 class="h2 reveal" data-i18n="art_title">Our articles</h2></header></div>
-  <div class="marquee" data-marquee data-tilt><div class="marquee__track"><button class="acard" type="button" data-article="1" data-min="3">
+  <div class="arts" data-arts>
+    <button class="arts__nav arts__nav--prev" type="button" data-dir="-1" aria-label="Previous articles" data-i18n-aria-label="art_prev" disabled><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="arts__scroll" tabindex="0" role="region" aria-label="Our articles" data-i18n-aria-label="art_list"><div class="arts__track"><button class="acard" type="button" data-article="1" data-min="3">
           <span class="acard__cover"><img src="assets/img/culture/lab-bench.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a1_tag">Profile</span></span>
           <span class="acard__body">
             <h3 data-i18n="a1_title">Toronto, 1922. The boy who was not supposed to live</h3>
@@ -163,63 +165,16 @@
             <span class="acard__ex" data-i18n="a6_ex">A clinical trial failure, an unexpected effect and one of the most famous second lives in pharmacy.</span>
             <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </span>
-        </button><button class="acard" type="button" data-article="7" data-min="4">
+        </button><button class="acard" type="button" data-article="7" data-min="5">
           <span class="acard__cover"><img src="assets/img/culture/whiteboard-sprint.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a7_tag">Longevity</span></span>
           <span class="acard__body">
             <h3 data-i18n="a7_title">Friday, November 13, 2026. The day humanity was supposed to become infinite</h3>
             <span class="acard__ex" data-i18n="a7_ex">In 1960, three researchers calculated the exact date of a population explosion. That date arrives in a few days, and the lesson lies elsewhere.</span>
-            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="1" data-min="3">
-          <span class="acard__cover"><img src="assets/img/culture/lab-bench.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a1_tag">Profile</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a1_title">Toronto, 1922. The boy who was not supposed to live</h3>
-            <span class="acard__ex" data-i18n="a1_ex">A young surgeon with no laboratory, a student, and a protein that was about to change medicine.</span>
-            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="2" data-min="3">
-          <span class="acard__cover"><img src="assets/img/culture/pitch-day.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a2_tag">By the numbers</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a2_title">Ten years, billions, and nine failures out of ten</h3>
-            <span class="acard__ex" data-i18n="a2_ex">Behind every approved medicine, a mountain of abandoned projects. The numbers of drug design are dizzying.</span>
-            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="3" data-min="4">
-          <span class="acard__cover"><img src="assets/img/culture/pipette-plate.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a3_tag">History</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a3_title">From luck to algorithm, a century of learning to draw a medicine</h3>
-            <span class="acard__ex" data-i18n="a3_ex">Penicillin, propranolol, AlphaFold. How the design of medicines stopped being a matter of luck.</span>
-            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="4" data-min="3">
-          <span class="acard__cover"><img src="assets/img/culture/founders-table.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a4_tag">Startup culture</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a4_title">What a biotech startup will look like in 2027</h3>
-            <span class="acard__ex" data-i18n="a4_ex">Fewer people, more agents, and one golden rule. Be wrong fast, be wrong cleanly, and say so.</span>
-            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="5" data-min="4">
-          <span class="acard__cover"><img src="assets/img/culture/data-wall.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a5_tag">Target</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a5_title">The receptor, lock of the living</h3>
-            <span class="acard__ex" data-i18n="a5_ex">From Langley to Lefkowitz, a century of insight into why so many medicines aim at a receptor.</span>
-            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="6" data-min="3">
-          <span class="acard__cover"><img src="assets/img/culture/healthy-years.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a6_tag">Did you know</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a6_title">The drug that was meant to heal the heart</h3>
-            <span class="acard__ex" data-i18n="a6_ex">A clinical trial failure, an unexpected effect and one of the most famous second lives in pharmacy.</span>
-            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </span>
-        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="7" data-min="4">
-          <span class="acard__cover"><img src="assets/img/culture/whiteboard-sprint.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="a7_tag">Longevity</span></span>
-          <span class="acard__body">
-            <h3 data-i18n="a7_title">Friday, November 13, 2026. The day humanity was supposed to become infinite</h3>
-            <span class="acard__ex" data-i18n="a7_ex">In 1960, three researchers calculated the exact date of a population explosion. That date arrives in a few days, and the lesson lies elsewhere.</span>
-            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="acard__meta"><span>5 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </span>
         </button></div></div>
+    <button class="arts__nav arts__nav--next" type="button" data-dir="1" aria-label="Next articles" data-i18n-aria-label="art_next"><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
 </section>
 
 <section class="sec contact" id="contact" data-tone="deep">

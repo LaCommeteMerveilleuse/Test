@@ -21,6 +21,8 @@ BAD = re.compile('[—;:]')   # tiret long, point-virgule, deux-points
 problems = []
 
 ARROW = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+CHEV_L = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+CHEV_R = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 NORTH = '<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 CLOSE = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
 ICONS = {
@@ -268,8 +270,11 @@ def build_index():
           </span>
         </button>'''
     steps = ''.join(f'<li class="sstep{" is-on" if k == 1 else ""}" data-step="{k}"><b class="sstep__n">{k}</b><div>{tx(f"story_s{k}t", "h3")}{tx(f"story_s{k}", "p")}</div></li>' for k in range(1, 5))
-    arts_dup = arts.replace('class="acard"', 'class="acard" tabindex="-1" aria-hidden="true"')
-    cards_row = f'<div class="marquee" data-marquee data-tilt><div class="marquee__track">{arts}{arts_dup}</div></div>'
+    cards_row = f'''<div class="arts" data-arts>
+    <button class="arts__nav arts__nav--prev" type="button" data-dir="-1" aria-label="{a(STR['en']['art_prev'])}" data-i18n-aria-label="art_prev" disabled>{CHEV_L}</button>
+    <div class="arts__scroll" tabindex="0" role="region" aria-label="{a(STR['en']['art_list'])}" data-i18n-aria-label="art_list"><div class="arts__track">{arts}</div></div>
+    <button class="arts__nav arts__nav--next" type="button" data-dir="1" aria-label="{a(STR['en']['art_next'])}" data-i18n-aria-label="art_next">{CHEV_R}</button>
+  </div>'''
     feats = ''.join(f'''<li class="feat reveal-wipe" style="--i:{k}"><span class="feat__ico">{ICONS[ic]}</span><div>{tx(f"nova_f{k + 1}", "h3")}{tx(f"nova_f{k + 1}n", "p")}</div></li>''' for k, ic in enumerate(['brain', 'cube', 'loop']))
     nova_chips = ''.join(tx(f'nova_c{k}', 'li', 'chip chip--pop') for k in range(1, 4))
     prog_chips = ''.join(tx(f'prog_{k}', 'li', 'chip') for k in range(1, 8))
