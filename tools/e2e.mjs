@@ -39,12 +39,17 @@ async function scrollTo(page, y, wait = 700) {
   const meshes = await page.waitForFunction(() => { const s = window.__agent && window.__agent.smooth; return !!s && s.ready(0) && s.ready(2); }, null, { timeout: 150000 }).then(() => true).catch(() => false);
   ok(meshes, 'les maillages lisses (cerveau et robot) sont prêts ' + JSON.stringify(await page.evaluate(() => (window.__agent && window.__agent.smooth ? window.__agent.smooth.stats : null))));
   ok(!bag.warns.some((w) => /maillage|worker/.test(w)), 'aucun avertissement de maillage ni de worker ' + JSON.stringify(bag.warns.filter((w) => /maillage|worker/.test(w)).slice(0, 2)));
+  ok(await page.evaluate(() => document.querySelector('.hero').classList.contains('is-in')), 'le titre est affiché tout de suite, sans animation d\'ouverture');
+  const f00 = await page.evaluate(() => window.__agent.state().frame);
+  await page.waitForFunction((f) => window.__agent.state().frame >= f + 4, f00, { timeout: 60000 }).catch(() => {});
+  const st0 = await state(page);
+  ok(st0 && st0.intro === undefined && st0.dis && st0.dis[0] === 0 && st0.reveal[0] === 1, 'le cerveau est entier dès le départ, aucun assemblage de cubes ' + JSON.stringify({ dis: st0 && st0.dis, reveal: st0 && st0.reveal }));
 
   // le contenu demandé
   const txt = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   const h1 = await page.evaluate(() => document.querySelector('h1').textContent.replace(/\s+/g, ' ').trim());
   ok(/Discovering the future of medicine/.test(h1), 'titre central : ' + h1);
-  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question']) {
+  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question', 'right key for the right lock', 'Pick a target', 'Generate by diffusion', 'Optimize in real time', 'Turn the pathway on or off', 'activates the receptor']) {
     ok(txt.includes(w) || txt.toLowerCase().includes(w.toLowerCase()), 'le texte contient « ' + w + ' »');
   }
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world', 'On contact, NovaDiff reshapes itself', 'The receptor switches on', 'The signal carries on']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
@@ -66,7 +71,7 @@ async function scrollTo(page, y, wait = 700) {
   const txtFr = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   ok(!/[—;:]/.test(txtFr), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (FR)' + (/[—;:]/.test(txtFr) ? ' : ' + (txtFr.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'NovaDiff active']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
-  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'La rigueur dans chaque tube', 'par diffusion', 'en temps réel']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
+  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'par diffusion', 'en temps réel', 'la bonne clé pour la bonne serrure', 'Choisir une cible', 'Générer par diffusion', 'Optimiser en temps réel', 'Activer ou inhiber la voie']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
   ok(await page.evaluate(() => localStorage.getItem('bp-lang') === 'fr'), 'la langue est mémorisée');
   await page.reload({ waitUntil: 'load' }); await sleep(1500);
   ok(await page.evaluate(() => document.documentElement.lang === 'fr'), 'la langue survit au rechargement');
@@ -109,7 +114,7 @@ async function scrollTo(page, y, wait = 700) {
       alts: imgs.filter((i) => (i.alt || '').length > 30).length,
     };
   });
-  ok(gal.files === 13 && gal.loaded === gal.n, 'carrousel : les huit personnages en cubes et les cinq photographies se chargent ' + JSON.stringify(gal));
+  ok(gal.files === 8 && gal.loaded === gal.n, 'carrousel : les huit personnages en cubes (pixel 3D) se chargent, rien d\'autre ' + JSON.stringify(gal));
   ok(gal.whole === gal.n && gal.alts === gal.n, 'carrousel : chaque image est montrée entière, avec son texte alternatif');
 
   // l'agent, section par section
@@ -153,10 +158,15 @@ async function scrollTo(page, y, wait = 700) {
     geo = await G(); await scrollTo(page, geo.storyTop + u * (geo.storyH - geo.h), 1000);
     s = await state(page);
     ok(s && Math.abs(s.u - u) < 0.07, 'science : u = ' + u + ' → a=' + (s && s.a) + ' b=' + (s && s.b) + ' mix=' + (s && s.mix.toFixed(2)));
+    if (u > 0.55) ok(s && s.a === 3 && s.b === 3 && s.dis[0] === 0 && s.dis[1] === 0, 'science : une fois la protéine fixée au récepteur, plus aucune traînée de cubes (u = ' + u + ') ' + JSON.stringify(s && { a: s.a, b: s.b, dis: s.dis }));
+    const un = s ? s.u : u;                                            // l'étape suit la valeur amortie de u, celle que l'agent annonce
+    const want = un < 0.18 ? 1 : un < 0.38 ? 2 : un < 0.56 ? 3 : 4;
+    const on = await page.evaluate(() => [...document.querySelectorAll('.story__steps .sstep')].map((x) => x.classList.contains('is-on') ? 1 : 0).join(''));
+    ok(on === [1, 2, 3, 4].map((k) => (k === want ? 1 : 0)).join(''), 'science : l\'étape ' + want + ' de l\'explication est allumée (u = ' + u + ') ' + on);
   }
   geo = await G(); await scrollTo(page, geo.articles + 200, 900);
   s = await state(page);
-  ok(s && s.a === 4, 'blog : la scène est derrière nous (a=' + (s && s.a) + ')');
+  ok(s && s.a === 3 && s.b === 3 && s.dis[0] === 0 && s.dis[1] === 0, 'blog : la scène est derrière nous, sans aucun cube ' + JSON.stringify(s && { a: s.a, b: s.b, dis: s.dis }));
   ok(await page.evaluate(() => !document.querySelector('.grid, .grid__btn, [data-grid]')), 'plus d\'animation de grille ni de sphère');
 
   // le contact : un simple bouton, qui répond au curseur

@@ -94,8 +94,20 @@ s('nova_c3', 'Plus précis', 'More precise')
 # ------------------------------------------------------------------ le récepteur
 s('story_eyebrow', 'Science', 'Science')
 s('story_title', 'De petites structures. De grandes questions.', 'Small structures. Big questions.')
-s('story_text', 'Notre agent génère la structure par diffusion, puis l\'optimise en temps réel pour qu\'elle soit biophysiquement optimisée et réponde à une question biologique.',
-  'Our agent generates the structure by diffusion, then optimizes it in real time so it is biophysically optimized to answer a biological question.')
+s('story_lead', 'Concevoir une protéine pour une cible, c\'est fabriquer la bonne clé pour la bonne serrure et répondre à une question biologique.',
+  'Designing a protein for a target means building the right key for the right lock, to answer a biological question.')
+s('story_s1t', 'Choisir une cible', 'Pick a target')
+s('story_s1', 'Un récepteur à la surface de la cellule commande une voie biologique, une chaîne de signaux qui dit à la cellule quoi faire.',
+  'A receptor on the cell surface commands a biological pathway, a chain of signals that tells the cell what to do.')
+s('story_s2t', 'Générer par diffusion', 'Generate by diffusion')
+s('story_s2', 'Notre agent part du bruit et façonne une protéine en 3D pas à pas, comme un sculpteur qui révèle une forme, jusqu\'à épouser la cible.',
+  'Our agent starts from noise and shapes a 3D protein step by step, like a sculptor revealing a form, until it fits the target.')
+s('story_s3t', 'Optimiser en temps réel', 'Optimize in real time')
+s('story_s3', 'Il affine la structure en continu et vérifie qu\'elle se replie, reste stable et se fixe fermement, jusqu\'à être biophysiquement optimisée.',
+  'It keeps refining the structure and checks that it folds, stays stable and binds tightly, until it is biophysically optimized.')
+s('story_s4t', 'Activer ou inhiber la voie', 'Turn the pathway on or off')
+s('story_s4', 'Fixée à sa cible, la protéine active le récepteur, comme une clé qui tourne, ou le bloque. La voie s\'accélère ou s\'arrête, comme voulu.',
+  'Bound to its target, the protein either activates the receptor, like a key turning, or blocks it. The pathway speeds up or stops, as designed.')
 
 # ------------------------------------------------------------------ articles
 s('art_eyebrow', 'Blog', 'Blog')

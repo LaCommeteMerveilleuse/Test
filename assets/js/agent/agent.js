@@ -29,7 +29,6 @@ uniform float uCube[6];
 uniform float uLevel; uniform float uBend; uniform float uG; uniform float uL;
 uniform float uGlowAll; uniform float uPulseSpeed; uniform float uKeep;
 uniform vec3 uPal[20]; uniform float uFlight; uniform float uBulge;
-uniform float uIntro;                                                  // l'ouverture : 0 les cubes sont en poussière, 1 la forme est assemblée
 uniform float uDisA; uniform float uDisB; uniform float uCellS[6];       // le fractionnement : 0 l'objet lisse est entier (pas de cubes), 1 il est tout en cubes
 varying vec3 vCol; varying float vGlow; varying float vFog; varying float vMet; varying float vThick;
 varying vec3 vLocal; varying vec3 vNloc; varying vec3 vM0; varying vec3 vM1; varying vec3 vM2; varying vec3 vWP;
@@ -131,18 +130,6 @@ void main() {
   // le souffle : un léger mouvement de chaque cube, qui reste petit devant sa taille
   float eShape = mix(A.edge, B.edge, t);
   pos += vec3(sin(uTime * 0.9 + aR.x * 40.0), cos(uTime * 0.8 + aR.y * 40.0), sin(uTime * 0.7 + aR.z * 40.0)) * 0.06 * min(eShape, 0.06) * sc;
-  // l'ouverture : les cubes arrivent en poussière, en tourbillon autour de l'axe vertical, puis s'assemblent
-  float tin = smoothstep(aR.x * 0.5, aR.x * 0.5 + 0.5, uIntro);
-  if (uIntro < 0.999) {
-    float k = 1.0 - tin;
-    vec3 relI = pos - cA;
-    vec3 dirI = normalize(rnd + vec3(0.2, 0.1, 0.0));
-    relI += dirI * (0.6 + 2.4 * aR.z) * uSA * k * k;
-    float angI = k * (2.5 + 3.5 * aR.y);
-    float cI = cos(angI); float sI = sin(angI);
-    relI.xz = vec2(cI * relI.x - sI * relI.z, sI * relI.x + cI * relI.z);
-    pos = cA + relI;
-  }
   mat3 bA = mat3(uMA) / uSA * A.b; mat3 bB = mat3(uMB) / uSB * B.b;
   mat3 bas = mat3(mix(bA[0], bB[0], t), mix(bA[1], bB[1], t), mix(bA[2], bB[2], t));
   // les impulsions cérébrales : un front de lumière part d'une source (ou court le long d'un faisceau) puis s'éteint, et des neurones s'allument au hasard
@@ -166,7 +153,7 @@ void main() {
   float visB = smoothstep(hB, hB + 0.07, uDisB);
   float vis = mix(visA, 1.0, smoothstep(0.0, 0.1, t));
   vis = mix(vis, visB, smoothstep(0.9, 1.0, t));
-  float edge = mix(A.edge * uSA, B.edge * uSB, ke) * (0.96 + 0.08 * aR.w) * uFade * vis * thin * smoothstep(0.0, 0.22, tin) * (1.0 + 0.45 * pulse) * mix(1.0, 0.82, c);
+  float edge = mix(A.edge * uSA, B.edge * uSB, ke) * (0.96 + 0.08 * aR.w) * uFade * vis * thin * (1.0 + 0.45 * pulse) * mix(1.0, 0.82, c);
   float thick = mix(A.thick, B.thick, t);
   vec3 local = position * vec3(edge, edge, edge * thick);
   mat3 Mx = rd * bas;
@@ -289,7 +276,7 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     uMA: { value: new THREE.Matrix4() }, uMB: { value: new THREE.Matrix4() }, uSA: { value: 1 }, uSB: { value: 1 },
     uCube: { value: cubes },
     uLevel: { value: 0 }, uBend: { value: 0 }, uG: { value: G }, uL: { value: L },
-    uGlowAll: { value: 0 }, uPulseSpeed: { value: 0.24 }, uKeep: { value: 1 }, uFlight: { value: 0.16 }, uBulge: { value: 0.12 }, uDisA: { value: 1 }, uDisB: { value: 1 }, uIntro: { value: 1 }, uCellS: { value: cellS },
+    uGlowAll: { value: 0 }, uPulseSpeed: { value: 0.24 }, uKeep: { value: 1 }, uFlight: { value: 0.16 }, uBulge: { value: 0.12 }, uDisA: { value: 1 }, uDisB: { value: 1 }, uCellS: { value: cellS },
     uPal: { value: PALETTE.map((h) => { const c = new THREE.Color().setStyle(h, THREE.LinearSRGBColorSpace); return new THREE.Vector3(c.r, c.g, c.b); }) },   // sRGB tel quel, sans conversion
   };
   const material = new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG });
@@ -325,14 +312,13 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     return out.compose(tmpP, tmpQ, tmpS);
   }
 
-  /** Règle l'agent. p : { a, b, mix, dust, fade, time, anchorA, anchorB, level, bend, glow, intro, disA, disB, keep } */
+  /** Règle l'agent. p : { a, b, mix, dust, fade, time, anchorA, anchorB, level, bend, glow, disA, disB, keep } */
   function set(p) {
     uniforms.uA.value = p.a; uniforms.uB.value = p.b; uniforms.uMix.value = p.mix;
     if (p.dust !== undefined) uniforms.uDust.value = p.dust;
     if (p.fade !== undefined) uniforms.uFade.value = p.fade;
     if (p.flight !== undefined) uniforms.uFlight.value = p.flight;
     if (p.bulge !== undefined) uniforms.uBulge.value = p.bulge;
-    if (p.intro !== undefined) uniforms.uIntro.value = p.intro;
     if (p.keep !== undefined) uniforms.uKeep.value = p.keep;
     if (p.disA !== undefined) uniforms.uDisA.value = p.disA;
     if (p.disB !== undefined) uniforms.uDisB.value = p.disB;

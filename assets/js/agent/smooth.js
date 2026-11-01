@@ -163,10 +163,12 @@ totalEmissiveRadiance += vColor.rgb * (vMat.z * vEm * 1.1) + uGlow * (vGlow * 0.
  * (brain-neurons.js) : le shader lit seulement l'heure. La lumière est ambrée sur le bleu profond de la marque, plus pâle au fond du cerveau.
  */
 function makeNeuralNet(THREE, net, shared) {
-  const tints = [0x2a5f86, 0x3f5e9e, 0x2d7f8c, 0x5d6fa8, 0x5f7a8a, 0x27463d].map((h) => new THREE.Color(h));
+  // des jaunes, écrits tels qu'on les veut à l'écran (le shader écrit directement dans le canevas : pas de conversion de couleur)
+  const D = (hex) => new THREE.Color().setHex(hex, THREE.LinearSRGBColorSpace);
+  const tints = [0xd9a000, 0xcf9600, 0xe2ae10, 0xc58f00, 0xbd9a3a, 0xa87c00].map(D);
   Object.assign(shared, {
     uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.4 }, uPx: { value: 2.0 }, uDepthR: { value: 1 }, uSizePx: { value: 300 }, uCycle: { value: net.cycle }, uSigma: { value: net.sigma },
-    uBase: { value: new THREE.Color(0x2a5f86) }, uGlow2: { value: new THREE.Color(0xf0a040) }, uTints: { value: tints },
+    uBase: { value: D(0xdca300) }, uGlow2: { value: D(0xffb800) }, uTints: { value: tints },
   });
   const quad = () => {
     const g = new THREE.InstancedBufferGeometry();
@@ -214,8 +216,8 @@ void main() {
   float tail = d < 0.0 ? exp(d / (5.0 * uSigma)) * 0.4 * step(head, len + 8.0 * uSigma) : 0.0;
   float p = clamp(pulse + tail, 0.0, 1.0);
   float depthK = mix(0.3, 1.0, smoothstep(-0.9, 0.9, vDepth));
-  float densK = clamp(pow(uSizePx / 330.0, 1.3), 0.4, 1.0);       // plus le cerveau est petit, plus ses connexions se superposent : on les allège
-  float base = mix(0.13, 0.22, vF.w) * densK;
+  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.3, 1.0);       // plus le cerveau est petit, plus ses connexions se superposent : on les allège
+  float base = mix(0.3, 0.44, vF.w) * densK;
   float a = (base + (0.95 - base) * p) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
   vec3 c = mix(uBase, uGlow2, clamp(p * 1.3, 0.0, 1.0));
   gl_FragColor = vec4(c, a);
@@ -260,8 +262,8 @@ void main() {
   float core = 1.0 - smoothstep(0.55, 1.0, r);                 // une pastille nette au repos
   float glow = exp(-r * r * 3.6);                              // un halo qui s'ouvre quand le neurone s'allume
   float k = clamp(vFlash * 1.6, 0.0, 1.0);
-  float densK = clamp(pow(uSizePx / 330.0, 1.3), 0.4, 1.0);
-  float a = mix(core * 0.62 * mix(0.6, 1.0, densK), glow * 0.95 + core * 0.2, k);
+  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.3, 1.0);
+  float a = mix(core * 0.8 * mix(0.6, 1.0, densK), glow * 0.95 + core * 0.3, k);
   vec3 c = mix(rest, uGlow2, k);
   float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
   gl_FragColor = vec4(c, clamp(a, 0.0, 1.0) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis)));

@@ -6,8 +6,7 @@
     "caption_en": "Careful science at the lab bench",
     "caption_fr": "Une science rigoureuse à la paillasse",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/pipette-plate.webp",
@@ -16,8 +15,7 @@
     "caption_en": "Precision down to the last drop",
     "caption_fr": "La précision jusqu'à la dernière goutte",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/data-wall.webp",
@@ -26,8 +24,7 @@
     "caption_en": "Data and discovery, side by side",
     "caption_fr": "Données et découvertes, côte à côte",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/whiteboard-sprint.webp",
@@ -36,8 +33,7 @@
     "caption_en": "Short sprints and bold ideas, shared at the whiteboard",
     "caption_fr": "Des sprints courts et des idées audacieuses, partagées au tableau blanc",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/founders-table.webp",
@@ -46,8 +42,7 @@
     "caption_en": "Founders around one long table, building the next step together",
     "caption_fr": "Les fondateurs autour d'une même table, pour construire la suite ensemble",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/pitch-day.webp",
@@ -56,8 +51,7 @@
     "caption_en": "Pitch day, where a growing idea meets its first audience",
     "caption_fr": "Le jour du pitch, une idée qui grandit rencontre son premier public",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/partners-handshake.webp",
@@ -66,8 +60,7 @@
     "caption_en": "Clinicians and founders shaking hands on a shared mission",
     "caption_fr": "Cliniciens et fondateurs se serrent la main autour d'une mission commune",
     "width": 1200,
-    "height": 800,
-    "row": 0
+    "height": 800
   },
   {
     "file": "culture/healthy-years.webp",
@@ -76,57 +69,6 @@
     "caption_en": "More healthy years to share",
     "caption_fr": "Plus d'années en bonne santé à partager",
     "width": 1200,
-    "height": 800,
-    "row": 0
-  },
-  {
-    "file": "pipette-tubes.webp",
-    "width": 1000,
-    "height": 667,
-    "row": 1,
-    "alt_en": "A pink pipette tip dips into a rack of transparent laboratory tubes.",
-    "alt_fr": "Une pointe de pipette rose plonge dans un support de tubes de laboratoire transparents.",
-    "caption_en": "Rigor in every tube",
-    "caption_fr": "La rigueur dans chaque tube"
-  },
-  {
-    "file": "team-laptops.webp",
-    "width": 750,
-    "height": 501,
-    "row": 1,
-    "alt_en": "A team works on laptops around a wooden table.",
-    "alt_fr": "Une équipe travaille sur des ordinateurs portables autour d'une table en bois.",
-    "caption_en": "A small team, a big ambition",
-    "caption_fr": "Une petite équipe, une grande ambition"
-  },
-  {
-    "file": "neurons.webp",
-    "width": 750,
-    "height": 500,
-    "row": 1,
-    "alt_en": "Blue fluorescent neurons seen under a microscope, with their branching extensions.",
-    "alt_fr": "Neurones fluorescents bleus vus au microscope, avec leurs prolongements ramifiés.",
-    "caption_en": "Curious about how cells communicate",
-    "caption_fr": "Curieux de comprendre comment les cellules communiquent"
-  },
-  {
-    "file": "light-bulb.webp",
-    "width": 750,
-    "height": 500,
-    "row": 1,
-    "alt_en": "A glowing light bulb lies on a reflective black surface.",
-    "alt_fr": "Une ampoule incandescente posée sur une surface noire réfléchissante.",
-    "caption_en": "The spark of a new idea",
-    "caption_fr": "L'étincelle d'une nouvelle idée"
-  },
-  {
-    "file": "equations.webp",
-    "width": 750,
-    "height": 360,
-    "row": 1,
-    "alt_en": "Physics equations floating over colorful wireframe surfaces, among them Einstein's field equations and a Maxwell equation.",
-    "alt_fr": "Des équations de physique flottent au-dessus de surfaces en fil de fer colorées, dont les équations d'Einstein et une équation de Maxwell.",
-    "caption_en": "Models grounded in physics and math",
-    "caption_fr": "Des modèles ancrés dans la physique et les maths"
+    "height": 800
   }
 ]

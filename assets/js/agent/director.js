@@ -1,8 +1,7 @@
 // BlackPhage - le chef d'orchestre de l'agent. Il lit la page (où sont les emplacements, où l'on en est dans la scène épinglée) et règle à chaque image
 // l'objet lisse de la section (smooth.js) et le moteur de petits cubes (agent.js). Le canevas est DERRIÈRE le texte : l'animation ne passe jamais au-dessus.
 //
-//   hero   le cerveau, grand, au centre : une animation 3D (les cubes arrivent en tourbillon et s'assemblent, puis le cerveau devient translucide
-//          et ses impulsions courent à travers le cortex), puis le titre, seul
+//   hero   le cerveau, grand, au centre, tout de suite : un réseau de neurones jaune, transparent, où l'influx saute de neurone en neurone ; le titre est là aussi, seul
 //   why    le cerveau se range à droite de « notre raison d'être »
 //   agent  le cerveau se fractionne en cubes qui filent (une traînée fine) jusqu'au robot NovaDiff, lisse
 //   story  le robot descend, se brise en cubes qui se replient en protéine, s'insère dans la poche du récepteur, puis le signal descend la cascade
@@ -24,7 +23,7 @@ const lerpA = (p, q, k) => ({ x: lerp(p.x, q.x, k), y: lerp(p.y, q.y, k), scale:
 const easeIO = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 const q = (s) => document.querySelector(s);
 
-export async function startAgent({ canvas, low = false, frozen = null, onTitle = () => {} }) {
+export async function startAgent({ canvas, low = false, frozen = null }) {
   const weak = low || innerWidth < 760 || (navigator.hardwareConcurrency || 8) <= 2;
   const n = weak ? GRID_LOW * GRID_LOW : 40000;
   const M = weak ? VISIBLE_WEAK : VISIBLE;
@@ -50,7 +49,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
 
   const el = {
     brain: q('[data-slot="brain"]'), brain2: q('[data-slot="brain2"]'), robot: q('[data-slot="robot"]'), story: q('[data-slot="story"]'), storySec: q('[data-story]'),
-    rail: q('.rail'),
+    steps: [...document.querySelectorAll('.story__steps .sstep')],
   };
 
   function resize() { agent.resize(innerWidth, innerHeight, dpr); }
@@ -67,10 +66,9 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
   const fit = (r, k, f = 0.95) => Math.min((r.width / 2) / ext[k][0], (r.height / 2) / ext[k][1]) * f;
 
   // l'état amorti
-  const S = { look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
+  const S = { step: 1, shownAt: null, brainSeen: false, look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
   let last = performance.now();
-  let introStart = null; let titleShown = false;
-  const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, anchor: null, n, intro: 0 };
+  const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, anchor: null, n };
 
   function frameLoop(now) {
     const raw = (now - last) / 1000; const dt = Math.min(0.05, raw); last = now;
@@ -83,8 +81,6 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     const sy = scrollY;
     if (!reduce) S.time += dt;
     const time = frozen !== null ? frozen : (window.__timeOverride !== undefined ? window.__timeOverride : S.time);     // __timeOverride : pour les captures d'écran
-    const introT = reduce ? 99 : (window.__introFreeze !== undefined ? window.__introFreeze : introStart === null ? 0 : (performance.now() - introStart) / 1000);     // __introFreeze : pour les captures d'écran
-    if (!titleShown && (introT >= 2.5 || reduce)) { titleShown = true; onTitle(); }
 
     // le regard : le cerveau et le robot suivent un peu le curseur
     S.look.x = damp(S.look.x, ptr.in ? ptr.nx : 0, 4, dt); S.look.y = damp(S.look.y, ptr.in ? ptr.ny : 0, 4, dt);
@@ -95,10 +91,9 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     const rBrain = rectOf(el.brain); const rBrain2 = rectOf(el.brain2); const rRobot = rectOf(el.robot); const rStory = rectOf(el.story);
     const secStory = rectOf(el.storySec);
     const anchors = {};
-    const introK = smooth(0, 3.4, introT);
     if (rBrain) {
       const c = center(rBrain); const sc = fit(rBrain, 0, 0.78);
-      anchors.b1 = { x: c.x, y: c.y + bob(sc) + (1 - introK) * sc * 0.06, scale: sc * lerp(0.92, 1, introK), rx: 0.1 + lookX * 0.08, ry: -0.5 + (1 - introK) * -1.3 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.22) * 0.1) };
+      anchors.b1 = { x: c.x, y: c.y + bob(sc), scale: sc, rx: 0.1 + lookX * 0.08, ry: -0.5 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.22) * 0.1) };
     }
     if (rBrain2) { const c = center(rBrain2); const sc = fit(rBrain2, 0, 0.92); anchors.b2 = { x: c.x, y: c.y + bob(sc), scale: sc, rx: 0.1 + lookX * 0.1, ry: -0.5 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.22) * 0.1) }; }
     // la danse du robot : il flotte, pivote doucement, se penche quand on défile ; en arrivant il fait un tour sur lui-même, et un clic le fait tourner et saluer
@@ -131,7 +126,6 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     if (rStory) {
       const c = center(rStory);
       anchors[3] = { x: c.x, y: c.y + focus * storyScale, scale: storyScale, rx: pitch, ry: yaw };
-      anchors[4] = anchors[3];
       // le ruban de cubes se forme au-dessus de la poche (1,05 unité le long de son axe) puis glisse dedans : on le voit s'insérer
       const hov = 1.05 * (1 - smooth(0.28, 0.44, u)) * storyScale;
       anchors.ligand = { ...anchors[3], x: anchors[3].x + hov * Math.sin(pitch) * Math.sin(yaw), y: anchors[3].y - hov * Math.cos(pitch) };
@@ -164,10 +158,12 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     } else if (sy < storyEnd) {
       // la scène du récepteur
       A = anchors.robotAbove || anchors.robot; B = anchors.ligand || anchors[3];
-      if (u < 0.52) { a = 2; b = 3; mix = smooth(0.06, 0.4, u); } else { a = 3; b = 4; mix = smooth(0.6, 0.92, u); A = anchors[3]; B = anchors[4]; }     // le ruban s'est posé : la suite part de la poche
+      // le robot se brise en cubes qui se replient en protéine et filent jusqu'à la poche. Une fois la protéine fixée au récepteur, plus aucune traînée de cubes :
+      // le maillage de la protéine, du récepteur et de la cascade prend le relais (les cubes du ruban sont éteints)
+      if (u < 0.52) { a = 2; b = 3; mix = smooth(0.06, 0.4, u); } else { a = b = 3; mix = 0; A = B = anchors.ligand || anchors[3]; }
       if (u < 0.06) { a = b = 2; mix = 0; A = B = anchors.robotAbove || anchors.robot; }
     } else {
-      a = b = 4; A = B = anchors[4]; off = sy > storyEnd + vh * 1.15;     // la scène remonte avec la page ; plus rien à dessiner une fois sortie
+      a = b = 3; A = B = anchors.ligand || anchors[3]; off = sy > storyEnd + vh * 1.15;     // la scène remonte avec la page (sans cubes) ; plus rien à dessiner une fois sortie
     }
     if (!A) A = anchors.b1 || { x: vw / 2, y: vh / 2, scale: 200, rx: 0, ry: 0 };
     if (!B) B = A;
@@ -195,14 +191,19 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     const wave = window.__waveOverride !== undefined ? window.__waveOverride : reduce ? 0 : Math.max(smooth(0.35, 0.8, ph) * (1 - smooth(2.9, 3.4, ph)), S.hover * 0.85, Math.min(1, S.burst * 1.6));
 
     // le fractionnement : 0 l'objet lisse est entier, 1 il est tout en cubes. Lisse au repos, en cubes pendant le voyage.
-    for (const k of [0, 2]) if (sm && sm.ready(k)) reveal[k] = reduce ? 1 : Math.min(1, reveal[k] + rawDt / 1.4);
+    // le premier maillage (le cerveau du titre) est tout de suite entier : l'affiche prend le relais sans aucune animation d'ouverture. Seul un appareil très
+    // lent (le canevas déjà visible depuis un moment quand le cerveau arrive) le voit se former en fondu.
+    if (S.shownAt === null && document.documentElement.classList.contains('agent-ready')) S.shownAt = performance.now();
+    for (const k of [0, 2]) {
+      if (!(sm && sm.ready(k))) continue;
+      if (k === 0 && !S.brainSeen) { S.brainSeen = true; if (!(S.shownAt !== null && performance.now() - S.shownAt > 400)) reveal[0] = 1; }
+      reveal[k] = reduce ? 1 : Math.min(1, reveal[k] + rawDt / 1.4);
+    }
     const rv = (k) => smooth(0, 1, reveal[k]);
-    const introDis = 1 - smooth(1.9, 3.6, introT);                       // l'assemblage en cubes puis le fondu vers le cerveau lisse
-    const rest = (k) => (k === 0 ? Math.max(introDis, sm ? 1 - rv(0) : 1) : k === 2 ? (sm ? 1 - rv(2) : 1) : 1);
+    const rest = (k) => (k === 0 || k === 2 ? (sm ? 1 - rv(k) : 1) : 1);
     let dA = a === b ? rest(a) : Math.max(rest(a), smooth(0, 0.07, mix));
     let dB = a === b ? rest(a) : Math.max(rest(b), 1 - smooth(0.93, 1.0, mix));
     if (b === 3) dB = 1 - smooth(0.42, 0.5, u);                           // le maillage du ruban prend le relais des cubes
-    if (b === 4 && a === 3) dB = 1 - smooth(0.9, 1.0, mix);
     if (a === 3) dA = smooth(0.0, 0.1, mix);
     if (sm) {
       sm.place(a, A); if (b !== a) sm.place(b, B);
@@ -213,9 +214,9 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
       }
     }
     // la part des cubes qui existent pendant une transition : très peu entre le cerveau et le robot (là où passe le carrousel), un peu plus dans la scène Science
-    const keep = a === b ? 1 : (a === 0 && b === 2) ? 0.1 : (a === 2 && b === 3) ? 0.4 : 0.5;
+    const keep = a === b ? 1 : (a === 0 && b === 2) ? 0.1 : 0.4;
     agent.set({ a, b, mix, dust, fade: 1, time, keep, anchorA: A, anchorB: B, level: 0, bend: 0, glow: 0,
-      disA: dA, disB: dB, intro: smooth(0, 2.4, introT) });
+      disA: dA, disB: dB });
 
     // la scène du récepteur : un repère commun (ancre 3) pour la membrane, le récepteur et le signal
     const an = anchors[3];
@@ -238,15 +239,16 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
 
     // l'habillage HTML de la scène épinglée
     if (secStory) {
-      el.rail && el.rail.style.setProperty('--sp', u.toFixed(3));
+      // l'étape de l'explication qui correspond à la scène : la cible, la génération par diffusion, l'optimisation, puis l'activation (ou l'inhibition) de la voie
+      const stepNow = u < 0.18 ? 1 : u < 0.38 ? 2 : u < 0.56 ? 3 : 4;
+      if (stepNow !== S.step) { S.step = stepNow; el.steps.forEach((x, i) => x.classList.toggle('is-on', i + 1 === stepNow)); }
     }
-    Object.assign(dbg, { a, b, mix, u, P, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], intro: introT, spin: S.spinT, wave, robot: anchors.robot ? { ry: anchors.robot.ry, rz: anchors.robot.rz } : null });
+    Object.assign(dbg, { a, b, mix, u, P, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], spin: S.spinT, wave, robot: anchors.robot ? { ry: anchors.robot.ry, rz: anchors.robot.rz } : null });
   }
 
   requestAnimationFrame(frameLoop);
   window.__agent = { state: () => ({ ...dbg }), agent, n, ready: true, smooth: sm };
-  // l'affiche (le cerveau, lisse) reste à l'écran tant que le premier maillage n'est pas prêt, au plus 7 secondes ; l'animation d'ouverture commence alors
-  if (firstMesh) await Promise.race([firstMesh, new Promise((r) => setTimeout(r, 7000))]);
-  introStart = performance.now();
+  // l'affiche (le même cerveau, en réseau de neurones) reste à l'écran tant que le premier maillage n'est pas prêt (au plus 25 secondes, pour un appareil très lent) : puis le cerveau vivant la remplace, sans aucune transition de cubes
+  if (firstMesh) await Promise.race([firstMesh, new Promise((r) => setTimeout(r, 25000))]);
   return window.__agent;
 }

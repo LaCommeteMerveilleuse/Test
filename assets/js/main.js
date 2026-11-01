@@ -26,9 +26,7 @@ initBackground();
 initFlow();
 initContact(trail);
 const heroEl = document.querySelector('.hero');
-const showTitle = () => heroEl && heroEl.classList.add('is-in');       // le titre n'apparaît qu'après l'animation 3D d'ouverture
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) showTitle();
-setTimeout(showTitle, 14000);                                           // filet de sécurité
+if (heroEl) requestAnimationFrame(() => heroEl.classList.add('is-in'));       // le titre est là tout de suite : plus d'animation d'ouverture
 
 // les adresses, les boutons Copier
 site().then((s) => {
@@ -58,13 +56,13 @@ site().then((s) => {
   if (!canvas) return;
   let gl2 = false;
   try { gl2 = !!document.createElement('canvas').getContext('webgl2'); } catch (e) { /* rien */ }
-  if (!gl2 || q.has('nogl')) { root.classList.add('no-webgl'); showTitle(); return; }
+  if (!gl2 || q.has('nogl')) { root.classList.add('no-webgl'); return; }
   try {
     const { startAgent } = await import('./agent/director.js');
-    await startAgent({ canvas, low: q.get('n') === 'low', frozen: q.has('t') ? +q.get('t') : null, onTitle: showTitle });
+    await startAgent({ canvas, low: q.get('n') === 'low', frozen: q.has('t') ? +q.get('t') : null });
     root.classList.add('agent-ready');
   } catch (e) {
     console.warn('agent', e);
-    root.classList.add('no-webgl'); showTitle();
+    root.classList.add('no-webgl');
   }
 })();

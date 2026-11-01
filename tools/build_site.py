@@ -55,9 +55,9 @@ def tx(key, tag='span', cls='', attrs=''):
 
 
 def culture():
-    """Les visuels du carrousel « Where science meets the startup spirit », rangés en rangées (champ « row » de assets/data/culture-gallery.json) :
-    d'un côté des personnages en cubes (pixel 3D) dans divers lieux qui montrent nos valeurs, de l'autre des photographies. Un fichier sans « / » est
-    cherché dans assets/img/gallery/, sinon à partir de assets/img/. Rend une liste de rangées, chacune une liste de (numéro, chemin, mention ?, largeur, hauteur)."""
+    """Les visuels du carrousel « Where science meets the startup spirit » : des personnages en cubes (pixel 3D) dans divers lieux qui montrent nos valeurs
+    (assets/data/culture-gallery.json). Un champ « row » facultatif range les images en plusieurs rangées qui défilent en sens inverse. Un fichier sans « / »
+    est cherché dans assets/img/gallery/, sinon à partir de assets/img/. Rend une liste de rangées, chacune une liste de (numéro, chemin, mention ?, largeur, hauteur)."""
     rows = {}
     manifest = ROOT / 'assets/data/culture-gallery.json'
     n = 0
@@ -267,6 +267,7 @@ def build_index():
             <span class="acard__meta"><span>{mins} <span data-i18n="art_min">{en("art_min")}</span></span>{NORTH}</span>
           </span>
         </button>'''
+    steps = ''.join(f'<li class="sstep{" is-on" if k == 1 else ""}" data-step="{k}"><b class="sstep__n">{k}</b><div>{tx(f"story_s{k}t", "h3")}{tx(f"story_s{k}", "p")}</div></li>' for k in range(1, 5))
     arts_dup = arts.replace('class="acard"', 'class="acard" tabindex="-1" aria-hidden="true"')
     cards_row = f'<div class="marquee" data-marquee data-tilt><div class="marquee__track">{arts}{arts_dup}</div></div>'
     feats = ''.join(f'''<li class="feat reveal-wipe" style="--i:{k}"><span class="feat__ico">{ICONS[ic]}</span><div>{tx(f"nova_f{k + 1}", "h3")}{tx(f"nova_f{k + 1}n", "p")}</div></li>''' for k, ic in enumerate(['brain', 'cube', 'loop']))
@@ -324,8 +325,10 @@ def build_index():
   <div class="story__pin">
     <header class="story__head">{tx('story_eyebrow', 'p', 'eyebrow')}{tx('story_title', 'h2', 'h2')}</header>
     <div class="story__frame" data-slot="story" aria-hidden="true"></div>
-    {tx('story_text', 'p', 'story__text')}
-    <div class="rail" aria-hidden="true"><i class="rail__bar"><b></b></i></div>
+    <div class="story__text">
+      {tx('story_lead', 'p', 'story__lead')}
+      <ol class="story__steps">{steps}</ol>
+    </div>
   </div>
 </section>
 
