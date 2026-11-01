@@ -257,7 +257,7 @@ def build_index():
   {culture_rows}
 </section>''' if rows else '')
     arts = ''
-    covers = ['lab-bench', 'pitch-day', 'pipette-plate', 'founders-table', 'data-wall', 'healthy-years', 'whiteboard-sprint']
+    covers = ['lab-bench', 'pitch-day', 'pipette-plate', 'founders-table', 'data-wall', 'healthy-years', 'whiteboard-sprint', 'partners-handshake']
     for i, (_tag, mins, *_rest) in enumerate(ARTICLES, 1):
         cover = f'assets/img/culture/{covers[i - 1]}.webp'
         cover_html = f'<img src="{cover}" alt="" loading="lazy" width="600" height="400">' if (ROOT / cover).exists() else '<i class="acard__ph"></i>'
