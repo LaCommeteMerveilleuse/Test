@@ -8,7 +8,8 @@ self.onmessage = async (e) => {
     const t0 = performance.now();
     const parts = await buildSmooth(kind, cubes, palette, h);
     const transfer = [];
-    for (const p of parts) transfer.push(p.pos.buffer, p.nrm.buffer, p.index.buffer, p.col.buffer, p.mat.buffer, p.phase.buffer);
+    const collect = (o) => { for (const v of Object.values(o)) { if (ArrayBuffer.isView(v)) transfer.push(v.buffer); else if (v && typeof v === 'object') collect(v); } };
+    for (const p of parts) collect(p);
     self.postMessage({ id, kind, parts, ms: performance.now() - t0 }, transfer);
   } catch (err) {
     self.postMessage({ id, kind, error: String(err && err.message ? err.message : err) });

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>BlackPhage</title>
-  <meta name="description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff active rescues and redesigns drug candidates, from the lab to real-world impact.">
+  <meta name="description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff rescues and redesigns drug candidates, from the lab to real-world impact.">
   <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="BlackPhage">
-  <meta property="og:description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff active rescues and redesigns drug candidates, from the lab to real-world impact.">
+  <meta property="og:description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff rescues and redesigns drug candidates, from the lab to real-world impact.">
   <meta property="og:type" content="website">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -31,11 +31,11 @@
   <i class="bg__blob bg__blob--a"></i><i class="bg__blob bg__blob--b"></i><i class="bg__blob bg__blob--c"></i>
   <i class="bg__grid"></i><i class="bg__beam"></i><canvas class="bg__dust" id="dust"></canvas><i class="bg__spot"></i><i class="bg__grain"></i>
 </div>
-<canvas id="agent" class="agent" aria-hidden="true"></canvas><button class="grid__btn" type="button" data-open-contact data-i18n="grid_btn" data-cursor="">Contact</button>
+<canvas id="agent" class="agent" aria-hidden="true"></canvas>
 <header class="nav" id="nav">
   <a class="logo" href="#top" aria-label="BlackPhage, home" data-i18n-aria-label="home_aria"><img class="logo__img" src="assets/img/blackphage-logo-noir.svg" alt="BlackPhage" width="170" height="29"></a>
   <nav class="nav__pill" id="nav-pill" aria-label="Main navigation" data-i18n-aria-label="nav_main">
-    <i class="nav__ind" aria-hidden="true"></i><a href="#engineering" data-i18n="nav_tech">Technology</a><a href="#novadiff" data-i18n="nav_novadiff">NovaDiff</a><a href="#story" data-i18n="nav_science">Science</a><a href="#articles" data-i18n="nav_articles">Articles</a><a href="#why" data-i18n="nav_why">Why</a><a href="careers.html" data-i18n="nav_careers">Careers</a>
+    <i class="nav__ind" aria-hidden="true"></i><a href="#why" data-i18n="nav_why">Why</a><a href="#novadiff" data-i18n="nav_novadiff">NovaDiff</a><a href="#story" data-i18n="nav_science">Science</a><a href="#articles" data-i18n="nav_articles">Articles</a><a href="careers.html" data-i18n="nav_careers">Careers</a>
   </nav>
   <div class="nav__end">
     <button class="lang" id="lang" type="button" aria-label="Switch to French" data-i18n-aria-label="lang_aria" title="Translate the page" data-i18n-title="lang_hint"><span class="lang__on" data-l="en">EN</span><span data-l="fr">FR</span></button>
@@ -47,8 +47,8 @@
   <div class="menu__panel">
     <p class="menu__title" data-i18n="menu_title">Menu</p>
     <nav class="menu__list" aria-label="Main navigation" data-i18n-aria-label="nav_main">
-      <a class="menu__item" href="#engineering" style="--i:0"><span class="menu__n">01</span><span class="menu__t" data-i18n="nav_tech">Technology</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#novadiff" style="--i:1"><span class="menu__n">02</span><span class="menu__t" data-i18n="nav_novadiff">NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#story" style="--i:2"><span class="menu__n">03</span><span class="menu__t" data-i18n="nav_science">Science</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#articles" style="--i:3"><span class="menu__n">04</span><span class="menu__t" data-i18n="nav_articles">Articles</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#why" style="--i:4"><span class="menu__n">05</span><span class="menu__t" data-i18n="nav_why">Why</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="menu__item" href="careers.html" style="--i:5"><span class="menu__n">06</span><span class="menu__t" data-i18n="nav_careers">Careers</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="menu__item" href="#why" style="--i:0"><span class="menu__n">01</span><span class="menu__t" data-i18n="nav_why">Why</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#novadiff" style="--i:1"><span class="menu__n">02</span><span class="menu__t" data-i18n="nav_novadiff">NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#story" style="--i:2"><span class="menu__n">03</span><span class="menu__t" data-i18n="nav_science">Science</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#articles" style="--i:3"><span class="menu__n">04</span><span class="menu__t" data-i18n="nav_articles">Articles</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="menu__item" href="careers.html" style="--i:4"><span class="menu__n">05</span><span class="menu__t" data-i18n="nav_careers">Careers</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </nav>
     <div class="menu__foot">
       <button class="btn btn--dark" type="button" data-open-contact data-i18n="nav_contact">Contact</button>
@@ -57,80 +57,58 @@
   </div>
 </div>
 <main id="main">
-<section class="hero" id="top">
+<section class="hero" id="top" data-tone="haze">
+  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="A translucent brain, with its fibers and the impulses that travel across the whole cortex. Move the cursor over it and a few cubes break away." data-i18n-aria-label="brain_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
   <div class="container hero__in">
-    <span class="badge hero__badge"><i aria-hidden="true"></i><span data-i18n="hero_badge">Drug rescue, powered by NovaDiff</span></span>
     <h1 class="hero__title" data-split><span data-i18n="hero_t1">Discovering the</span> <span class="grad" data-i18n="hero_t2">future</span> <span data-i18n="hero_t3">of medicine</span></h1>
-    <p class="hero__sub" data-i18n="hero_sub">We engineer medicine that changes people’s lives, transforming discovery into real-world impact.</p>
-    <div class="hero__cta">
-      <a class="btn btn--dark btn--lg" href="#novadiff"><span data-i18n="hero_cta1">Meet NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="btn btn--light btn--lg" href="#articles" data-i18n="hero_cta2">Read our articles</a>
-    </div>
   </div>
-  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="Our agent NovaDiff, a cloud of thousands of gray cubes that changes shape as you scroll. Move the cursor over it and it dissolves." data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
-  <p class="hero__hint" data-i18n="hero_hint">Move your cursor over the agent</p>
+  <i class="hero__cue" aria-hidden="true"></i>
 </section>
 
-<section class="sec sec--haze eng" id="engineering">
-  <div class="container">
-    <header class="sec__head center"><p class="eyebrow reveal" data-i18n="eng_eyebrow">What we build</p><h2 class="h2 reveal" data-i18n="eng_title">Engineering medicines that change lives</h2><p class="lead reveal" data-i18n="eng_lead">One holistic approach, three fronts, one agent.</p></header>
-    <div class="eng__grid" data-slot="split"><article class="card eng__card reveal-fan" style="--i:0;--fx:-60px">
-        <div class="eng__icon" data-split-icon="0" aria-hidden="true"></div>
-        <p class="tag" data-i18n="eng1_tag">Metabolism</p>
-        <h3 data-i18n="eng1_title">Metabolic health</h3>
-        <p class="card__p" data-i18n="eng1_text">Dual incretin signaling through GLP-1R and GIPR, paired with an anti-NCOA1 / SRC-1 action and protection of cells under stress through Bax Inhibitor-1.</p>
-        <ul class="chips"><li class="chip" data-i18n="eng1_c1">GLP-1R / GIPR</li><li class="chip" data-i18n="eng1_c2">Anti-NCOA1 / SRC-1</li><li class="chip" data-i18n="eng1_c3">Bax Inhibitor-1 / TMBIM6</li></ul>
-      </article><article class="card eng__card reveal-fan" style="--i:1;--fx:0px">
-        <div class="eng__icon" data-split-icon="1" aria-hidden="true"></div>
-        <p class="tag" data-i18n="eng2_tag">Muscle</p>
-        <h3 data-i18n="eng2_title">Anti-sarcopenia</h3>
-        <p class="card__p" data-i18n="eng2_text">Myostatin (GDF-8) and Activin A are held back by two complementary designs. The Sweeper clears the circulating ligands. The Latent-Lock keeps them locked in their inactive form.</p>
-        <ul class="chips"><li class="chip" data-i18n="eng2_c1">Myostatin (GDF-8) / Activin A</li><li class="chip" data-i18n="eng2_c2">Sweeper</li><li class="chip" data-i18n="eng2_c3">Latent-Lock</li></ul>
-      </article><article class="card eng__card reveal-fan" style="--i:2;--fx:60px">
-        <div class="eng__icon" data-split-icon="2" aria-hidden="true"></div>
-        <p class="tag" data-i18n="eng3_tag">Inflammation</p>
-        <h3 data-i18n="eng3_title">Chronic inflammation</h3>
-        <p class="card__p" data-i18n="eng3_text">TNF alpha, a master signal of inflammation, is targeted by a pH-dependent Smart Binder to calm it exactly where it matters.</p>
-        <ul class="chips"><li class="chip" data-i18n="eng3_c1">TNF alpha</li><li class="chip" data-i18n="eng3_c2">pH-dependent</li></ul>
-      </article></div>
-    <p class="eng__note reveal" data-i18n="eng_note">Together, a holistic approach to healthy ageing.</p>
-  </div>
-</section>
-
-<section class="sec rescue" id="why">
+<section class="sec rescue" id="why" data-tone="warm">
   <div class="container rescue__in">
     <div class="rescue__txt">
       <p class="eyebrow reveal" data-i18n="rescue_eyebrow">Our why</p>
       <h2 class="h2 reveal" data-i18n="rescue_title">Every shelved drug is a promise waiting to be kept</h2>
-      <p class="rescue__p" data-words data-i18n="rescue_p">BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff active we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.</p>
+      <p class="lead rescue__lead reveal" data-i18n="hero_sub">We engineer medicine that changes people’s lives, transforming discovery into real-world impact.</p>
+      <p class="rescue__p" data-words data-i18n="rescue_p">BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.</p>
+      <div class="hero__cta reveal">
+        <a class="btn btn--dark btn--lg" href="#novadiff"><span data-i18n="hero_cta1">Meet NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--light btn--lg" href="#articles" data-i18n="hero_cta2">Read our articles</a>
+      </div>
     </div>
-    <ol class="rescue__steps">
-      <li class="step reveal-line" style="--i:0"><span class="step__n">1</span><span data-i18n="rescue_s1">Understand why it stalled</span></li>
-      <li class="step reveal-line" style="--i:1"><span class="step__n">2</span><span data-i18n="rescue_s2">Redesign it as a Smart Binder</span></li>
-      <li class="step reveal-line" style="--i:2"><span class="step__n">3</span><span data-i18n="rescue_s3">Bring it back to patients</span></li>
-    </ol>
+    <div class="rescue__side">
+      <div class="slot slot--brain2" data-slot="brain2" aria-hidden="true"></div>
+      <ol class="rescue__steps">
+        <li class="step reveal-line" style="--i:0"><span class="step__n">1</span><span data-i18n="rescue_s1">Understand why it stalled</span></li>
+        <li class="step reveal-line" style="--i:1"><span class="step__n">2</span><span data-i18n="rescue_s2">Redesign it as a Smart Binder</span></li>
+        <li class="step reveal-line" style="--i:2"><span class="step__n">3</span><span data-i18n="rescue_s3">Bring it back to patients</span></li>
+      </ol>
+    </div>
   </div>
-  <div class="culture">
-      <h3 class="culture__title reveal" data-i18n="culture_title">Where science meets the startup spirit</h3>
-      <div class="marquee marquee--slow" data-marquee><div class="marquee__track"><figure class="shot"><img src="assets/img/culture/lab-bench.webp" alt="Voxel illustration of a researcher in a white coat and goggles holding up a glowing blue flask beside a lab bench with a microscope, test tubes, glassware and a small robot helper." data-i18n-alt="cu1_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu1_c">Careful science at the lab bench</figcaption></figure><figure class="shot"><img src="assets/img/culture/pipette-plate.webp" alt="Voxel illustration of an eight channel pipette hovering over a 96 well plate that fills with glowing blue and amber liquids, next to a rack of test tubes, a box of pipette tips and a small robot." data-i18n-alt="cu2_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu2_c">Precision down to the last drop</figcaption></figure><figure class="shot"><img src="assets/img/culture/data-wall.webp" alt="Voxel illustration of a researcher pointing at a large wall display that shows a rotating molecule made of cubes, with a small robot at her side and a DNA double helix sculpture on a pedestal." data-i18n-alt="cu3_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu3_c">Data and discovery, side by side</figcaption></figure><figure class="shot"><img src="assets/img/culture/healthy-years.webp" alt="Voxel illustration of a grandparent and a grandchild walking hand in hand on a park path, with a small dog, an amber balloon, trees and a wooden bench." data-i18n-alt="cu4_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu4_c">More healthy years to share</figcaption></figure><figure class="shot"><img src="assets/img/culture/whiteboard-sprint.webp" alt="Voxel illustration of four teammates at a whiteboard covered in sticky notes and sketches, one person pointing at a note and another holding a coffee." data-i18n-alt="cu5_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu5_c">Short sprints and bold ideas, shared at the whiteboard</figcaption></figure><figure class="shot"><img src="assets/img/culture/founders-table.webp" alt="Voxel illustration of four founders around a long wooden table in a bright loft, with laptops, plants and coffee cups, talking with energy." data-i18n-alt="cu6_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu6_c">Founders around one long table, building the next step together</figcaption></figure><figure class="shot"><img src="assets/img/culture/pitch-day.webp" alt="Voxel illustration of a presenter pointing at a screen with a rising growth chart made of cubes, while a small audience sits and watches." data-i18n-alt="cu7_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu7_c">Pitch day, where a growing idea meets its first audience</figcaption></figure><figure class="shot"><img src="assets/img/culture/partners-handshake.webp" alt="Voxel illustration of a doctor and a founder shaking hands over a small table with a glowing molecule model, in a warm room with a round window." data-i18n-alt="cu8_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu8_c">Clinicians and founders shaking hands on a shared mission</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/lab-bench.webp" alt="Voxel illustration of a researcher in a white coat and goggles holding up a glowing blue flask beside a lab bench with a microscope, test tubes, glassware and a small robot helper." data-i18n-alt="cu1_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu1_c">Careful science at the lab bench</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/pipette-plate.webp" alt="Voxel illustration of an eight channel pipette hovering over a 96 well plate that fills with glowing blue and amber liquids, next to a rack of test tubes, a box of pipette tips and a small robot." data-i18n-alt="cu2_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu2_c">Precision down to the last drop</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/data-wall.webp" alt="Voxel illustration of a researcher pointing at a large wall display that shows a rotating molecule made of cubes, with a small robot at her side and a DNA double helix sculpture on a pedestal." data-i18n-alt="cu3_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu3_c">Data and discovery, side by side</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/healthy-years.webp" alt="Voxel illustration of a grandparent and a grandchild walking hand in hand on a park path, with a small dog, an amber balloon, trees and a wooden bench." data-i18n-alt="cu4_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu4_c">More healthy years to share</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/whiteboard-sprint.webp" alt="Voxel illustration of four teammates at a whiteboard covered in sticky notes and sketches, one person pointing at a note and another holding a coffee." data-i18n-alt="cu5_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu5_c">Short sprints and bold ideas, shared at the whiteboard</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/founders-table.webp" alt="Voxel illustration of four founders around a long wooden table in a bright loft, with laptops, plants and coffee cups, talking with energy." data-i18n-alt="cu6_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu6_c">Founders around one long table, building the next step together</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/pitch-day.webp" alt="Voxel illustration of a presenter pointing at a screen with a rising growth chart made of cubes, while a small audience sits and watches." data-i18n-alt="cu7_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu7_c">Pitch day, where a growing idea meets its first audience</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/partners-handshake.webp" alt="Voxel illustration of a doctor and a founder shaking hands over a small table with a glowing molecule model, in a warm room with a round window." data-i18n-alt="cu8_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu8_c">Clinicians and founders shaking hands on a shared mission</figcaption></figure></div></div>
-    </div>
 </section>
 
-<section class="sec sec--haze nova" id="novadiff">
+<section class="sec culture" id="culture" data-tone="mist">
+  <div class="container"><header class="sec__head center"><h2 class="h2 reveal" data-i18n="culture_title">Where science meets the startup spirit</h2></header></div>
+  <div class="marquee marquee--slow" data-marquee><div class="marquee__track"><figure class="shot"><img src="assets/img/gallery/lab-tubes.webp" alt="Computer-generated image of seven glass test tubes in a rack, filled with orange, blue, teal, pink, green and violet liquids." data-i18n-alt="cu1_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu1_c">Careful science, one tube at a time</span><small class="shot__credit" data-i18n="cu1_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/dna-helix.webp" alt="Computer-generated image of a DNA double helix model, with blue and amber spheres joined by white rungs." data-i18n-alt="cu2_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu2_c">The code of life, read with care</span><small class="shot__credit" data-i18n="cu2_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/petri-pipette.webp" alt="Computer-generated image of three Petri dishes with colored agar and small colonies, next to a micropipette." data-i18n-alt="cu3_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu3_c">Precision down to the last drop</span><small class="shot__credit" data-i18n="cu3_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/flasks-glow.webp" alt="Computer-generated image of laboratory flasks and a beaker holding glowing blue, orange, teal and pink liquids." data-i18n-alt="cu4_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu4_c">Ideas that glow in the flask</span><small class="shot__credit" data-i18n="cu4_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/desk-laptop.webp" alt="Computer-generated image of a laptop showing a dashboard on a wooden desk, with a cup of coffee, a notebook and a small plant." data-i18n-alt="cu5_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu5_c">Startup days begin with a laptop and a coffee</span><small class="shot__credit" data-i18n="cu5_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/sticky-wall.webp" alt="Computer-generated image of a wall covered with colored sticky notes arranged in columns." data-i18n-alt="cu6_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu6_c">Sprints, sticky notes and bold bets</span><small class="shot__credit" data-i18n="cu6_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/idea-bulb.webp" alt="Computer-generated image of a clear light bulb with a glowing filament." data-i18n-alt="cu7_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu7_c">The spark of a new idea</span><small class="shot__credit" data-i18n="cu7_cr">Computer-generated image</small></figcaption></figure><figure class="shot"><img src="assets/img/gallery/paper-plane.webp" alt="Computer-generated image of a white paper plane in flight, followed by a trail of small amber lights." data-i18n-alt="cu8_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu8_c">Launching what could change a life</span><small class="shot__credit" data-i18n="cu8_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/lab-tubes.webp" alt="Computer-generated image of seven glass test tubes in a rack, filled with orange, blue, teal, pink, green and violet liquids." data-i18n-alt="cu1_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu1_c">Careful science, one tube at a time</span><small class="shot__credit" data-i18n="cu1_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/dna-helix.webp" alt="Computer-generated image of a DNA double helix model, with blue and amber spheres joined by white rungs." data-i18n-alt="cu2_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu2_c">The code of life, read with care</span><small class="shot__credit" data-i18n="cu2_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/petri-pipette.webp" alt="Computer-generated image of three Petri dishes with colored agar and small colonies, next to a micropipette." data-i18n-alt="cu3_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu3_c">Precision down to the last drop</span><small class="shot__credit" data-i18n="cu3_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/flasks-glow.webp" alt="Computer-generated image of laboratory flasks and a beaker holding glowing blue, orange, teal and pink liquids." data-i18n-alt="cu4_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu4_c">Ideas that glow in the flask</span><small class="shot__credit" data-i18n="cu4_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/desk-laptop.webp" alt="Computer-generated image of a laptop showing a dashboard on a wooden desk, with a cup of coffee, a notebook and a small plant." data-i18n-alt="cu5_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu5_c">Startup days begin with a laptop and a coffee</span><small class="shot__credit" data-i18n="cu5_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/sticky-wall.webp" alt="Computer-generated image of a wall covered with colored sticky notes arranged in columns." data-i18n-alt="cu6_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu6_c">Sprints, sticky notes and bold bets</span><small class="shot__credit" data-i18n="cu6_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/idea-bulb.webp" alt="Computer-generated image of a clear light bulb with a glowing filament." data-i18n-alt="cu7_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu7_c">The spark of a new idea</span><small class="shot__credit" data-i18n="cu7_cr">Computer-generated image</small></figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/gallery/paper-plane.webp" alt="Computer-generated image of a white paper plane in flight, followed by a trail of small amber lights." data-i18n-alt="cu8_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu8_c">Launching what could change a life</span><small class="shot__credit" data-i18n="cu8_cr">Computer-generated image</small></figcaption></figure></div></div>
+</section>
+
+<section class="sec nova" id="novadiff" data-tone="blue">
   <div class="container nova__in">
     <div class="nova__txt">
       <p class="eyebrow reveal" data-i18n="nova_eyebrow">Our agent</p>
       <h2 class="h2 reveal" data-i18n="nova_title">Meet NovaDiff</h2>
-      <p class="lead reveal" data-i18n="nova_text">NovaDiff active is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.</p>
+      <p class="lead reveal" data-i18n="nova_text">NovaDiff is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.</p>
       <p class="lead reveal" data-i18n="nova_text2">It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.</p>
       <ul class="feats"><li class="feat reveal-wipe" style="--i:0"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M10 6a4 4 0 0 0-4 4 3.5 3.5 0 0 0-1.5 6A4 4 0 0 0 10 22a3 3 0 0 0 4-2.5V8.5A2.5 2.5 0 0 0 10 6Zm8 0a4 4 0 0 1 4 4 3.5 3.5 0 0 1 1.5 6A4 4 0 0 1 18 22a3 3 0 0 1-4-2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f1">It reads biology</h3><p data-i18n="nova_f1n">At scale, from the disease down to the target.</p></div></li><li class="feat reveal-wipe" style="--i:1"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="m14 3.5 9 5v11l-9 5-9-5v-11l9-5Zm0 0v11m0 0 9-5.5m-9 5.5-9-5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f2">It designs, step by step</h3><p data-i18n="nova_f2n">Binders that grow ever more precise, round after round.</p></div></li><li class="feat reveal-wipe" style="--i:2"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f3">It learns from every round</h3><p data-i18n="nova_f3n">Every result feeds the next.</p></div></li></ul>
       <ul class="chips chips--row"><li class="chip chip--pop" data-i18n="nova_c1">pH-dependent</li><li class="chip chip--pop" data-i18n="nova_c2">Less toxic</li><li class="chip chip--pop" data-i18n="nova_c3">More precise</li></ul>
+      <div class="progs reveal"><p class="progs__t" data-i18n="prog_title">Current programs</p><ul class="chips"><li class="chip" data-i18n="prog_1">GLP-1R / GIPR</li><li class="chip" data-i18n="prog_2">Anti-NCOA1 / SRC-1</li><li class="chip" data-i18n="prog_3">Bax Inhibitor-1 / TMBIM6</li><li class="chip" data-i18n="prog_4">Myostatin (GDF-8) / Activin A</li><li class="chip" data-i18n="prog_5">Sweeper</li><li class="chip" data-i18n="prog_6">Latent-Lock</li><li class="chip" data-i18n="prog_7">TNF alpha</li></ul></div>
     </div>
-    <div class="slot slot--robot" data-slot="robot" role="img" aria-label="Our agent NovaDiff, a cloud of thousands of gray cubes that changes shape as you scroll. Move the cursor over it and it dissolves." data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-robot.webp" alt="" width="700" height="800"></div>
+    <div class="slot slot--robot" data-slot="robot" role="img" aria-label="NovaDiff, our agent, a small white robot with amber eyes that waves with one hand. Move the cursor over it and a few cubes break away." data-i18n-aria-label="robot_alt"><img class="slot__poster" src="assets/img/agent-robot.webp" alt="" width="760" height="928"></div>
   </div>
 </section>
 
-<section class="story" id="story" data-story>
+<section class="story" id="story" data-story data-tone="aqua">
   <div class="story__pin">
     <header class="story__head"><p class="eyebrow" data-i18n="story_eyebrow">Science</p><h2 class="h2" data-i18n="story_title">Small structures. Big questions.</h2></header>
     <div class="story__frame" data-slot="story" aria-hidden="true"></div>
@@ -139,7 +117,7 @@
   </div>
 </section>
 
-<section class="sec articles" id="articles">
+<section class="sec articles" id="articles" data-tone="warm2">
   <div class="container"><header class="sec__head center"><p class="eyebrow reveal" data-i18n="art_eyebrow">Blog</p><h2 class="h2 reveal" data-i18n="art_title">Our articles for startups &amp; people</h2><p class="lead reveal" data-i18n="art_lead">Short reads on drug rescue, science and building in biotech.</p></header></div>
   <div class="marquee" data-marquee data-tilt><div class="marquee__track"><button class="acard" type="button" data-article="1" data-aud="startups" data-min="4" data-cursor-label="cursor_view">
           <span class="acard__cover"><img src="assets/img/culture/data-wall.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
@@ -228,13 +206,10 @@
         </button></div></div>
 </section>
 
-<section class="grid" id="contact" data-grid>
-  <div class="grid__pin">
-    <header class="grid__head"><p class="eyebrow" data-i18n="grid_eyebrow">Contact</p><h2 class="h2" data-i18n="grid_title">From one cube to a whole world</h2><p class="lead" data-i18n="grid_sub">Let’s rescue the next drug together.</p></header>
-    <div class="grid__frame" data-slot="grid">
-      <p class="grid__count" aria-hidden="true"><b class="grid__lv">1 × 1</b><span class="grid__n"></span></p>
-    </div>
-    <p class="grid__hint" data-i18n="grid_hint">Keep scrolling</p>
+<section class="sec contact" id="contact" data-tone="deep">
+  <div class="container contact__in">
+    <p class="contact__line reveal" data-i18n="grid_sub">Let’s rescue the next drug together.</p>
+    <button class="contact__btn" type="button" data-open-contact data-magnet data-cursor-label="cursor_contact"><i class="contact__ring" aria-hidden="true"></i><span class="contact__glow" aria-hidden="true"></span><span class="contact__txt" data-i18n="grid_btn">Contact</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 </section>
 </main>
@@ -245,10 +220,9 @@
       <p data-i18n="foot_tagline">Discovering the future of medicine.</p>
     </div>
     <div><h4 data-i18n="foot_explore">Explore</h4><ul>
-      <li><a href="#engineering" data-i18n="nav_tech">Technology</a></li>
+      <li><a href="#why" data-i18n="nav_why">Why</a></li>
       <li><a href="#novadiff" data-i18n="nav_novadiff">NovaDiff</a></li>
-      <li><a href="#articles" data-i18n="nav_articles">Articles</a></li>
-      <li><a href="#why" data-i18n="nav_why">Why</a></li></ul></div>
+      <li><a href="#articles" data-i18n="nav_articles">Articles</a></li></ul></div>
     <div><h4 data-i18n="foot_company">Company</h4><ul>
       <li><a href="careers.html" data-i18n="nav_careers">Careers</a></li>
       <li><button class="foot__link" type="button" data-open-contact data-i18n="nav_contact">Contact</button></li></ul></div>

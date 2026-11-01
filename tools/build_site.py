@@ -55,17 +55,28 @@ def tx(key, tag='span', cls='', attrs=''):
 
 
 def culture():
-    """Les visuels : les légendes viennent des fichiers JSON, les images de assets/img/culture/."""
-    out = []
-    for name in ('culture-science.json', 'culture-startup.json'):
-        p = ROOT / 'assets/data' / name
-        if p.exists():
-            out += json.loads(p.read_text(encoding='utf-8'))
+    """Les visuels du carrousel. S'il existe assets/data/culture-gallery.json et les images qu'il décrit (dans assets/img/gallery/), ce sont elles qui
+    s'affichent (photographies en accès libre ou images de synthèse, avec leur mention). Sinon, les illustrations en voxels de assets/img/culture/."""
+    entries = []
+    manifest = ROOT / 'assets/data/culture-gallery.json'
+    if manifest.exists():
+        for c in json.loads(manifest.read_text(encoding='utf-8')):
+            if (ROOT / 'assets/img/gallery' / c['file']).exists():
+                entries.append((c, f'assets/img/gallery/{c["file"]}'))
+    if not entries:
+        for name in ('culture-science.json', 'culture-startup.json'):
+            p = ROOT / 'assets/data' / name
+            if p.exists():
+                for c in json.loads(p.read_text(encoding='utf-8')):
+                    entries.append((c, c['file'] if '/' in c['file'] else f'assets/img/culture/{c["file"]}'))
     items = []
-    for n, c in enumerate(out, 1):
+    for n, (c, path) in enumerate(entries, 1):
         add_str(f'cu{n}_c', c['caption_fr'], c['caption_en'])
         add_str(f'cu{n}_a', c['alt_fr'], c['alt_en'])
-        items.append((n, c['file'] if '/' in c['file'] else f'assets/img/culture/{c["file"]}'))
+        has_credit = bool(c.get('credit_en'))
+        if has_credit:
+            add_str(f'cu{n}_cr', c.get('credit_fr', c['credit_en']), c['credit_en'])
+        items.append((n, path, has_credit))
     return items
 
 
@@ -101,7 +112,7 @@ def head(title_key, desc_key, home):
 
 def header(home):
     base = '' if home else 'index.html'
-    links = [('engineering', 'nav_tech'), ('novadiff', 'nav_novadiff'), ('story', 'nav_science'), ('articles', 'nav_articles'), ('why', 'nav_why')]
+    links = [('why', 'nav_why'), ('novadiff', 'nav_novadiff'), ('story', 'nav_science'), ('articles', 'nav_articles')]
     pill = ''.join(f'<a href="{base}#{k}" data-i18n="{t}">{en(t)}</a>' for k, t in links)
     pill += f'<a href="careers.html"{" aria-current=\"page\"" if not home else ""} data-i18n="nav_careers">{en("nav_careers")}</a>'
     return f'''<header class="nav" id="nav">
@@ -139,10 +150,9 @@ def footer(home):
       <p data-i18n="foot_tagline">{en('foot_tagline')}</p>
     </div>
     <div><h4 data-i18n="foot_explore">{en('foot_explore')}</h4><ul>
-      <li><a href="{base}#engineering" data-i18n="nav_tech">{en('nav_tech')}</a></li>
+      <li><a href="{base}#why" data-i18n="nav_why">{en('nav_why')}</a></li>
       <li><a href="{base}#novadiff" data-i18n="nav_novadiff">{en('nav_novadiff')}</a></li>
-      <li><a href="{base}#articles" data-i18n="nav_articles">{en('nav_articles')}</a></li>
-      <li><a href="{base}#why" data-i18n="nav_why">{en('nav_why')}</a></li></ul></div>
+      <li><a href="{base}#articles" data-i18n="nav_articles">{en('nav_articles')}</a></li></ul></div>
     <div><h4 data-i18n="foot_company">{en('foot_company')}</h4><ul>
       <li><a href="careers.html" data-i18n="nav_careers">{en('nav_careers')}</a></li>
       <li><button class="foot__link" type="button" data-open-contact data-i18n="nav_contact">{en('nav_contact')}</button></li></ul></div>
@@ -208,7 +218,7 @@ def page(title_key, desc_key, home, body_cls, main):
 <body class="{body_cls}" {attrs}>
 <a class="skip" href="#main" data-i18n="skip">{en('skip')}</a>
 {background()}
-{('<canvas id="agent" class="agent" aria-hidden="true"></canvas>' + '<button class="grid__btn" type="button" data-open-contact data-i18n="grid_btn" data-cursor="">' + en('grid_btn') + '</button>') if home else ''}
+{'<canvas id="agent" class="agent" aria-hidden="true"></canvas>' if home else ''}
 {header(home)}
 <main id="main">
 {main}
@@ -230,23 +240,14 @@ def sechead(prefix, eyebrow=True, center=True, extra=''):
 # ------------------------------------------------------------------ l'accueil
 def build_index():
     pics = culture()
-    fan = ['-60px', '0px', '60px']
-    eng_cards = ''
-    for i in range(1, 4):
-        chips = ''.join(tx(f'eng{i}_c{k}', 'li', 'chip') for k in range(1, 4) if f'eng{i}_c{k}' in STR['en'])
-        eng_cards += f'''<article class="card eng__card reveal-fan" style="--i:{i - 1};--fx:{fan[i - 1]}">
-        <div class="eng__icon" data-split-icon="{i - 1}" aria-hidden="true"></div>
-        {tx(f'eng{i}_tag', 'p', 'tag')}
-        {tx(f'eng{i}_title', 'h3')}
-        {tx(f'eng{i}_text', 'p', 'card__p')}
-        <ul class="chips">{chips}</ul>
-      </article>'''
-    marquee_items = ''.join(f'<figure class="shot"><img src="{f}" alt="{a(STR["en"][f"cu{n}_a"])}" data-i18n-alt="cu{n}_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu{n}_c">{en(f"cu{n}_c")}</figcaption></figure>' for n, f in pics)
+    marquee_items = ''.join(
+        f'<figure class="shot"><img src="{f}" alt="{a(STR["en"][f"cu{n}_a"])}" data-i18n-alt="cu{n}_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu{n}_c">{en(f"cu{n}_c")}</span>'
+        + (f'<small class="shot__credit" data-i18n="cu{n}_cr">{en(f"cu{n}_cr")}</small>' if cr else '') + '</figcaption></figure>' for n, f, cr in pics)
     marquee_dup = marquee_items.replace('<figure class="shot">', '<figure class="shot" aria-hidden="true">')
-    culture_html = (f'''<div class="culture">
-      {tx('culture_title', 'h3', 'culture__title reveal')}
-      <div class="marquee marquee--slow" data-marquee><div class="marquee__track">{marquee_items}{marquee_dup}</div></div>
-    </div>''' if pics else '')
+    culture_html = (f'''<section class="sec culture" id="culture" data-tone="mist">
+  <div class="container"><header class="sec__head center">{tx('culture_title', 'h2', 'h2 reveal')}</header></div>
+  <div class="marquee marquee--slow" data-marquee><div class="marquee__track">{marquee_items}{marquee_dup}</div></div>
+</section>''' if pics else '')
     arts = ''
     covers = ['data-wall', 'whiteboard-sprint', 'founders-table', 'pipette-plate', 'lab-bench', 'healthy-years']
     for i, (aud, mins, *_rest) in enumerate(ARTICLES, 1):
@@ -264,47 +265,43 @@ def build_index():
     cards_row = f'<div class="marquee" data-marquee data-tilt><div class="marquee__track">{arts}{arts_dup}</div></div>'
     feats = ''.join(f'''<li class="feat reveal-wipe" style="--i:{k}"><span class="feat__ico">{ICONS[ic]}</span><div>{tx(f"nova_f{k + 1}", "h3")}{tx(f"nova_f{k + 1}n", "p")}</div></li>''' for k, ic in enumerate(['brain', 'cube', 'loop']))
     nova_chips = ''.join(tx(f'nova_c{k}', 'li', 'chip chip--pop') for k in range(1, 4))
+    prog_chips = ''.join(tx(f'prog_{k}', 'li', 'chip') for k in range(1, 8))
     caps = ''.join(f'<p class="cap{" is-on" if k == 1 else ""}" data-cap="{k}" data-i18n="story_c{k}">{en(f"story_c{k}")}</p>' for k in range(1, 5))
     dots = ''.join(f'<i class="rail__dot" data-dot="{k}"></i>' for k in range(1, 5))
-    main = f'''<section class="hero" id="top">
+    main = f'''<section class="hero" id="top" data-tone="haze">
+  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="{a(STR['en']['brain_alt'])}" data-i18n-aria-label="brain_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
   <div class="container hero__in">
-    <span class="badge hero__badge"><i aria-hidden="true"></i>{tx('hero_badge')}</span>
     <h1 class="hero__title" data-split>{tx('hero_t1')} {tx('hero_t2', 'span', 'grad')} {tx('hero_t3')}</h1>
-    {tx('hero_sub', 'p', 'hero__sub')}
-    <div class="hero__cta">
-      <a class="btn btn--dark btn--lg" href="#novadiff"><span data-i18n="hero_cta1">{en('hero_cta1')}</span>{ARROW}</a>
-      <a class="btn btn--light btn--lg" href="#articles" data-i18n="hero_cta2">{en('hero_cta2')}</a>
-    </div>
   </div>
-  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="{a(STR['en']['agent_alt'])}" data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
-  {tx('hero_hint', 'p', 'hero__hint')}
+  <i class="hero__cue" aria-hidden="true"></i>
 </section>
 
-<section class="sec sec--haze eng" id="engineering">
-  <div class="container">
-    {sechead('eng')}
-    <div class="eng__grid" data-slot="split">{eng_cards}</div>
-    {tx('eng_note', 'p', 'eng__note reveal')}
-  </div>
-</section>
-
-<section class="sec rescue" id="why">
+<section class="sec rescue" id="why" data-tone="warm">
   <div class="container rescue__in">
     <div class="rescue__txt">
       {tx('rescue_eyebrow', 'p', 'eyebrow reveal')}
       {tx('rescue_title', 'h2', 'h2 reveal')}
+      {tx('hero_sub', 'p', 'lead rescue__lead reveal')}
       <p class="rescue__p" data-words data-i18n="rescue_p">{en('rescue_p')}</p>
+      <div class="hero__cta reveal">
+        <a class="btn btn--dark btn--lg" href="#novadiff"><span data-i18n="hero_cta1">{en('hero_cta1')}</span>{ARROW}</a>
+        <a class="btn btn--light btn--lg" href="#articles" data-i18n="hero_cta2">{en('hero_cta2')}</a>
+      </div>
     </div>
-    <ol class="rescue__steps">
-      <li class="step reveal-line" style="--i:0"><span class="step__n">1</span>{tx('rescue_s1', 'span')}</li>
-      <li class="step reveal-line" style="--i:1"><span class="step__n">2</span>{tx('rescue_s2', 'span')}</li>
-      <li class="step reveal-line" style="--i:2"><span class="step__n">3</span>{tx('rescue_s3', 'span')}</li>
-    </ol>
+    <div class="rescue__side">
+      <div class="slot slot--brain2" data-slot="brain2" aria-hidden="true"></div>
+      <ol class="rescue__steps">
+        <li class="step reveal-line" style="--i:0"><span class="step__n">1</span>{tx('rescue_s1', 'span')}</li>
+        <li class="step reveal-line" style="--i:1"><span class="step__n">2</span>{tx('rescue_s2', 'span')}</li>
+        <li class="step reveal-line" style="--i:2"><span class="step__n">3</span>{tx('rescue_s3', 'span')}</li>
+      </ol>
+    </div>
   </div>
-  {culture_html}
 </section>
 
-<section class="sec sec--haze nova" id="novadiff">
+{culture_html}
+
+<section class="sec nova" id="novadiff" data-tone="blue">
   <div class="container nova__in">
     <div class="nova__txt">
       {tx('nova_eyebrow', 'p', 'eyebrow reveal')}
@@ -313,12 +310,13 @@ def build_index():
       {tx('nova_text2', 'p', 'lead reveal')}
       <ul class="feats">{feats}</ul>
       <ul class="chips chips--row">{nova_chips}</ul>
+      <div class="progs reveal">{tx('prog_title', 'p', 'progs__t')}<ul class="chips">{prog_chips}</ul></div>
     </div>
-    <div class="slot slot--robot" data-slot="robot" role="img" aria-label="{a(STR['en']['agent_alt'])}" data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-robot.webp" alt="" width="700" height="800"></div>
+    <div class="slot slot--robot" data-slot="robot" role="img" aria-label="{a(STR['en']['robot_alt'])}" data-i18n-aria-label="robot_alt"><img class="slot__poster" src="assets/img/agent-robot.webp" alt="" width="760" height="928"></div>
   </div>
 </section>
 
-<section class="story" id="story" data-story>
+<section class="story" id="story" data-story data-tone="aqua">
   <div class="story__pin">
     <header class="story__head">{tx('story_eyebrow', 'p', 'eyebrow')}{tx('story_title', 'h2', 'h2')}</header>
     <div class="story__frame" data-slot="story" aria-hidden="true"></div>
@@ -327,18 +325,15 @@ def build_index():
   </div>
 </section>
 
-<section class="sec articles" id="articles">
+<section class="sec articles" id="articles" data-tone="warm2">
   <div class="container">{sechead('art')}</div>
   {cards_row}
 </section>
 
-<section class="grid" id="contact" data-grid>
-  <div class="grid__pin">
-    <header class="grid__head">{tx('grid_eyebrow', 'p', 'eyebrow')}{tx('grid_title', 'h2', 'h2')}{tx('grid_sub', 'p', 'lead')}</header>
-    <div class="grid__frame" data-slot="grid">
-      <p class="grid__count" aria-hidden="true"><b class="grid__lv">1 × 1</b><span class="grid__n"></span></p>
-    </div>
-    {tx('grid_hint', 'p', 'grid__hint')}
+<section class="sec contact" id="contact" data-tone="deep">
+  <div class="container contact__in">
+    {tx('grid_sub', 'p', 'contact__line reveal')}
+    <button class="contact__btn" type="button" data-open-contact data-magnet data-cursor-label="cursor_contact"><i class="contact__ring" aria-hidden="true"></i><span class="contact__glow" aria-hidden="true"></span><span class="contact__txt" data-i18n="grid_btn">{en('grid_btn')}</span>{ARROW}</button>
   </div>
 </section>'''
     return page('home_title', 'home_desc', True, 'page-home', main)
@@ -349,11 +344,6 @@ def build_careers():
     why = ''.join(f'<article class="card"><span class="feat__ico">{ICONS[ic]}</span>{tx(f"why_{i}", "h3")}{tx(f"why_{i}n", "p", "card__p")}</article>' for i, ic in ((1, 'brain'), (2, 'cube'), (3, 'loop')))
     quals = ''.join(f'<li class="qual reveal-line" style="--i:{i - 1}">{tx(f"q_{i}", "span", "qual__w")}{tx(f"q_{i}n", "span", "qual__p")}</li>' for i in range(1, 6))
     skills = ''.join(tx(f'sk_{i}', 'li', 'chip') for i in range(1, 9))
-    jobs = ''
-    for i in range(1, 5):
-        subject = a(STR['en']['mail_subject_apply'] + ' ' + STR['en'][f'job_{i}'])
-        jobs += (f'<article class="job reveal-line" style="--i:{i - 1}"><div><p class="tag">{tx(f"job_{i}_team")} · {tx("job_full")}</p>{tx(f"job_{i}", "h3")}{tx(f"job_{i}n", "p", "card__p")}</div>'
-                 f'<a class="btn btn--light" data-mail="careersEmail" data-subject="{subject}" href="mailto:{a(SITE["careersEmail"])}?subject={subject}"><span data-i18n="job_apply">{en("job_apply")}</span>{ARROW}</a></article>')
     sbb_subject = a(STR['en']['mail_subject_apply'] + ' ' + STR['en']['sbb_title'])
     sbb_meta = ''.join(f'<div>{tx(f"sbb_m{k}_k", "dt")}{tx(f"sbb_m{k}_v", "dd")}</div>' for k in range(1, 5))
     sbb_secs = ''
@@ -381,8 +371,7 @@ def build_careers():
 <section class="sec sec--tight"><div class="container">{tx('skill_eyebrow', 'p', 'eyebrow reveal')}{tx('skill_h2', 'h2', 'h2 reveal')}{tx('skill_lead', 'p', 'lead reveal')}<ul class="chips chips--row">{skills}</ul></div></section>
 <section class="sec sec--tight" id="jobs"><div class="container">{tx('jobs_eyebrow', 'p', 'eyebrow reveal')}{tx('jobs_h2', 'h2', 'h2 reveal')}{tx('jobs_lead', 'p', 'lead reveal')}
   <p class="mailrow"><a data-mail="careersEmail" href="mailto:{a(SITE['careersEmail'])}">{h(SITE['careersEmail'])}</a><button class="copy" type="button" data-copy="{a(SITE['careersEmail'])}" data-mailkey="careersEmail"></button></p>
-  {featured}
-  <div class="jobs">{jobs}</div></div></section>
+  {featured}</div></section>
 <section class="sec end"><div class="container"><div class="endcard reveal">{tx('car_end_h2', 'h2', 'h2')}{tx('car_end_p', 'p', 'lead')}
   <div class="hero__cta"><a class="btn btn--dark btn--lg" data-mail="careersEmail" data-subject="{a(STR['en']['mail_subject_apply'])}" href="mailto:{a(SITE['careersEmail'])}?subject={a(STR['en']['mail_subject_apply'])}"><span data-i18n="car_end_cta">{en('car_end_cta')}</span>{ARROW}</a></div></div></div></section>'''
     return page('car_title', 'car_desc', False, 'page-careers', main)

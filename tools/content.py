@@ -15,7 +15,6 @@ def s(key, fr, en):
 s('skip', 'Aller au contenu', 'Skip to content')
 s('home_aria', 'BlackPhage, accueil', 'BlackPhage, home')
 s('nav_main', 'Navigation principale', 'Main navigation')
-s('nav_tech', 'Technologie', 'Technology')
 s('nav_novadiff', 'NovaDiff', 'NovaDiff')
 s('nav_science', 'Science', 'Science')
 s('nav_articles', 'Articles', 'Articles')
@@ -40,9 +39,8 @@ s('cursor_drag', 'Survoler', 'Hover')
 
 # ------------------------------------------------------------------ accueil
 s('home_title', 'BlackPhage', 'BlackPhage')
-s('home_desc', 'BlackPhage conçoit des médicaments qui changent la vie des gens. Notre agent NovaDiff active sauve et reconçoit des candidats médicaments, du laboratoire à l\'impact concret.',
-  'BlackPhage engineers medicine that changes people\'s lives. Our agent NovaDiff active rescues and redesigns drug candidates, from the lab to real-world impact.')
-s('hero_badge', 'Drug rescue, propulsé par NovaDiff', 'Drug rescue, powered by NovaDiff')
+s('home_desc', 'BlackPhage conçoit des médicaments qui changent la vie des gens. Notre agent NovaDiff sauve et reconçoit des candidats médicaments, du laboratoire à l\'impact concret.',
+  'BlackPhage engineers medicine that changes people\'s lives. Our agent NovaDiff rescues and redesigns drug candidates, from the lab to real-world impact.')
 s('hero_t1', 'Découvrir le', 'Discovering the')
 s('hero_t2', 'futur', 'future')
 s('hero_t3', 'de la médecine', 'of medicine')
@@ -50,52 +48,41 @@ s('hero_sub', 'Nous concevons des médicaments qui changent la vie des gens, et 
   'We engineer medicine that changes people\'s lives, transforming discovery into real-world impact.')
 s('hero_cta1', 'Découvrir NovaDiff', 'Meet NovaDiff')
 s('hero_cta2', 'Lire nos articles', 'Read our articles')
-s('hero_hint', 'Passez le curseur sur l\'agent', 'Move your cursor over the agent')
 s('scroll', 'Défiler', 'Scroll')
-s('agent_alt', 'Notre agent NovaDiff, un nuage de milliers de cubes gris qui change de forme au fil de la page. Passez le curseur dessus et il se dissocie.',
-  'Our agent NovaDiff, a cloud of thousands of gray cubes that changes shape as you scroll. Move the cursor over it and it dissolves.')
+s('brain_alt', 'Un cerveau translucide, dont on voit les fibres et les impulsions qui se propagent dans tout le cortex. Passez le curseur dessus et quelques cubes s\'en détachent.',
+  'A translucent brain, with its fibers and the impulses that travel across the whole cortex. Move the cursor over it and a few cubes break away.')
+s('robot_alt', 'NovaDiff, notre agent, un petit robot blanc aux yeux ambrés qui salue d\'une main. Passez le curseur dessus et quelques cubes s\'en détachent.',
+  'NovaDiff, our agent, a small white robot with amber eyes that waves with one hand. Move the cursor over it and a few cubes break away.')
 
 # ------------------------------------------------------------------ ce que nous construisons
-s('eng_eyebrow', 'Ce que nous construisons', 'What we build')
-s('eng_title', 'Concevoir des médicaments qui changent des vies', 'Engineering medicines that change lives')
-s('eng_lead', 'Une approche holistique, trois fronts, un seul agent.', 'One holistic approach, three fronts, one agent.')
-s('eng1_tag', 'Métabolisme', 'Metabolism')
-s('eng1_title', 'Santé métabolique', 'Metabolic health')
-s('eng1_text', 'Une signalisation duale des incrétines par GLP-1R et GIPR, associée à une action anti-NCOA1 / SRC-1 et à la protection des cellules sous stress par Bax Inhibitor-1.',
-  'Dual incretin signaling through GLP-1R and GIPR, paired with an anti-NCOA1 / SRC-1 action and protection of cells under stress through Bax Inhibitor-1.')
-s('eng1_c1', 'GLP-1R / GIPR', 'GLP-1R / GIPR')
-s('eng1_c2', 'Anti-NCOA1 / SRC-1', 'Anti-NCOA1 / SRC-1')
-s('eng1_c3', 'Bax Inhibitor-1 / TMBIM6', 'Bax Inhibitor-1 / TMBIM6')
-s('eng2_tag', 'Muscle', 'Muscle')
-s('eng2_title', 'Anti-sarcopénie', 'Anti-sarcopenia')
-s('eng2_text', 'Myostatine (GDF-8) et Activine A sont freinées par deux conceptions complémentaires. Le Sweeper élimine les ligands en circulation. Le Latent-Lock les garde verrouillés sous leur forme inactive.',
-  'Myostatin (GDF-8) and Activin A are held back by two complementary designs. The Sweeper clears the circulating ligands. The Latent-Lock keeps them locked in their inactive form.')
-s('eng2_c1', 'Myostatine (GDF-8) / Activine A', 'Myostatin (GDF-8) / Activin A')
-s('eng2_c2', 'Sweeper', 'Sweeper')
-s('eng2_c3', 'Latent-Lock', 'Latent-Lock')
-s('eng3_tag', 'Inflammation', 'Inflammation')
-s('eng3_title', 'Inflammation chronique', 'Chronic inflammation')
-s('eng3_text', 'Le TNF alpha, un signal maître de l\'inflammation, est ciblé par un Smart Binder dépendant du pH pour l\'apaiser là où il le faut.',
-  'TNF alpha, a master signal of inflammation, is targeted by a pH-dependent Smart Binder to calm it exactly where it matters.')
-s('eng3_c1', 'TNF alpha', 'TNF alpha')
-s('eng3_c2', 'Dépendant du pH', 'pH-dependent')
-s('eng_note', 'Ensemble, une approche holistique du vieillissement en bonne santé.', 'Together, a holistic approach to healthy ageing.')
 
 # ------------------------------------------------------------------ notre raison d'être
 s('rescue_eyebrow', 'Notre raison d\'être', 'Our why')
 s('rescue_title', 'Chaque médicament abandonné est une promesse qui attend d\'être tenue', 'Every shelved drug is a promise waiting to be kept')
-s('rescue_p', 'BlackPhage est spécialisé en drug rescue. Trop de molécules prometteuses sont mises de côté, non parce qu\'elles ne fonctionnent pas, mais parce qu\'elles sont trop toxiques, trop brutes ou trop difficiles à doser. Nous croyons qu\'elles méritent une seconde chance. Avec NovaDiff active, nous comprenons pourquoi un candidat a calé, puis nous le reconcevons en Smart Binder plus fin, qui agit là où il le doit et épargne le reste. Pour les patients, pour les scientifiques qui ont consacré des années à ces idées, et pour les startups qui osent les reprendre.',
-  'BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff active we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.')
+s('rescue_p', 'BlackPhage est spécialisé en drug rescue. Trop de molécules prometteuses sont mises de côté, non parce qu\'elles ne fonctionnent pas, mais parce qu\'elles sont trop toxiques, trop brutes ou trop difficiles à doser. Nous croyons qu\'elles méritent une seconde chance. Avec NovaDiff, nous comprenons pourquoi un candidat a calé, puis nous le reconcevons en Smart Binder plus fin, qui agit là où il le doit et épargne le reste. Pour les patients, pour les scientifiques qui ont consacré des années à ces idées, et pour les startups qui osent les reprendre.',
+  'BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.')
 s('rescue_s1', 'Comprendre pourquoi il a calé', 'Understand why it stalled')
 s('rescue_s2', 'Le reconcevoir en Smart Binder', 'Redesign it as a Smart Binder')
 s('rescue_s3', 'Le ramener aux patients', 'Bring it back to patients')
+s('prog_title', 'Programmes actuels', 'Current programs')
+for i, (fr, en) in enumerate([
+    ('GLP-1R / GIPR', 'GLP-1R / GIPR'),
+    ('Anti-NCOA1 / SRC-1', 'Anti-NCOA1 / SRC-1'),
+    ('Bax Inhibitor-1 / TMBIM6', 'Bax Inhibitor-1 / TMBIM6'),
+    ('Myostatine (GDF-8) / Activine A', 'Myostatin (GDF-8) / Activin A'),
+    ('Sweeper', 'Sweeper'),
+    ('Latent-Lock', 'Latent-Lock'),
+    ('TNF alpha', 'TNF alpha'),
+], 1):
+    s(f'prog_{i}', fr, en)
+s('cursor_contact', 'Écrivez-nous', 'Write to us')
 s('culture_title', 'Là où la science rencontre l\'esprit startup', 'Where science meets the startup spirit')
 
 # ------------------------------------------------------------------ NovaDiff
 s('nova_eyebrow', 'Notre agent', 'Our agent')
 s('nova_title', 'Découvrez NovaDiff', 'Meet NovaDiff')
-s('nova_text', 'NovaDiff active est notre agent autonome, un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et une durée moyenne de vie en bonne santé au-delà de 100 ans.',
-  'NovaDiff active is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.')
+s('nova_text', 'NovaDiff est notre agent autonome, un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et une durée moyenne de vie en bonne santé au-delà de 100 ans.',
+  'NovaDiff is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.')
 s('nova_text2', 'Il construit des Smart Binders, des protéines dépendantes du pH qui changent de conformation pour réduire la toxicité.',
   'It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.')
 s('nova_f1', 'Il lit la biologie', 'It reads biology')
@@ -196,12 +183,8 @@ for _i, (_aud, _min, _tfr, _ten, _xfr, _xen, _bfr, _ben) in enumerate(ARTICLES, 
         s(f'a{_i}_p{_j + 1}', _bfr[_j], _ben[_j])
 
 # ------------------------------------------------------------------ contact : la sphère
-s('grid_eyebrow', 'Contact', 'Contact')
-s('grid_title', 'D\'un seul cube à un monde entier', 'From one cube to a whole world')
 s('grid_sub', 'Sauvons ensemble le prochain médicament.', 'Let\'s rescue the next drug together.')
-s('grid_cubes', 'cubes', 'cubes')
 s('grid_btn', 'Contact', 'Contact')
-s('grid_hint', 'Continuez à défiler', 'Keep scrolling')
 s('form_title', 'Dites bonjour', 'Say hello')
 s('form_lead', 'Parlez-nous de ce que vous construisez ou de ce qui vous préoccupe. Nous répondons à tout le monde.', 'Tell us what you are building or what is on your mind. We answer everyone.')
 s('form_last', 'Nom', 'Last name')
@@ -232,8 +215,8 @@ s('car_title', 'Carrières', 'Careers')
 s('car_desc', 'Rejoignez BlackPhage et aidez à concevoir une nouvelle classe de médicaments protéiques.', 'Join BlackPhage and help design a new class of protein medicines.')
 s('car_eyebrow', 'Carrières', 'Careers')
 s('car_h1', 'Un impact qui change le monde naît d\'une culture pensée pour l\'innovation.', 'World-changing impact starts with a culture built for innovation.')
-s('car_lead', 'Chez BlackPhage, nous construisons NovaDiff active, un agent autonome qui conçoit de nouveaux médicaments. Notre équipe réunit biologie, apprentissage automatique et ingénierie, avec une même envie de repousser la frontière du traitable.',
-  'At BlackPhage, we build NovaDiff active, an autonomous agent that designs new medicines. Our team brings together biology, machine learning and engineering, with one shared drive to move the frontier of the treatable.')
+s('car_lead', 'Chez BlackPhage, nous construisons NovaDiff, un agent autonome qui conçoit de nouveaux médicaments. Notre équipe réunit biologie, apprentissage automatique et ingénierie, avec une même envie de repousser la frontière du traitable.',
+  'At BlackPhage, we build NovaDiff, an autonomous agent that designs new medicines. Our team brings together biology, machine learning and engineering, with one shared drive to move the frontier of the treatable.')
 s('why_eyebrow', 'Pourquoi nous rejoindre', 'Why join us')
 s('why_h2', 'Un endroit où vos idées comptent.', 'A place where your ideas count.')
 s('why_1', 'Une équipe petite et affûtée', 'A small, sharp team')
@@ -274,26 +257,14 @@ s('jobs_h2', 'Nous recrutons.', 'We are hiring.')
 s('jobs_lead', 'Écrivez-nous à cette adresse. Joignez un CV et quelques lignes sur ce qui vous motive.', 'Write to us at this address. Attach a CV and a few lines on what drives you.')
 s('job_full', 'Temps plein', 'Full time')
 s('job_apply', 'Postuler', 'Apply')
-s('job_1_team', 'Équipe agent', 'Agent team')
-s('job_1', 'Ingénierie des agents IA', 'AI agent engineer')
-s('job_1n', 'Construire les boucles qui permettent à notre agent de planifier, concevoir et apprendre seul.', 'Build the loops that let our agent plan, design and learn on its own.')
-s('job_2_team', 'Conception', 'Design')
-s('job_2', 'Recherche en conception de protéines', 'Protein design scientist')
-s('job_2n', 'Transformer les propositions de l\'agent en binders qui fonctionnent au laboratoire.', 'Turn the agent\'s proposals into binders that work in the lab.')
-s('job_3_team', 'Biologie', 'Biology')
-s('job_3', 'Biologie computationnelle', 'Computational biologist')
-s('job_3n', 'Cartographier la biologie des maladies et choisir les cibles qui valent la peine.', 'Map disease biology and choose the targets worth pursuing.')
-s('job_4_team', 'Partenariats', 'Partnerships')
-s('job_4', 'Développement commercial, international', 'Business development lead, international')
-s('job_4n', 'Ouvrir les portes des partenaires pharmaceutiques et des investisseurs, partout dans le monde.', 'Open doors with pharma partners and investors around the world.')
 s('car_end_h2', 'Postulez maintenant pour résoudre l\'un des problèmes les plus urgents de la découverte de médicaments.', 'Apply now to solve one of the most urgent real-world problems in drug discovery.')
 # ------------------------------------------------------------------ le poste à la une : Serial Biotech Builder
 s('sbb_eyebrow', 'Poste à la une', 'Featured role')
 s('sbb_team', 'Direction scientifique', 'Scientific leadership')
 s('sbb_title', 'Serial Biotech Builder', 'Serial Biotech Builder')
 s('sbb_lead',
-  'Nous recherchons un Serial Biotech Builder confirmé, qui sera le garant scientifique de BlackPhage et qui maximisera la valeur de chaque licence que nous signons. Vous avez déjà bâti des sociétés de biotechnologie, mené des actifs jusqu\'à la preuve de concept in vivo puis jusqu\'à un accord, et vous savez exactement ce qu\'un acheteur demande ensuite. Vous travaillerez main dans la main avec nos fondateurs, nos scientifiques et NovaDiff active, et vous défendrez notre science face aux partenaires pharmaceutiques et aux investisseurs.',
-  'We are looking for an accomplished Serial Biotech Builder to be the scientific guarantor of BlackPhage and to maximize the value of every license we sign. You have built biotech companies before, taken assets through in vivo proof of concept and into a deal, and you know exactly what a buyer asks for next. You will work hand in hand with our founders, our scientists and NovaDiff active, and you will stand behind our science in front of pharma partners and investors.')
+  'Nous recherchons un Serial Biotech Builder confirmé, qui sera le garant scientifique de BlackPhage et qui maximisera la valeur de chaque licence que nous signons. Vous avez déjà bâti des sociétés de biotechnologie, mené des actifs jusqu\'à la preuve de concept in vivo puis jusqu\'à un accord, et vous savez exactement ce qu\'un acheteur demande ensuite. Vous travaillerez main dans la main avec nos fondateurs, nos scientifiques et NovaDiff, et vous défendrez notre science face aux partenaires pharmaceutiques et aux investisseurs.',
+  'We are looking for an accomplished Serial Biotech Builder to be the scientific guarantor of BlackPhage and to maximize the value of every license we sign. You have built biotech companies before, taken assets through in vivo proof of concept and into a deal, and you know exactly what a buyer asks for next. You will work hand in hand with our founders, our scientists and NovaDiff, and you will stand behind our science in front of pharma partners and investors.')
 s('sbb_m1_k', 'Société', 'Company'); s('sbb_m1_v', 'BlackPhage, société privée', 'BlackPhage, private company')
 s('sbb_m2_k', 'Lieu', 'Location'); s('sbb_m2_v', 'France ou à distance, avec des déplacements internationaux ponctuels', 'France or remote, with periodic international travel')
 s('sbb_m3_k', 'Langues', 'Languages'); s('sbb_m3_v', 'Français et anglais courants', 'Fluent French and English')

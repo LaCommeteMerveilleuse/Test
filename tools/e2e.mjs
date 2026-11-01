@@ -36,15 +36,21 @@ async function scrollTo(page, y, wait = 700) {
   ok(bag.errors.length === 0, 'aucune erreur de console ' + JSON.stringify(bag.errors.slice(0, 3)));
   ok(bag.bad.length === 0, 'aucune requête en échec ' + JSON.stringify(bag.bad.slice(0, 5)));
   if (bag.warns.length) console.log('     avertissements : ' + JSON.stringify(bag.warns.slice(0, 4)));
+  const meshes = await page.waitForFunction(() => { const s = window.__agent && window.__agent.smooth; return !!s && s.ready(0) && s.ready(2); }, null, { timeout: 150000 }).then(() => true).catch(() => false);
+  ok(meshes, 'les maillages lisses (cerveau et robot) sont prêts ' + JSON.stringify(await page.evaluate(() => (window.__agent && window.__agent.smooth ? window.__agent.smooth.stats : null))));
+  ok(!bag.warns.some((w) => /maillage|worker/.test(w)), 'aucun avertissement de maillage ni de worker ' + JSON.stringify(bag.warns.filter((w) => /maillage|worker/.test(w)).slice(0, 2)));
 
   // le contenu demandé
   const txt = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   const h1 = await page.evaluate(() => document.querySelector('h1').textContent.replace(/\s+/g, ' ').trim());
   ok(/Discovering the future of medicine/.test(h1), 'titre central : ' + h1);
-  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Engineering medicines that change lives', 'Small structures. Big questions.']) {
+  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.']) {
     ok(txt.includes(w) || txt.toLowerCase().includes(w.toLowerCase()), 'le texte contient « ' + w + ' »');
   }
-  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
+  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
+  ok(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((x) => x.id).join(',') === 'top,why,culture,novadiff,story,articles,contact'), 'les sections suivent l\'ordre demandé : titre, why, culture, agent, science, blog, contact');
+  ok(await page.evaluate(() => { const c = document.getElementById('agent'); const m = document.getElementById('main'); return +getComputedStyle(c).zIndex < +getComputedStyle(m).zIndex; }), 'le canevas 3D est derrière le texte');
+  ok(await page.evaluate(() => !document.querySelector('.hero p, .hero a, .hero button') && document.querySelector('.hero h1')), 'le héros ne contient que le titre');
   ok(!/[—;:]/.test(txt.replace(/https?:\/\/\S+/g, '')), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (EN)' + (/[—;:]/.test(txt) ? ' : ' + (txt.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
   ok(await page.evaluate(() => document.querySelectorAll('h1').length === 1), 'un seul h1');
   ok(await page.evaluate(() => [...document.querySelectorAll('img')].every((i) => i.hasAttribute('alt'))), 'toutes les images ont un attribut alt');
@@ -59,8 +65,8 @@ async function scrollTo(page, y, wait = 700) {
   ok(/Découvrir le futur de la médecine|Découvrir le futur/.test(h1fr) || /Découvrir/.test(h1fr), 'titre FR : ' + h1fr);
   const txtFr = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   ok(!/[—;:]/.test(txtFr), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (FR)' + (/[—;:]/.test(txtFr) ? ' : ' + (txtFr.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
-  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
-  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
+  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'NovaDiff active']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
+  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Image de synthèse', 'Une science rigoureuse']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
   ok(await page.evaluate(() => localStorage.getItem('bp-lang') === 'fr'), 'la langue est mémorisée');
   await page.reload({ waitUntil: 'load' }); await sleep(1500);
   ok(await page.evaluate(() => document.documentElement.lang === 'fr'), 'la langue survit au rechargement');
@@ -91,14 +97,23 @@ async function scrollTo(page, y, wait = 700) {
   const mq = await page.evaluate(() => { const t = document.querySelector('.marquee__track'); const k = [...t.children]; return { n: k.length, hidden: k.filter((x) => x.getAttribute('aria-hidden') === 'true').length, anim: getComputedStyle(t).animationName }; });
   ok(mq.n >= 8 && mq.n % 2 === 0 && mq.hidden === mq.n / 2, 'carrousel : éléments dupliqués pour la boucle ' + JSON.stringify(mq));
   ok(mq.anim && mq.anim !== 'none', 'carrousel : animation de défilement active');
+  const gal = await page.evaluate(async () => {
+    const imgs = [...document.querySelectorAll('.marquee--slow .shot img')];
+    imgs.forEach((i) => { i.loading = 'eager'; });
+    await Promise.all(imgs.map((i) => i.decode().catch(() => null)));
+    const figs = [...document.querySelectorAll('.marquee--slow .shot')];
+    return { n: imgs.length, loaded: imgs.filter((i) => i.complete && i.naturalWidth === 1080 && i.naturalHeight === 720).length, credits: figs.filter((f) => (f.querySelector('.shot__credit') || {}).textContent).length, alts: imgs.filter((i) => (i.alt || '').length > 30).length };
+  });
+  ok(gal.n >= 16 && gal.loaded === gal.n, 'carrousel : les images de qualité (1080 x 720) se chargent ' + JSON.stringify(gal));
+  ok(gal.credits === gal.n && gal.alts === gal.n, 'carrousel : chaque image a sa mention et son texte alternatif');
 
   // l'agent, section par section
   const G = () => page.evaluate(() => {
     const y = (el) => el.getBoundingClientRect().top + scrollY; const h = innerHeight;
     const mid = (el) => y(el) + el.getBoundingClientRect().height / 2 - h / 2;
-    const st = document.querySelector('[data-story]'); const gr = document.querySelector('[data-grid]');
-    return { h, brain: mid(document.querySelector('[data-slot="brain"]')), icon1: mid(document.querySelectorAll('[data-split-icon]')[1]), robot: mid(document.querySelector('[data-slot="robot"]')),
-      storyTop: y(st), storyH: st.offsetHeight, gridTop: y(gr), gridH: gr.offsetHeight, articles: y(document.querySelector('#articles')), doc: document.documentElement.scrollHeight };
+    const st = document.querySelector('[data-story]');
+    return { h, brain: mid(document.querySelector('[data-slot="brain"]')), why: mid(document.querySelector('[data-slot="brain2"]')), culture: y(document.querySelector('#culture')), robot: mid(document.querySelector('[data-slot="robot"]')),
+      storyTop: y(st), storyH: st.offsetHeight, articles: y(document.querySelector('#articles')), contact: y(document.querySelector('#contact')), doc: document.documentElement.scrollHeight };
   });
   // les images paresseuses se chargent en chemin et déplacent les sections : on les charge d'abord toutes
   await page.evaluate(() => document.querySelectorAll('img[loading="lazy"]').forEach((i) => { i.loading = 'eager'; }));
@@ -106,35 +121,42 @@ async function scrollTo(page, y, wait = 700) {
   let geo = await G();
   await scrollTo(page, 0, 900);
   let s = await state(page);
-  ok(s && s.a === 0 && s.b === 0, 'section 1 : cerveau (a=0, b=0) ' + JSON.stringify({ a: s && s.a, b: s && s.b }));
-  geo = await G(); await scrollTo(page, Math.max(0, geo.icon1), 1100);
+  ok(s && s.a === 0 && s.b === 0 && s.P < 0.15, 'titre : le cerveau est au centre (a=0, b=0) ' + JSON.stringify({ a: s && s.a, b: s && s.b, P: s && +s.P.toFixed(2) }));
+  const flow0 = await page.evaluate(() => getComputedStyle(document.querySelector('.bg')).getPropertyValue('--c1'));
+  geo = await G(); await scrollTo(page, Math.max(0, geo.why), 1100);
   s = await state(page);
-  ok(s && s.b === 1 && (s.mix > 0.9 || s.a === 1), 'section 2 : trois amas (b=1) ' + JSON.stringify({ a: s && s.a, b: s && s.b, mix: s && +s.mix.toFixed(2) }));
+  ok(s && s.a === 0 && s.b === 0 && s.P > 0.85, 'our why : le cerveau se range à droite ' + JSON.stringify({ P: s && +s.P.toFixed(2) }));
+  const flow1 = await page.evaluate(() => getComputedStyle(document.querySelector('.bg')).getPropertyValue('--c1'));
+  geo = await G(); await scrollTo(page, geo.culture + 100, 1100);
+  s = await state(page);
+  ok(s && s.a === 0 && s.b === 2 && s.mix > 0.02 && s.mix < 0.98, 'culture : le cerveau se fractionne en cubes et file vers le robot ' + JSON.stringify({ a: s && s.a, b: s && s.b, mix: s && +s.mix.toFixed(2) }));
   geo = await G(); await scrollTo(page, Math.max(0, geo.robot), 1100);
   s = await state(page);
-  ok(s && s.b === 2 && (s.mix > 0.9 || s.a === 2), 'section 3 : robot (b=2) ' + JSON.stringify({ a: s && s.a, b: s && s.b, mix: s && +s.mix.toFixed(2) }));
+  ok(s && s.b === 2 && (s.mix > 0.9 || s.a === 2), 'our agent : le robot (b=2) ' + JSON.stringify({ a: s && s.a, b: s && s.b, mix: s && +s.mix.toFixed(2) }));
+  const flow2 = await page.evaluate(() => getComputedStyle(document.querySelector('.bg')).getPropertyValue('--c1'));
+  ok(flow0 !== flow1 && flow1 !== flow2, 'le fond change de teinte en continu d\'une section à l\'autre');
   for (const u of [0.2, 0.45, 0.7, 0.95]) {
     geo = await G(); await scrollTo(page, geo.storyTop + u * (geo.storyH - geo.h), 1000);
     s = await state(page);
-    ok(s && Math.abs(s.u - u) < 0.07, 'récepteur : u = ' + u + ' → a=' + (s && s.a) + ' b=' + (s && s.b) + ' mix=' + (s && s.mix.toFixed(2)));
+    ok(s && Math.abs(s.u - u) < 0.07, 'science : u = ' + u + ' → a=' + (s && s.a) + ' b=' + (s && s.b) + ' mix=' + (s && s.mix.toFixed(2)));
   }
   geo = await G(); await scrollTo(page, geo.articles + 200, 900);
   s = await state(page);
-  ok(s && (s.a === 4 || s.a === 5), 'articles : le flux descend (a=' + (s && s.a) + ', b=' + (s && s.b) + ')');
-  let lastLevel = -1; let monotone = true;
-  for (const g of [0.1, 0.3, 0.5, 0.7, 0.85, 0.97]) {
-    geo = await G(); await scrollTo(page, geo.gridTop + g * (geo.gridH - geo.h), 1000);
-    s = await state(page);
-    if (s.level < lastLevel - 0.01) monotone = false; lastLevel = s.level;
-    console.log('     grille g=' + g + ' niveau=' + (s && s.level.toFixed(2)) + ' courbure=' + (s && s.bend.toFixed(2)) + ' compteur=' + await page.evaluate(() => document.querySelector('.grid__lv').textContent));
-  }
-  const Lmax = await page.evaluate(() => window.__agent.agent.L);
-  ok(monotone && lastLevel >= Lmax - 0.05, 'grille : 1, 3, 9, 27, 81' + (Lmax > 4 ? ', 243' : '') + ' puis sphère (niveau final ' + lastLevel.toFixed(2) + ' sur ' + Lmax + ')');
-  ok(await page.evaluate(() => document.querySelector('.grid__btn').classList.contains('is-on')), 'le bouton Contact apparaît sur la sphère');
-  ok(await page.evaluate(() => { const b = document.querySelector('.grid__btn'); const r = b.getBoundingClientRect(); const e = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return e === b || b.contains(e); }), 'le bouton Contact est au premier plan (cliquable)');
-  // le formulaire
-  await page.evaluate(() => document.querySelector('.grid__btn').click()); await sleep(900);
+  ok(s && s.a === 4, 'blog : la scène est derrière nous (a=' + (s && s.a) + ')');
+  ok(await page.evaluate(() => !document.querySelector('.grid, .grid__btn, [data-grid]')), 'plus d\'animation de grille ni de sphère');
+
+  // le contact : un simple bouton, qui répond au curseur
+  geo = await G(); await scrollTo(page, geo.contact, 900);
+  ok(await page.evaluate(() => { const b = document.querySelector('.contact__btn'); return !!b && !!document.querySelector('.contact__fx') && b.hasAttribute('data-magnet'); }), 'contact : un bouton avec son canevas de cubes');
+  const bb = await page.evaluate(() => { const r = document.querySelector('.contact__btn').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; });
+  await page.mouse.move(bb.x - bb.w, bb.y - 80); await page.mouse.move(bb.x - 30, bb.y - 8, { steps: 8 }); await sleep(700);
+  ok(await page.evaluate(() => { const b = document.querySelector('.contact__btn'); return b.classList.contains('is-near') && b.style.getPropertyValue('--tx') !== '0px'; }), 'contact : le bouton se laisse attirer par le curseur');
+  ok(await page.evaluate(() => document.querySelector('.cursor').classList.contains('has-label') || document.querySelector('.cursor').classList.contains('is-link')), 'contact : le curseur change d\'aspect sur le bouton');
+  await page.click('.contact__btn'); await sleep(900);
   ok(await page.evaluate(() => document.getElementById('contact-modal').classList.contains('is-open')), 'le bouton Contact ouvre la fenêtre');
+  await page.keyboard.press('Escape'); await sleep(500);
+  await page.evaluate(() => document.querySelector('[data-open-contact]').click()); await sleep(700);
+  // le formulaire
   await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(300);
   ok(await page.evaluate(() => document.querySelectorAll('#contact-form .field.is-bad').length === 4), 'formulaire vide : quatre champs en erreur');
   await page.fill('#f-last', 'Curie'); await page.fill('#f-first', 'Marie'); await page.selectOption('#f-act', { index: 1 }); await page.fill('#f-msg', 'Bonjour, parlons de drug rescue.');
@@ -192,6 +214,7 @@ async function scrollTo(page, y, wait = 700) {
   const car = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   for (const w of ['Serial Biotech Builder', 'scientific guarantor', 'in vivo', 'due diligence', 'licens', 'Fluent French and English', 'PhD']) ok(car.toLowerCase().includes(w.toLowerCase()), 'carrières : l\'offre contient « ' + w + ' »');
   ok(!/patent|brevet/i.test(car), 'carrières : aucune mention de brevet');
+  ok(!/AI agent engineer|Protein design scientist|Computational biologist|Business development lead/i.test(car), 'carrières : les autres postes sont retirés');
   ok(await page.evaluate(() => document.querySelectorAll('.jobx__sec').length === 7), 'carrières : sept blocs dans l\'offre à la une');
   ok(await page.evaluate(() => { const a = document.querySelector('.jobx__cta a'); return a && /subject=/.test(a.getAttribute('href')) && /Serial/.test(decodeURIComponent(a.getAttribute('href'))); }), 'carrières : le bouton Postuler cible cette offre');
   await page.click('#lang'); await sleep(500);

@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# rendus de synthèse (géométries, textures et images intermédiaires)
+tools/renders/geo/
+tools/renders/tex/
+tools/renders/final/

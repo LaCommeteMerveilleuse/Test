@@ -7,7 +7,7 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function initReveal() {
   const root = document.documentElement;
   setTimeout(() => root.classList.add('reveal-fallback'), 4000);
-  const targets = document.querySelectorAll('.reveal, .reveal-fan, .reveal-line, .reveal-wipe, .chips--row, .hero');
+  const targets = document.querySelectorAll('.reveal, .reveal-fan, .reveal-line, .reveal-wipe, .chips--row');
   if (!('IntersectionObserver' in window) || reduce) { targets.forEach((el) => el.classList.add('is-in')); return; }
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });

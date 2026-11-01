@@ -5,11 +5,15 @@
 // signaux qui suivent les faisceaux, neurones qui s'allument au hasard).
 import { rng, noise3, smin, sdEllipsoid, sdCapsule, voxelShell } from './voxel.js';
 
-const ridge = (x, y, z) => {
-  const wx = noise3(x * 3.0 + 3.1, y * 3.0, z * 3.0) - 0.5; const wy = noise3(x * 3.0, y * 3.0 + 7.7, z * 3.0) - 0.5; const wz = noise3(x * 3.0, y * 3.0, z * 3.0 + 4.3) - 0.5;
-  const n = noise3(x * 7.4 + wx * 2.6, y * 7.4 + wy * 2.6, z * 7.4 + wz * 2.6);
-  return Math.pow(1 - Math.abs(2 * n - 1), 1.5);
+// le cortex : des lignes de niveau d'un bruit déformé dessinent un labyrinthe de sillons étroits entre de larges circonvolutions (comme un vrai cerveau)
+const warped = (x, y, z, f, o) => {
+  const wx = noise3(x * 2.2 + 3.1 + o, y * 2.2, z * 2.2) - 0.5; const wy = noise3(x * 2.2, y * 2.2 + 7.7 + o, z * 2.2) - 0.5; const wz = noise3(x * 2.2, y * 2.2, z * 2.2 + 4.3 + o) - 0.5;
+  return noise3(x * f + wx * 1.9, y * f + wy * 1.9, z * f + wz * 1.9);
 };
+const cortexN = (x, y, z) => 0.72 * warped(x, y, z, 4.7, 0) + 0.28 * warped(x + 7.7, y + 1.3, z + 4.1, 10.2, 5);
+/** 1 au fond d'un sillon, 0 sur la crête d'une circonvolution (profil lisse). */
+const groove = (x, y, z) => { const k = 1 - Math.min(1, Math.abs(cortexN(x, y, z) - 0.5) / 0.062); return k * k * (3 - 2 * k); };
+const ridge = (x, y, z) => 1 - groove(x, y, z);
 
 // les sillons, en (x, y) vus de profil
 const SYLV = [[-0.52, -0.27], [-0.2, -0.2], [0.14, -0.13], [0.42, -0.05], [0.64, 0.02]];     // le sillon latéral, qui sépare le lobe temporal
@@ -60,7 +64,8 @@ function sdf(x, y, z) {
   if (d0 > 0.1 || d0 < -0.22) return d0;                                                // loin de la peau, on ne cherche pas le détail
   let d = cerebrum(x, y, z);
   if (d < 0.1 && d > -0.2) {
-    d -= 0.04 * ridge(x, y, z);                                                         // les circonvolutions
+    const gv = groove(x, y, z);
+    d += 0.058 * gv - 0.007;                                                            // les sillons étroits, entre des circonvolutions un peu bombées
     const lat = Math.min(1, Math.max(0, (az - 0.1) / 0.15));                           // les sillons n'entament que les flancs
     const dl = dPoly(x, y, SYLV); if (dl < 0.07) d += 0.065 * (1 - dl / 0.07) * lat;     // sillon latéral
     const dc = dPoly(x, y, CENT); if (dc < 0.04) d += 0.032 * (1 - dc / 0.04) * lat;   // sillon central
@@ -103,7 +108,6 @@ export default function build(n, seed = 1) {
     else {
       const r = ridge(x, y, z);
       t = LOBE_TAG[lobe] + (r > 0.5 || R() < 0.06 ? 0 : 1);
-      if (r > 0.93) t = 6;
       if (Math.abs(z) > 0.25 && (dPoly(x, y, SYLV) < 0.03 || dPoly(x, y, CENT) < 0.017 || dPoly(x, y, PARO) < 0.017)) t = LOBE_TAG[lobe] + 1;   // le fond des sillons est plus sombre
     }
     tag[i] = t;
@@ -178,7 +182,6 @@ export function field() {
     if (lobe === 'cb') return Math.abs(Math.cos(y * 72)) > 0.7 ? 17 : 16;
     const r = ridge(x, y, z);
     let t = LOBE_TAG[lobe] + (r > 0.5 ? 0 : 1);
-    if (r > 0.93) t = 6;
     if (Math.abs(z) > 0.25 && (dPoly(x, y, SYLV) < 0.03 || dPoly(x, y, CENT) < 0.017 || dPoly(x, y, PARO) < 0.017)) t = LOBE_TAG[lobe] + 1;
     return t;
   };
