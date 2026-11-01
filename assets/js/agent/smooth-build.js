@@ -100,7 +100,7 @@ export async function buildSmooth(kind, cubes, palette, h) {
       part[i] = model.partAt(x, y, z);
       glow[i] = model.glowAt(x, y, z);
     }
-    return [{ name: 'robot', pos: p, nrm, index: ref.index, col, mat4, part, glow, parts: model.parts, refined: nv - nBase }];
+    return [{ name: 'robot', pos: p, nrm, index: ref.index, col, mat4, part, glow, parts: model.parts, rig: model.rig, refined: nv - nBase }];
   }
   throw new Error('forme lisse inconnue ' + kind);
 }

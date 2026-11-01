@@ -42,16 +42,19 @@ function studioEnv(THREE, renderer) {
  * l'antenne oscille, la flamme vacille). Les cubes ne bougent pas : l'animation s'efface donc sous le curseur et pendant le fractionnement (k), là où
  * lisse et cubes se remplacent case par case.
  */
-function makeRobotMaterial(THREE, env, hover, parts) {
+function makeRobotMaterial(THREE, env, hover, parts, rig) {
   const mat = new THREE.MeshPhysicalMaterial({
     vertexColors: true, roughness: 0.4, metalness: 0.3, clearcoat: 1.0, clearcoatRoughness: 0.12,
     envMap: env, envMapIntensity: 1.0,
   });
   const part = (id) => parts.find((q) => q.id === id) || {};
   const V = (a, d = [0, 0, 0]) => new THREE.Vector3(...(a || d));
+  // les articulations des bras (épaule, coude, poignet), côté gauche de l'écran puis côté droit
+  const R = rig || { shoulder: [[-0.372, -0.297, -0.01], [0.372, -0.297, -0.01]], elbow: [[-0.505, -0.305, 0.04], [0.515, -0.265, 0.04]], wrist: [[-0.64, -0.279, 0.146], [0.73, -0.343, 0.168]] };
   const u = {
     uDis: { value: 0 }, uTime: { value: 0 }, uCell: { value: 0.04 }, uGlow: { value: new THREE.Color(0xe0a35c).convertSRGBToLinear() },
-    uLook: { value: new THREE.Vector2() }, uAnim: { value: 1 },
+    uLook: { value: new THREE.Vector2() }, uAnim: { value: 1 }, uWave: { value: 0 },
+    uShL: { value: V(R.shoulder[0]) }, uElL: { value: V(R.elbow[0]) }, uWbL: { value: V(R.wrist[0]) }, uShR: { value: V(R.shoulder[1]) }, uElR: { value: V(R.elbow[1]) }, uWbR: { value: V(R.wrist[1]) },
     uHeadP: { value: V(part(1).pivot) }, uAntP: { value: V(part(5).pivot) }, uHandLP: { value: V(part(2).pivot) }, uHandRP: { value: V(part(3).pivot) },
     uRingC: { value: V(part(4).center) }, uRingAx: { value: V(part(4).axis, [0, 1, 0]).normalize() }, uFlameP: { value: V(part(6).pivot) },
     uEyeLC: { value: V(part(7).center) }, uEyeRC: { value: V(part(8).center) }, uEyeUp: { value: V(part(7).up, [0, 1, 0]).normalize() },
@@ -63,12 +66,36 @@ function makeRobotMaterial(THREE, env, hover, parts) {
       .replace('#include <common>', `#include <common>
 attribute vec4 aMat; attribute float aPart; attribute float aGlow;
 varying vec4 vMat; varying float vGlow; varying float vEm; varying vec3 vLoc; varying vec3 vWorld;
-uniform float uTime; uniform float uAnim; uniform vec2 uLook;
+uniform float uTime; uniform float uAnim; uniform vec2 uLook; uniform float uWave;
+uniform vec3 uShL; uniform vec3 uElL; uniform vec3 uWbL; uniform vec3 uShR; uniform vec3 uElR; uniform vec3 uWbR;
 uniform vec3 uHeadP; uniform vec3 uAntP; uniform vec3 uHandLP; uniform vec3 uHandRP; uniform vec3 uRingC; uniform vec3 uRingAx; uniform vec3 uFlameP;
 uniform vec3 uEyeLC; uniform vec3 uEyeRC; uniform vec3 uEyeUp;
 ${HOVER_GLSL}
 vec3 rotA(vec3 v, vec3 ax, float a) { float c = cos(a); float s = sin(a); return v * c + cross(ax, v) * s + ax * dot(ax, v) * (1.0 - c); }
 void rotAbout(inout vec3 p, inout vec3 n, vec3 pv, vec3 ax, float a) { p = pv + rotA(p - pv, ax, a); n = rotA(n, ax, a); }
+// les bras : l'épaule lève le bras, le coude balance l'avant-bras, le poignet agite la main. Les bras sont du maillage du corps : on les écorche en douceur
+// (le poids croît vers l'extérieur de l'épaule, puis au-delà du coude), les mains tournent d'un bloc avec l'avant-bras.
+// uWave (0 à 1) : la main droite salue. k : 1 pleine animation, 0 au repos.
+void bpArms(inout vec3 p, inout vec3 n, int ip, float k) {
+  float t = uTime; float wv = uWave * k;
+  vec3 Z = vec3(0.0, 0.0, 1.0);
+  float aR = (0.04 + 0.10 * wv + 0.018 * sin(t * 1.3)) * k;
+  float eR = (wv * (-0.14 + 0.36 * sin(t * 7.0)) + 0.05 * sin(t * 1.7)) * k;       // la main se penche vers l'extérieur plus qu'elle ne revient vers la tête
+  float wR = (0.28 * wv * sin(t * 7.0 - 1.1) + 0.05 * sin(t * 1.1)) * k;
+  float aL = (-0.03 + 0.03 * sin(t * 1.1 + 1.0)) * k;
+  float eL = 0.10 * sin(t * 1.35 + 0.5) * k;
+  float wL = 0.08 * sin(t * 1.05 + 0.7) * k;
+  if (ip == 3) {
+    rotAbout(p, n, uHandRP, Z, wR); rotAbout(p, n, uElR, Z, eR); rotAbout(p, n, uShR, Z, aR);
+  } else if (ip == 2) {
+    rotAbout(p, n, uHandLP, Z, wL); rotAbout(p, n, uElL, Z, eL); rotAbout(p, n, uShL, Z, aL);
+  } else {
+    float wAR = smoothstep(-0.02, 0.04, p.x - uShR.x); float wAL = smoothstep(-0.02, 0.04, uShL.x - p.x);
+    float wER = smoothstep(-0.035, 0.045, dot(p - uElR, normalize(uWbR - uElR))); float wEL = smoothstep(-0.035, 0.045, dot(p - uElL, normalize(uWbL - uElL)));
+    if (wAR > 0.0) { if (wER > 0.0) rotAbout(p, n, uElR, Z, eR * wER); rotAbout(p, n, uShR, Z, aR * wAR); }
+    else if (wAL > 0.0) { if (wEL > 0.0) rotAbout(p, n, uElL, Z, eL * wEL); rotAbout(p, n, uShL, Z, aL * wAL); }
+  }
+}
 // k : 1 pleine animation, 0 au repos (la pose des cubes)
 void bpAnimate(inout vec3 p, inout vec3 n, float part, float k, out float em) {
   int ip = int(part + 0.5);
@@ -84,14 +111,8 @@ void bpAnimate(inout vec3 p, inout vec3 n, float part, float k, out float em) {
     vec3 ax = normalize(vec3(0.3, 0.0, 1.0));
     rotAbout(p, n, uAntP, ax, sin(t * 1.7) * 0.10 * k + sin(t * 0.7 + 1.0) * 0.05 * k);
     em = 0.8 + 0.3 * sin(t * 2.6);
-  } else if (ip == 2) {                                       // la main gauche flotte
-    p.y += sin(t * 1.25 + 1.0) * 0.012 * k;
-    rotAbout(p, n, uHandLP, vec3(0.0, 0.0, 1.0), sin(t * 1.05 + 0.7) * 0.07 * k);
-  } else if (ip == 3) {                                       // la main droite salue : quelques secondes toutes les sept secondes
-    float ph = mod(t, 7.0);
-    float w = smoothstep(0.35, 0.8, ph) * (1.0 - smoothstep(2.9, 3.4, ph));
-    p.y += sin(t * 1.25) * 0.012 * k;
-    rotAbout(p, n, uHandRP, vec3(0.0, 0.0, 1.0), (sin(t * 7.0) * 0.30 * w + sin(t * 1.1) * 0.05) * k);
+  } else if (ip == 2 || ip == 3) {                                // les mains suivent leur bras
+    bpArms(p, n, ip, k);
   } else if (ip == 4) {                                       // l'anneau tourne autour de son axe, ses satellites en orbite
     rotAbout(p, n, uRingC, normalize(uRingAx), t * 0.5 * k);
   } else if (ip == 6) {                                       // la flamme vacille sous la tuyère
@@ -99,8 +120,9 @@ void bpAnimate(inout vec3 p, inout vec3 n, float part, float k, out float em) {
     p.y = uFlameP.y + (p.y - uFlameP.y) * f;
     p.x += sin(t * 13.0 + p.y * 6.0) * 0.006 * k * clamp(uFlameP.y - p.y, 0.0, 0.4) * 4.0;
     em = 1.0 + 0.22 * sin(t * 23.0) * k;
-  } else if (ip == 0 && aMat.z > 0.5) {
-    em = 0.88 + 0.2 * sin(t * 1.6) * k;                       // le coeur du robot respire
+  } else if (ip == 0) {
+    bpArms(p, n, 0, k);                                       // les bras font partie du corps
+    if (aMat.z > 0.5) em = 0.88 + 0.2 * sin(t * 1.6) * k;       // le coeur du robot respire
   }
   if (ip == 1 || ip == 5 || ip == 7 || ip == 8) {             // la tête (et ce qui lui est attaché) suit le curseur, un peu en retard sur le corps
     float yaw = uLook.x * 0.30 * k + sin(t * 0.55) * 0.05 * k;
@@ -290,7 +312,7 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
       for (const m of [back, fibers, front]) { m.frustumCulled = false; slot.group.add(m); slot.meshes.push(m); }
     } else {
       for (const p of parts) {
-        const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeRobotMaterial(THREE, env, hover, p.parts || []));
+        const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeRobotMaterial(THREE, env, hover, p.parts || [], p.rig));
         mesh.frustumCulled = false;
         mesh.material.userData.u.uCell.value = slot.cell;
         slot.group.add(mesh); slot.meshes.push(mesh);
@@ -330,14 +352,14 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
   };
 
   /** Règle un objet : visible (oui, non), dissolve (0 entier, 1 tout en cubes), temps pour les impulsions. */
-  const set = (k, { visible, dissolve = 0, time = 0, look = null }) => {
+  const set = (k, { visible, dissolve = 0, time = 0, look = null, wave = 0 }) => {
     const s = byK[k]; if (!s) return;
     const show = !!visible && s.ready && dissolve < 0.999;
     s.group.visible = show;
     if (!show) return;
     if (s.shared) { s.shared.uDis.value = dissolve; s.shared.uTime.value = time; }
     if (s.fibers) { agent.renderer.getDrawingBufferSize(size); s.fibers.material.uniforms.uRes.value.copy(size); s.fibers.material.uniforms.uWidth.value = 1.5 * (size.y / Math.max(1, agent.renderer.domElement.clientHeight)); }
-    for (const m of s.meshes) { const u = m.material.userData && m.material.userData.u; if (u && u.uDis && m.material.userData.u !== s.shared) { u.uDis.value = dissolve; u.uTime.value = time; if (u.uLook) { u.uLook.value.set(look ? look.x : 0, look ? look.y : 0); u.uAnim.value = 1 - clamp(dissolve * 2.5); } } }
+    for (const m of s.meshes) { const u = m.material.userData && m.material.userData.u; if (u && u.uDis && m.material.userData.u !== s.shared) { u.uDis.value = dissolve; u.uTime.value = time; if (u.uLook) { u.uLook.value.set(look ? look.x : 0, look ? look.y : 0); u.uAnim.value = 1 - clamp(dissolve * 2.5); u.uWave.value = wave; } } }
   };
 
   return { group, place, set, ready: (k) => !!(byK[k] && byK[k].ready), stats, dispose() { worker && worker.terminate(); env.dispose && env.dispose(); } };

@@ -701,7 +701,10 @@ function makeModel(hd) {
     { id: PT.EYE_L, name: 'eyeL', pivot: eyeC(-1), center: eyeC(-1), up: eyeUp, parent: PT.HEAD, note: 'lens of the eye on the left of the screen, blink by scaling y about center' },
     { id: PT.EYE_R, name: 'eyeR', pivot: eyeC(1), center: eyeC(1), up: eyeUp, parent: PT.HEAD, note: 'lens of the eye on the right of the screen' },
   ];
-  return { comps, sdf, nearest, featureAt, blendAt, partAt, glowAt, aoAt, bbox: [bx0, by0, bz0, bx1, by1, bz1], parts: partsTable };
+  // the arm rig for the animation: shoulder, elbow and wrist ball of each arm (index 0 is the left of the screen). The upper arm, the forearm, the wrist
+  // ball and the socket are body mesh, so a renderer can skin them softly: rotate about the elbow beyond it, and about the shoulder beyond the ball.
+  const rig = { shoulder: SH.map((q) => [q.x, q.y, q.z]), elbow: HANDS.map((h) => h.E.slice()), wrist: HANDS.map((h) => h.Wb.slice()) };
+  return { comps, sdf, nearest, featureAt, blendAt, partAt, glowAt, aoAt, bbox: [bx0, by0, bz0, bx1, by1, bz1], parts: partsTable, rig };
 }
 
 // ======================================================================================================================================
@@ -719,6 +722,7 @@ export function smoothModel(opts = {}) {
     glowAt: M.glowAt,                                             // (x, y, z) -> 0..1 soft glow on the glass around the eyes and the smile
     aoAt: M.aoAt,                                                 // (x, y, z, nx, ny, nz) -> 0..1 ambient occlusion (1 open), multiply the albedo by it
     parts: M.parts,
+    rig: M.rig,                                                   // the arm joints (shoulder, elbow, wrist per arm) for the soft skinning of the arms
     features: FEATURES,
     frame: { yc: Y_CENTER },
   };

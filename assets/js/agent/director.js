@@ -20,7 +20,8 @@ const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
 const lerp = (a, b, k) => a + (b - a) * k;
 const damp = (cur, target, rate, dt) => cur + (target - cur) * (1 - Math.exp(-rate * dt));
-const lerpA = (p, q, k) => ({ x: lerp(p.x, q.x, k), y: lerp(p.y, q.y, k), scale: lerp(p.scale, q.scale, k), rx: lerp(p.rx, q.rx, k), ry: lerp(p.ry, q.ry, k) });
+const lerpA = (p, q, k) => ({ x: lerp(p.x, q.x, k), y: lerp(p.y, q.y, k), scale: lerp(p.scale, q.scale, k), rx: lerp(p.rx, q.rx, k), ry: lerp(p.ry, q.ry, k), rz: lerp(p.rz || 0, q.rz || 0, k) });
+const easeIO = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 const q = (s) => document.querySelector(s);
 
 export async function startAgent({ canvas, low = false, frozen = null, onTitle = () => {} }) {
@@ -58,6 +59,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
   const ptr = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0, in: false };
   addEventListener('pointermove', (e) => { ptr.x = e.clientX; ptr.y = e.clientY; ptr.nx = (e.clientX / innerWidth) * 2 - 1; ptr.ny = (e.clientY / innerHeight) * 2 - 1; ptr.in = true; }, { passive: true });
   document.addEventListener('pointerleave', () => { ptr.in = false; });
+  addEventListener('pointerdown', (e) => { S.click = { x: e.clientX, y: e.clientY }; }, { passive: true });
 
   const ext = shapes.map((s) => s.extent || [1, 1, 1]);
   const rectOf = (e) => (e ? e.getBoundingClientRect() : null);
@@ -65,7 +67,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
   const fit = (r, k, f = 0.95) => Math.min((r.width / 2) / ext[k][0], (r.height / 2) / ext[k][1]) * f;
 
   // l'état amorti
-  const S = { disperse: 0, look: { x: 0, y: 0 }, P: null, u: null, time: 0 };
+  const S = { disperse: 0, look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
   let last = performance.now();
   let introStart = null; let titleShown = false;
   const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, disperse: 0, anchor: null, n, intro: 0 };
@@ -80,7 +82,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     const vh = innerHeight; const vw = innerWidth;
     const sy = scrollY;
     if (!reduce) S.time += dt;
-    const time = frozen !== null ? frozen : S.time;
+    const time = frozen !== null ? frozen : (window.__timeOverride !== undefined ? window.__timeOverride : S.time);     // __timeOverride : pour les captures d'écran
     const introT = reduce ? 99 : (window.__introFreeze !== undefined ? window.__introFreeze : introStart === null ? 0 : (performance.now() - introStart) / 1000);     // __introFreeze : pour les captures d'écran
     if (!titleShown && (introT >= 2.5 || reduce)) { titleShown = true; onTitle(); }
 
@@ -99,7 +101,22 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
       anchors.b1 = { x: c.x, y: c.y + bob(sc) + (1 - introK) * sc * 0.06, scale: sc * lerp(0.92, 1, introK), rx: 0.1 + lookX * 0.08, ry: -0.5 + (1 - introK) * -1.3 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.22) * 0.1) };
     }
     if (rBrain2) { const c = center(rBrain2); const sc = fit(rBrain2, 0, 0.92); anchors.b2 = { x: c.x, y: c.y + bob(sc), scale: sc, rx: 0.1 + lookX * 0.1, ry: -0.5 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.22) * 0.1) }; }
-    if (rRobot) { const c = center(rRobot); const sc = fit(rRobot, 2, 0.92); anchors.robot = { x: c.x, y: c.y + bob(sc), scale: sc, rx: 0.08 + lookX * 0.1, ry: 0.15 + lookY * 0.3 }; }
+    // la danse du robot : il flotte, pivote doucement, se penche quand on défile ; en arrivant il fait un tour sur lui-même, et un clic le fait tourner et saluer
+    S.vy = damp(S.vy, S.py === null ? 0 : (sy - S.py) / Math.max(dt, 1e-3), 8, dt); S.py = sy;
+    S.spinT += dt;
+    const Pprev = S.P === null ? 0 : S.P;
+    const arriveYaw = reduce ? 0 : (1 - smooth(0.78, 1.0, Pprev - 1)) * -Math.PI * 2;
+    const spinYaw = reduce || S.spinT > 1.25 ? 0 : easeIO(S.spinT / 1.25) * Math.PI * 2;
+    const lean = reduce ? 0 : clamp(S.vy / 2600, -1, 1);
+    if (rRobot) {
+      const c = center(rRobot); const sc = fit(rRobot, 2, 0.92);
+      anchors.robot = {
+        x: c.x, y: c.y + (reduce ? 0 : Math.sin(time * 1.15) * sc * 0.03), scale: sc,
+        rx: 0.08 + lookX * 0.1 + (reduce ? 0 : Math.sin(time * 0.9 + 1.0) * 0.025 + lean * 0.05),
+        ry: 0.15 + lookY * 0.3 + (reduce ? 0 : Math.sin(time * 0.45) * 0.16) + arriveYaw + spinYaw,
+        rz: reduce ? 0 : Math.sin(time * 0.7) * 0.03 - lean * 0.1,
+      };
+    }
 
     // la scène du récepteur, épinglée : u va de 0 à 1 pendant qu'on défile (amorti)
     let uRaw = 0;
@@ -172,6 +189,13 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
     window.__agentHot = inside;
     S.disperse = damp(S.disperse, inside ? 1 : 0, inside ? 9 : 2.6, dt);
     const hoverR = clamp(main.scale * 0.13, 22, 44);
+    // le salut du robot : régulier (quelques secondes toutes les sept secondes), plus franc quand le curseur s'approche, à l'arrivée et après un clic
+    if (S.click) { const c = S.click; S.click = null; if (!reduce && !off && mk === 2 && Math.hypot(c.x - main.x, c.y - main.y) < reach) { S.spinT = 0; S.burst = 1; } }
+    if (!reduce && Pprev < 1.97 && P >= 1.97) S.burst = 1;
+    S.burst = Math.max(0, S.burst - dt / 3.0);
+    S.hover = damp(S.hover, inside && mk === 2 ? 1 : 0, 3, dt);
+    const ph = ((time % 7) + 7) % 7;
+    const wave = window.__waveOverride !== undefined ? window.__waveOverride : reduce ? 0 : Math.max(smooth(0.35, 0.8, ph) * (1 - smooth(2.9, 3.4, ph)), S.hover * 0.85, Math.min(1, S.burst * 1.6));
 
     // le fractionnement : 0 l'objet lisse est entier, 1 il est tout en cubes. Lisse au repos, en cubes pendant le voyage.
     for (const k of [0, 2]) if (sm && sm.ready(k)) reveal[k] = reduce ? 1 : Math.min(1, reveal[k] + rawDt / 1.4);
@@ -188,7 +212,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
       for (const k of [0, 2]) {
         let vis = false; let dis = 1;
         if (k === a) { vis = true; dis = dA; } else if (k === b) { vis = true; dis = dB; }
-        sm.set(k, { visible: vis, dissolve: dis, time, look: reduce ? null : S.look });
+        sm.set(k, { visible: vis, dissolve: dis, time, look: reduce ? null : S.look, wave: k === 2 ? wave : 0 });
       }
     }
     agent.set({ a, b, mix, dust, fade: 1, time, anchorA: A, anchorB: B, level: 0, bend: 0, disperse: S.disperse, hit: { x: ptr.x, y: ptr.y }, radius: hoverR, glow: 0,
@@ -220,7 +244,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
       el.dots.forEach((d, i) => d.classList.toggle('on', i + 1 <= idx));
       el.rail && el.rail.style.setProperty('--sp', u.toFixed(3));
     }
-    Object.assign(dbg, { a, b, mix, u, P, disperse: S.disperse, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], intro: introT });
+    Object.assign(dbg, { a, b, mix, u, P, disperse: S.disperse, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], intro: introT, spin: S.spinT, wave, robot: anchors.robot ? { ry: anchors.robot.ry, rz: anchors.robot.rz } : null });
   }
 
   requestAnimationFrame(frameLoop);

@@ -133,6 +133,15 @@ async function scrollTo(page, y, wait = 700) {
   geo = await G(); await scrollTo(page, Math.max(0, geo.robot), 1100);
   s = await state(page);
   ok(s && s.b === 2 && (s.mix > 0.9 || s.a === 2), 'our agent : le robot (b=2) ' + JSON.stringify({ a: s && s.a, b: s && s.b, mix: s && +s.mix.toFixed(2) }));
+  // le robot a fini son tour d'arrivée ; un clic le fait tourner sur lui-même et saluer
+  ok(s && s.robot && Math.abs(s.robot.ry - 0.15) < 0.75, 'our agent : le robot fait face (le tour d\'arrivée est fini) ' + JSON.stringify(s && s.robot && { ry: +s.robot.ry.toFixed(2) }));
+  const rbt = await page.evaluate(() => { const e = document.querySelector('[data-slot="robot"]').getBoundingClientRect(); return { x: e.left + e.width / 2, y: e.top + e.height / 2 }; });
+  await page.mouse.move(rbt.x - 30, rbt.y); await page.mouse.move(rbt.x, rbt.y, { steps: 4 });
+  await page.mouse.down(); await page.mouse.up(); await sleep(600);
+  s = await state(page);
+  ok(s && s.spin < 1.25, 'un clic sur le robot le fait tourner sur lui-même ' + JSON.stringify({ spin: s && +s.spin.toFixed(2) }));
+  ok(s && s.wave > 0.4, 'et le fait saluer ' + JSON.stringify({ wave: s && +s.wave.toFixed(2) }));
+  await page.mouse.move(8, 780, { steps: 3 });
   const flow2 = await page.evaluate(() => getComputedStyle(document.querySelector('.bg')).getPropertyValue('--c1'));
   ok(flow0 !== flow1 && flow1 !== flow2, 'le fond change de teinte en continu d\'une section à l\'autre');
   for (const u of [0.2, 0.45, 0.7, 0.95]) {

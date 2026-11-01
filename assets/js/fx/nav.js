@@ -2,6 +2,10 @@
 const body = document.body;
 
 export function initNav() {
+  // la barre se voile en douceur quand le contenu défile dessous : le logo et les liens ne se superposent plus aux titres
+  const bar = document.getElementById('nav');
+  const stick = () => bar && bar.classList.toggle('is-stuck', scrollY > 40);
+  addEventListener('scroll', stick, { passive: true }); stick();
   const pill = document.getElementById('nav-pill');
   const ind = pill && pill.querySelector('.nav__ind');
   const links = pill ? [...pill.querySelectorAll('a')] : [];
