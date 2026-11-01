@@ -1,15 +1,14 @@
-// BlackPhage - les objets lisses. Au repos, chaque section montre son objet en maillage lisse et réaliste : le cerveau (translucide, avec ses fibres et ses
-// impulsions) et le robot. Entre deux sections, et sous le curseur, l'objet se brise en petits cubes (le moteur de cubes, agent.js, prend le relais).
+// BlackPhage - les objets lisses. Au repos, chaque section montre son objet en maillage lisse : le robot (un matériau physique animé pièce par pièce) et le cerveau,
+// qui n'est plus une surface mais un réseau de neurones entièrement transparent (neurones, connexions, influx qui saute de neurone en neurone). Entre deux
+// sections, l'objet se brise en petits cubes (le moteur de cubes, agent.js, prend le relais). Rien ne réagit au curseur par destruction.
 //
-// Les maillages sont calculés dans un worker (mesh.worker.js) à partir des champs de distance des formes. Le fractionnement est un « dissolve » par cases
-// cubiques : une case disparaît quand sa valeur de hachage passe sous le seuil, et ses bords brillent en Timber Glow. La même fonction (hoverDis) décide, dans
-// ce fichier et dans agent.js, quelle case est lisse et quelle case est en cubes : jamais de trou, jamais de doublon.
+// Les maillages et le réseau sont calculés dans un worker (mesh.worker.js) à partir des champs de distance des formes. Le fractionnement du robot est un
+// « dissolve » par cases cubiques : une case disparaît quand sa valeur de hachage passe sous le seuil, et ses bords brillent en Timber Glow. La même
+// fonction de hachage décide, dans ce fichier et dans agent.js, quelle case est lisse et quelle case est en cubes : jamais de trou, jamais de doublon.
 const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
 const srgbToLinear = (c) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
 
-const HOVER_GLSL = `
-uniform vec3 uHit; uniform float uRad; uniform float uDisperse;
-float hoverDis(vec2 w) { float d = length(w - uHit.xy); return clamp(uDisperse * 1.6, 0.0, 1.0) * (1.0 - smoothstep(0.45 * uRad, 1.5 * uRad, d)); }
+const HASH_GLSL = `
 float hash31(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }`;
 
 /** Un petit studio de lumière (plafond clair, horizon bleuté, sol sombre, trois boîtes à lumière) prérendu en environnement. */
@@ -42,7 +41,7 @@ function studioEnv(THREE, renderer) {
  * l'antenne oscille, la flamme vacille). Les cubes ne bougent pas : l'animation s'efface donc sous le curseur et pendant le fractionnement (k), là où
  * lisse et cubes se remplacent case par case.
  */
-function makeRobotMaterial(THREE, env, hover, parts, rig) {
+function makeRobotMaterial(THREE, env, parts, rig) {
   const mat = new THREE.MeshPhysicalMaterial({
     vertexColors: true, roughness: 0.4, metalness: 0.3, clearcoat: 1.0, clearcoatRoughness: 0.12,
     envMap: env, envMapIntensity: 1.0,
@@ -61,7 +60,7 @@ function makeRobotMaterial(THREE, env, hover, parts, rig) {
   };
   mat.userData.u = u;
   mat.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, u, hover);
+    Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>
 attribute vec4 aMat; attribute float aPart; attribute float aGlow;
@@ -70,7 +69,6 @@ uniform float uTime; uniform float uAnim; uniform vec2 uLook; uniform float uWav
 uniform vec3 uShL; uniform vec3 uElL; uniform vec3 uWbL; uniform vec3 uShR; uniform vec3 uElR; uniform vec3 uWbR;
 uniform vec3 uHeadP; uniform vec3 uAntP; uniform vec3 uHandLP; uniform vec3 uHandRP; uniform vec3 uRingC; uniform vec3 uRingAx; uniform vec3 uFlameP;
 uniform vec3 uEyeLC; uniform vec3 uEyeRC; uniform vec3 uEyeUp;
-${HOVER_GLSL}
 vec3 rotA(vec3 v, vec3 ax, float a) { float c = cos(a); float s = sin(a); return v * c + cross(ax, v) * s + ax * dot(ax, v) * (1.0 - c); }
 void rotAbout(inout vec3 p, inout vec3 n, vec3 pv, vec3 ax, float a) { p = pv + rotA(p - pv, ax, a); n = rotA(n, ax, a); }
 // les bras : l'épaule lève le bras, le coude balance l'avant-bras, le poignet agite la main. Les bras sont du maillage du corps : on les écorche en douceur
@@ -136,17 +134,17 @@ void bpAnimate(inout vec3 p, inout vec3 n, float part, float k, out float em) {
       .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
 vec3 bpPos = position; float bpEm = 1.0;
 vMat = aMat; vGlow = aGlow; vLoc = position; vWorld = (modelMatrix * vec4(position, 1.0)).xyz;
-{ float kk = uAnim * (1.0 - hoverDis(vWorld.xy)); bpAnimate(bpPos, objectNormal, aPart, kk, bpEm); }
+{ bpAnimate(bpPos, objectNormal, aPart, uAnim, bpEm); }
 vEm = bpEm;`)
       .replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed = bpPos;');
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
 uniform float uDis; uniform float uTime; uniform float uCell; uniform vec3 uGlow;
 varying vec4 vMat; varying float vGlow; varying float vEm; varying vec3 vLoc; varying vec3 vWorld;
-${HOVER_GLSL}`)
+${HASH_GLSL}`)
       .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
 float hh = hash31(floor(vLoc / uCell)) * 0.93;
-float dis = max(uDis, hoverDis(vWorld.xy));
+float dis = uDis;
 if (dis > 0.001 && hh < dis) discard;
 float rimGlow = dis > 0.001 ? (1.0 - smoothstep(dis, dis + 0.08, hh)) * 1.8 : 0.0;`)
       .replace('#include <metalnessmap_fragment>', '#include <metalnessmap_fragment>\nmetalnessFactor = vMat.x;')
@@ -159,71 +157,41 @@ totalEmissiveRadiance += vColor.rgb * (vMat.z * vEm * 1.1) + uGlow * (vGlow * 0.
   return mat;
 }
 
-/** Le cerveau : une coque translucide (deux passes, face arrière puis face avant) autour de ses fibres. L'alpha monte aux silhouettes et au fond des sillons. */
-function makeShell(THREE, env, hover, back, shared) {
-  const mat = new THREE.MeshPhysicalMaterial({
-    vertexColors: true, roughness: 0.5, metalness: 0.0, clearcoat: 0.55, clearcoatRoughness: 0.32, envMap: env, envMapIntensity: back ? 0.55 : 0.8,
-    transparent: true, depthWrite: false, side: back ? THREE.BackSide : THREE.FrontSide,
+/**
+ * Le cerveau : entièrement transparent, on n'en voit que le réseau de neurones. Les connexions sont des rubans fins qui s'éclairent quand l'influx les
+ * parcourt, les neurones des pastilles qui s'allument quand il les atteint. Le calendrier (qui s'allume quand, dans un cycle) est précalculé dans le worker
+ * (brain-neurons.js) : le shader lit seulement l'heure. La lumière est ambrée sur le bleu profond de la marque, plus pâle au fond du cerveau.
+ */
+function makeNeuralNet(THREE, net, shared) {
+  const tints = [0x2a5f86, 0x3f5e9e, 0x2d7f8c, 0x5d6fa8, 0x5f7a8a, 0x27463d].map((h) => new THREE.Color(h));
+  Object.assign(shared, {
+    uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.4 }, uPx: { value: 2.0 }, uDepthR: { value: 1 }, uSizePx: { value: 300 }, uCycle: { value: net.cycle }, uSigma: { value: net.sigma },
+    uBase: { value: new THREE.Color(0x2a5f86) }, uGlow2: { value: new THREE.Color(0xf0a040) }, uTints: { value: tints },
   });
-  mat.userData.u = shared;
-  mat.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, shared, hover);
-    sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute float aAo; varying float vAo; varying vec3 vLoc; varying vec3 vWorld;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvAo = aAo; vLoc = position; vWorld = (modelMatrix * vec4(position, 1.0)).xyz;');
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', `#include <common>
-uniform float uDis; uniform float uTime; uniform float uCell; uniform vec3 uGlow; uniform vec3 uSrc[6]; uniform float uSrcOff[6];
-varying float vAo; varying vec3 vLoc; varying vec3 vWorld;
-${HOVER_GLSL}`)
-      .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
-float hh = hash31(floor(vLoc / uCell)) * 0.93;
-float dis = max(uDis, hoverDis(vWorld.xy));
-if (dis > 0.001 && hh < dis) discard;
-float rimGlow = dis > 0.001 ? (1.0 - smoothstep(dis, dis + 0.08, hh)) * 1.6 : 0.0;
-// les impulsions : six fronts d'onde qui partent de foyers et balaient tout le cortex
-float surf = 0.0;
-for (int k = 0; k < 6; k++) {
-  float dd = distance(vLoc, uSrc[k]);
-  float ph = fract(uTime * 0.24 - dd * 0.45 - uSrcOff[k]);
-  surf += smoothstep(0.0, 0.02, ph) * exp(-ph * 36.0);
-}
-surf = clamp(surf, 0.0, 1.0);`)
-      .replace('#include <color_fragment>', `#include <color_fragment>
-diffuseColor.rgb *= mix(0.62, 1.0, vAo);`)
-      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-totalEmissiveRadiance += uGlow * (surf * 0.9 + rimGlow);`)
-      .replace('#include <opaque_fragment>', `float ndv = clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0);
-float rim = pow(1.0 - ndv, 2.0);
-outgoingLight = mix(outgoingLight, vec3(0.30, 0.52, 0.72), rim * ${back ? '0.18' : '0.30'});
-float alpha = ${back ? '0.10 + 0.22 * rim' : '0.26 + 0.50 * rim'} + 0.30 * (1.0 - vAo) + 0.6 * surf + 0.4 * rimGlow;
-gl_FragColor = vec4(outgoingLight, clamp(alpha, 0.0, 0.93));`);
+  const quad = () => {
+    const g = new THREE.InstancedBufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, -1, 0, 1, -1, 0, 1, 1, 0, 0, 1, 0]), 3));
+    g.setAttribute('corner', new THREE.BufferAttribute(new Float32Array([0, -1, 1, -1, 1, 1, 0, 1]), 2));
+    g.setIndex([0, 1, 2, 0, 2, 3]);
+    g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
+    return g;
   };
-  mat.customProgramCacheKey = () => 'bp-brain-shell' + (back ? '-back' : '-front');
-  return mat;
-}
-
-function makeFibers(THREE, data, hover, shared) {
-  const g = new THREE.InstancedBufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, -1, 0, 1, -1, 0, 1, 1, 0, 0, 1, 0]), 3));
-  g.setAttribute('corner', new THREE.BufferAttribute(new Float32Array([0, -1, 1, -1, 1, 1, 0, 1]), 2));
-  g.setIndex([0, 1, 2, 0, 2, 3]);
-  const ib = new THREE.InstancedInterleavedBuffer(data.seg, 8);
-  g.setAttribute('iA', new THREE.InterleavedBufferAttribute(ib, 3, 0));
-  g.setAttribute('iB', new THREE.InterleavedBufferAttribute(ib, 3, 3));
-  g.setAttribute('iS', new THREE.InterleavedBufferAttribute(ib, 2, 6));
-  g.setAttribute('iF', new THREE.InstancedBufferAttribute(data.fib, 3));
-  g.instanceCount = data.count;
-  g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 10);
-  const uniforms = { uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.6 }, uBase: { value: new THREE.Color(0x2a5f86) }, uGlow2: { value: new THREE.Color(0xffb04d) }, uTime: shared.uTime, uDis: shared.uDis, ...hover };
-  const mat = new THREE.ShaderMaterial({
-    uniforms, transparent: true, depthWrite: false,
-    vertexShader: `attribute vec2 corner; attribute vec3 iA; attribute vec3 iB; attribute vec2 iS; attribute vec3 iF;
-uniform vec2 uRes; uniform float uWidth;
-varying float vU; varying vec3 vF; varying vec3 vWorld;
+  // les connexions
+  const ge = quad();
+  const ib = new THREE.InstancedInterleavedBuffer(net.seg, 8);
+  ge.setAttribute('iA', new THREE.InterleavedBufferAttribute(ib, 3, 0));
+  ge.setAttribute('iB', new THREE.InterleavedBufferAttribute(ib, 3, 3));
+  ge.setAttribute('iS', new THREE.InterleavedBufferAttribute(ib, 2, 6));
+  ge.setAttribute('iF', new THREE.InstancedBufferAttribute(net.fib, 4));
+  ge.instanceCount = net.count;
+  const edges = new THREE.Mesh(ge, new THREE.ShaderMaterial({
+    uniforms: shared, transparent: true, depthWrite: false,
+    vertexShader: `attribute vec2 corner; attribute vec3 iA; attribute vec3 iB; attribute vec2 iS; attribute vec4 iF;
+uniform vec2 uRes; uniform float uWidth; uniform float uDepthR;
+varying float vU; varying vec4 vF; varying float vDepth;
 void main() {
-  vec4 a = projectionMatrix * modelViewMatrix * vec4(iA, 1.0);
-  vec4 b = projectionMatrix * modelViewMatrix * vec4(iB, 1.0);
+  vec4 mva = modelViewMatrix * vec4(iA, 1.0); vec4 mvb = modelViewMatrix * vec4(iB, 1.0);
+  vec4 a = projectionMatrix * mva; vec4 b = projectionMatrix * mvb;
   vec2 sa = a.xy / a.w * uRes * 0.5; vec2 sb = b.xy / b.w * uRes * 0.5;
   vec2 dir = sb - sa; float L = length(dir); dir = L > 1e-4 ? dir / L : vec2(1.0, 0.0);
   vec2 nrm = vec2(-dir.y, dir.x);
@@ -231,27 +199,76 @@ void main() {
   pos.xy += nrm * corner.y * uWidth / uRes * pos.w;
   gl_Position = pos;
   vU = mix(iS.x, iS.y, corner.x); vF = iF;
-  vWorld = (modelMatrix * vec4(mix(iA, iB, corner.x), 1.0)).xyz;
+  float zc = (modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).z;
+  vDepth = clamp((mix(mva.z, mvb.z, corner.x) - zc) / max(uDepthR, 1e-4), -1.0, 1.0);     // 1 devant, -1 au fond
 }`,
     fragmentShader: `precision highp float;
-varying float vU; varying vec3 vF; varying vec3 vWorld;
-uniform float uTime; uniform float uDis; uniform vec3 uBase; uniform vec3 uGlow2;
-${HOVER_GLSL}
+varying float vU; varying vec4 vF; varying float vDepth;
+uniform float uTime; uniform float uDis; uniform float uCycle; uniform float uSigma; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2;
 void main() {
-  float head = fract(uTime * vF.y + vF.x);
-  float d = vU - head;
-  float pulse = exp(-d * d / 0.003);
-  float tail = d < 0.0 ? exp(d * 8.0) * 0.4 : 0.0;
+  float len = vF.z;
+  float cyc = mod(uTime - vF.x, uCycle);                       // le temps écoulé depuis le départ de l'influx sur cette connexion
+  float head = cyc * vF.y;                                     // où est la tête de l'influx, dans l'unité du modèle
+  float d = vU * len - head;
+  float pulse = exp(-d * d / (2.0 * uSigma * uSigma)) * step(head, len + 3.0 * uSigma);
+  float tail = d < 0.0 ? exp(d / (5.0 * uSigma)) * 0.4 * step(head, len + 8.0 * uSigma) : 0.0;
   float p = clamp(pulse + tail, 0.0, 1.0);
-  float dis = max(uDis, hoverDis(vWorld.xy));
-  float a = (0.13 + 0.87 * p) * (1.0 - smoothstep(0.0, 0.5, dis));
-  vec3 c = mix(uBase, uGlow2, clamp(p * 1.25, 0.0, 1.0));
+  float depthK = mix(0.3, 1.0, smoothstep(-0.9, 0.9, vDepth));
+  float densK = clamp(pow(uSizePx / 330.0, 1.3), 0.4, 1.0);       // plus le cerveau est petit, plus ses connexions se superposent : on les allège
+  float base = mix(0.13, 0.22, vF.w) * densK;
+  float a = (base + (0.95 - base) * p) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
+  vec3 c = mix(uBase, uGlow2, clamp(p * 1.3, 0.0, 1.0));
   gl_FragColor = vec4(c, a);
 }`,
-  });
-  const mesh = new THREE.Mesh(g, mat);
-  mesh.frustumCulled = false;
-  return mesh;
+  }));
+  edges.frustumCulled = false; edges.renderOrder = 1;
+  // les neurones
+  const gn = quad();
+  const N = net.nodes.count; const iN = new Float32Array(N * 4); const iT = new Float32Array(N * 2);
+  for (let i = 0; i < N; i++) {
+    iN[i * 4] = net.nodes.pos[i * 3]; iN[i * 4 + 1] = net.nodes.pos[i * 3 + 1]; iN[i * 4 + 2] = net.nodes.pos[i * 3 + 2]; iN[i * 4 + 3] = net.nodes.time[i];
+    iT[i * 2] = net.nodes.tint[i]; iT[i * 2 + 1] = net.nodes.size[i];
+  }
+  gn.setAttribute('iN', new THREE.InstancedBufferAttribute(iN, 4));
+  gn.setAttribute('iT', new THREE.InstancedBufferAttribute(iT, 2));
+  gn.instanceCount = N;
+  const nodes = new THREE.Mesh(gn, new THREE.ShaderMaterial({
+    uniforms: shared, transparent: true, depthWrite: false,
+    vertexShader: `attribute vec2 corner; attribute vec4 iN; attribute vec2 iT;
+uniform vec2 uRes; uniform float uPx; uniform float uTime; uniform float uCycle; uniform float uDepthR;
+varying vec2 vC; varying float vFlash; varying float vTint; varying float vDepth;
+void main() {
+  vec4 mv = modelViewMatrix * vec4(iN.xyz, 1.0);
+  vec4 cp = projectionMatrix * mv;
+  float cyc = mod(uTime - iN.w, uCycle);                       // le temps écoulé depuis que ce neurone s'est allumé
+  float flash = exp(-cyc * 3.2);
+  vFlash = flash; vTint = iT.x;
+  float rpx = uPx * iT.y * (1.0 + 2.6 * flash);
+  vec2 c2 = vec2(corner.x * 2.0 - 1.0, corner.y);
+  vC = c2;
+  gl_Position = cp + vec4(c2 * rpx * 2.0 / uRes * cp.w, 0.0, 0.0);
+  float zc = (modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)).z;
+  vDepth = clamp((mv.z - zc) / max(uDepthR, 1e-4), -1.0, 1.0);
+}`,
+    fragmentShader: `precision highp float;
+varying vec2 vC; varying float vFlash; varying float vTint; varying float vDepth;
+uniform float uDis; uniform float uSizePx; uniform vec3 uGlow2; uniform vec3 uTints[6];
+void main() {
+  float r = length(vC);
+  if (r > 1.0) discard;
+  vec3 rest = uTints[int(vTint + 0.5)];
+  float core = 1.0 - smoothstep(0.55, 1.0, r);                 // une pastille nette au repos
+  float glow = exp(-r * r * 3.6);                              // un halo qui s'ouvre quand le neurone s'allume
+  float k = clamp(vFlash * 1.6, 0.0, 1.0);
+  float densK = clamp(pow(uSizePx / 330.0, 1.3), 0.4, 1.0);
+  float a = mix(core * 0.62 * mix(0.6, 1.0, densK), glow * 0.95 + core * 0.2, k);
+  vec3 c = mix(rest, uGlow2, k);
+  float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
+  gl_FragColor = vec4(c, clamp(a, 0.0, 1.0) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis)));
+}`,
+  }));
+  nodes.frustumCulled = false; nodes.renderOrder = 2;
+  return [edges, nodes];
 }
 
 function geometryFrom(THREE, p) {
@@ -262,12 +279,9 @@ function geometryFrom(THREE, p) {
   g.setAttribute('position', new THREE.BufferAttribute(p.pos, 3));
   g.setAttribute('normal', new THREE.BufferAttribute(p.nrm, 3));
   g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  if (p.ao) g.setAttribute('aAo', new THREE.BufferAttribute(p.ao, 1));
-  else {
-    g.setAttribute('aMat', new THREE.BufferAttribute(p.mat4, 4));
-    g.setAttribute('aPart', new THREE.BufferAttribute(p.part, 1));
-    g.setAttribute('aGlow', new THREE.BufferAttribute(p.glow, 1));
-  }
+  g.setAttribute('aMat', new THREE.BufferAttribute(p.mat4, 4));
+  g.setAttribute('aPart', new THREE.BufferAttribute(p.part, 1));
+  g.setAttribute('aGlow', new THREE.BufferAttribute(p.glow, 1));
   g.setIndex(new THREE.BufferAttribute(p.index, 1));
   g.computeBoundingSphere();
   return g;
@@ -281,15 +295,14 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
   const group = new THREE.Group(); group.name = 'smooth';
   agent.scene.add(group);
   const env = studioEnv(THREE, agent.renderer);
-  const hover = { uHit: agent.uniforms.uHit, uRad: agent.uniforms.uRad, uDisperse: agent.uniforms.uDisperse };       // les mêmes uniformes que les cubes
   const rgbSRGB = palette.map((h) => { const c = new THREE.Color().setStyle(h, THREE.SRGBColorSpace); const o = {}; c.getRGB(o, THREE.SRGBColorSpace); return [o.r, o.g, o.b]; });
 
-  const slots = [0, 2].map((k) => ({ k, group: new THREE.Group(), shared: null, fibers: null, meshes: [], ready: false, cell: 0.04 }));
+  const slots = [0, 2].map((k) => ({ k, group: new THREE.Group(), shared: null, net: false, meshes: [], ready: false, cell: 0.04 }));
   const byK = {}; for (const s of slots) { s.group.visible = false; group.add(s.group); byK[s.k] = s; }
   const size = new THREE.Vector2();
 
   const stats = { ms: {}, where: 'worker' };
-  const hFor = { brain: weak ? 0.02 : 0.0125, robot: weak ? 0.0135 : 0.0095 };
+  const hFor = { brain: weak ? 0.03 : 0.016, robot: weak ? 0.0135 : 0.0095 };
   const order = [[0, 'brain'], [2, 'robot']];
   const cubesOf = (k) => {
     const sh = shapes[k]; const m = sh.count === undefined ? sh.tag.length : sh.count;
@@ -299,20 +312,12 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
   const addParts = (k, kind, parts, ms) => {
     const slot = byK[k]; stats.ms[kind] = Math.round(ms);
     if (kind === 'brain') {
-      const p = parts[0];
-      const geo = geometryFrom(THREE, p);
-      const shared = {
-        uDis: { value: 0 }, uTime: { value: 0 }, uCell: { value: slot.cell }, uGlow: { value: new THREE.Color(0xffb04d).convertSRGBToLinear() },
-        uSrc: { value: Array.from({ length: 6 }, (_, i) => new THREE.Vector3(p.src.pos[i * 3], p.src.pos[i * 3 + 1], p.src.pos[i * 3 + 2])) }, uSrcOff: { value: Array.from(p.src.off) },
-      };
-      slot.shared = shared;
-      const back = new THREE.Mesh(geo, makeShell(THREE, env, hover, true, shared)); back.renderOrder = 0;
-      const fibers = makeFibers(THREE, p.fibers, hover, shared); fibers.renderOrder = 1; slot.fibers = fibers;
-      const front = new THREE.Mesh(geo, makeShell(THREE, env, hover, false, shared)); front.renderOrder = 2;
-      for (const m of [back, fibers, front]) { m.frustumCulled = false; slot.group.add(m); slot.meshes.push(m); }
+      const shared = { uDis: { value: 0 }, uTime: { value: 0 } };
+      slot.shared = shared; slot.net = true;
+      for (const m of makeNeuralNet(THREE, parts[0].net, shared)) { slot.group.add(m); slot.meshes.push(m); }
     } else {
       for (const p of parts) {
-        const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeRobotMaterial(THREE, env, hover, p.parts || [], p.rig));
+        const mesh = new THREE.Mesh(geometryFrom(THREE, p), makeRobotMaterial(THREE, env, p.parts || [], p.rig));
         mesh.frustumCulled = false;
         mesh.material.userData.u.uCell.value = slot.cell;
         slot.group.add(mesh); slot.meshes.push(mesh);
@@ -349,6 +354,7 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
     const s = byK[k]; if (!s || !a) return;
     const [wx, wy] = agent.toWorld(a.x, a.y);
     s.group.position.set(wx, wy, a.z || 0); s.group.scale.setScalar(a.scale * agent.pxw); s.group.rotation.set(a.rx || 0, a.ry || 0, a.rz || 0, 'YXZ');
+    if (s.net && s.shared) { s.shared.uDepthR.value = s.group.scale.x * 1.15; s.shared.uSizePx.value = a.scale; }       // le rayon du cerveau : estomper le fond, alléger quand il est petit
   };
 
   /** Règle un objet : visible (oui, non), dissolve (0 entier, 1 tout en cubes), temps pour les impulsions. */
@@ -358,7 +364,7 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
     s.group.visible = show;
     if (!show) return;
     if (s.shared) { s.shared.uDis.value = dissolve; s.shared.uTime.value = time; }
-    if (s.fibers) { agent.renderer.getDrawingBufferSize(size); s.fibers.material.uniforms.uRes.value.copy(size); s.fibers.material.uniforms.uWidth.value = 1.5 * (size.y / Math.max(1, agent.renderer.domElement.clientHeight)); }
+    if (s.net) { agent.renderer.getDrawingBufferSize(size); const px = size.y / Math.max(1, agent.renderer.domElement.clientHeight); s.shared.uRes.value.copy(size); s.shared.uWidth.value = 1.4 * px; s.shared.uPx.value = 2.0 * px; }
     for (const m of s.meshes) { const u = m.material.userData && m.material.userData.u; if (u && u.uDis && m.material.userData.u !== s.shared) { u.uDis.value = dissolve; u.uTime.value = time; if (u.uLook) { u.uLook.value.set(look ? look.x : 0, look ? look.y : 0); u.uAnim.value = 1 - clamp(dissolve * 2.5); u.uWave.value = wave; } } }
   };
 

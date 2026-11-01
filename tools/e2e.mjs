@@ -44,10 +44,10 @@ async function scrollTo(page, y, wait = 700) {
   const txt = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   const h1 = await page.evaluate(() => document.querySelector('h1').textContent.replace(/\s+/g, ' ').trim());
   ok(/Discovering the future of medicine/.test(h1), 'titre central : ' + h1);
-  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.']) {
+  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question']) {
     ok(txt.includes(w) || txt.toLowerCase().includes(w.toLowerCase()), 'le texte contient « ' + w + ' »');
   }
-  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
+  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world', 'On contact, NovaDiff reshapes itself', 'The receptor switches on', 'The signal carries on']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
   ok(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((x) => x.id).join(',') === 'top,why,culture,novadiff,story,articles,contact'), 'les sections suivent l\'ordre demandé : titre, why, culture, agent, science, blog, contact');
   ok(await page.evaluate(() => { const c = document.getElementById('agent'); const m = document.getElementById('main'); return +getComputedStyle(c).zIndex < +getComputedStyle(m).zIndex; }), 'le canevas 3D est derrière le texte');
   ok(await page.evaluate(() => !document.querySelector('.hero p, .hero a, .hero button') && document.querySelector('.hero h1')), 'le héros ne contient que le titre');
@@ -66,7 +66,7 @@ async function scrollTo(page, y, wait = 700) {
   const txtFr = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   ok(!/[—;:]/.test(txtFr), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (FR)' + (/[—;:]/.test(txtFr) ? ' : ' + (txtFr.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'NovaDiff active']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
-  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Image de synthèse', 'Une science rigoureuse']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
+  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'La rigueur dans chaque tube', 'par diffusion', 'en temps réel']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
   ok(await page.evaluate(() => localStorage.getItem('bp-lang') === 'fr'), 'la langue est mémorisée');
   await page.reload({ waitUntil: 'load' }); await sleep(1500);
   ok(await page.evaluate(() => document.documentElement.lang === 'fr'), 'la langue survit au rechargement');
@@ -94,18 +94,23 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate(() => /translate3d\(420px, 300px/.test(document.querySelector('.cursor__dot').style.transform)), 'le point suit la souris');
 
   // le carrousel infini
-  const mq = await page.evaluate(() => { const t = document.querySelector('.marquee__track'); const k = [...t.children]; return { n: k.length, hidden: k.filter((x) => x.getAttribute('aria-hidden') === 'true').length, anim: getComputedStyle(t).animationName }; });
-  ok(mq.n >= 8 && mq.n % 2 === 0 && mq.hidden === mq.n / 2, 'carrousel : éléments dupliqués pour la boucle ' + JSON.stringify(mq));
+  const mq = await page.evaluate(() => { const t = document.querySelector('.culture .marquee__track'); const k = [...t.children]; return { n: k.length, hidden: k.filter((x) => x.getAttribute('aria-hidden') === 'true').length, anim: getComputedStyle(t).animationName }; });
+  ok(mq.n >= 10 && mq.n % 2 === 0 && mq.hidden >= mq.n / 2, 'carrousel : éléments dupliqués pour la boucle ' + JSON.stringify(mq));
   ok(mq.anim && mq.anim !== 'none', 'carrousel : animation de défilement active');
   const gal = await page.evaluate(async () => {
-    const imgs = [...document.querySelectorAll('.marquee--slow .shot img')];
+    const imgs = [...document.querySelectorAll('.culture .shot img')];
     imgs.forEach((i) => { i.loading = 'eager'; });
     await Promise.all(imgs.map((i) => i.decode().catch(() => null)));
-    const figs = [...document.querySelectorAll('.marquee--slow .shot')];
-    return { n: imgs.length, loaded: imgs.filter((i) => i.complete && i.naturalWidth === 1080 && i.naturalHeight === 720).length, credits: figs.filter((f) => (f.querySelector('.shot__credit') || {}).textContent).length, alts: imgs.filter((i) => (i.alt || '').length > 30).length };
+    const ratio = (i) => i.naturalWidth / i.naturalHeight;
+    return {
+      n: imgs.length, files: new Set(imgs.map((i) => i.getAttribute('src'))).size,
+      loaded: imgs.filter((i) => i.complete && i.naturalWidth >= 700).length,
+      whole: imgs.filter((i) => { const r = i.getBoundingClientRect(); return r.height > 100 && Math.abs(r.width / r.height - ratio(i)) / ratio(i) < 0.03; }).length,       // aucune photo rognée
+      alts: imgs.filter((i) => (i.alt || '').length > 30).length,
+    };
   });
-  ok(gal.n >= 16 && gal.loaded === gal.n, 'carrousel : les images de qualité (1080 x 720) se chargent ' + JSON.stringify(gal));
-  ok(gal.credits === gal.n && gal.alts === gal.n, 'carrousel : chaque image a sa mention et son texte alternatif');
+  ok(gal.files === 13 && gal.loaded === gal.n, 'carrousel : les huit personnages en cubes et les cinq photographies se chargent ' + JSON.stringify(gal));
+  ok(gal.whole === gal.n && gal.alts === gal.n, 'carrousel : chaque image est montrée entière, avec son texte alternatif');
 
   // l'agent, section par section
   const G = () => page.evaluate(() => {
@@ -156,7 +161,7 @@ async function scrollTo(page, y, wait = 700) {
 
   // le contact : un simple bouton, qui répond au curseur
   geo = await G(); await scrollTo(page, geo.contact, 900);
-  ok(await page.evaluate(() => { const b = document.querySelector('.contact__btn'); return !!b && !!document.querySelector('.contact__fx') && b.hasAttribute('data-magnet'); }), 'contact : un bouton avec son canevas de cubes');
+  ok(await page.evaluate(() => { const b = document.querySelector('.contact__btn'); return !!b && !document.querySelector('.contact__fx') && !!document.querySelector('canvas.trail') && b.hasAttribute('data-magnet'); }), 'contact : un bouton attiré par le curseur, dont les cubes sont ceux de la traînée de toute la page');
   const bb = await page.evaluate(() => { const r = document.querySelector('.contact__btn').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width }; });
   await page.mouse.move(bb.x - bb.w, bb.y - 80); await page.mouse.move(bb.x - 30, bb.y - 8, { steps: 8 }); await sleep(700);
   ok(await page.evaluate(() => { const b = document.querySelector('.contact__btn'); return b.classList.contains('is-near') && b.style.getPropertyValue('--tx') !== '0px'; }), 'contact : le bouton se laisse attirer par le curseur');
@@ -180,17 +185,18 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate(() => document.getElementById('reader').classList.contains('is-open') && document.querySelectorAll('#reader-body p').length === 3 && document.getElementById('reader-title').textContent.length > 5), 'un article s\'ouvre dans la fenêtre de lecture');
   await page.keyboard.press('Escape'); await sleep(300);
 
-  // le survol dissocie l'agent (cerveau, en haut de page)
+  // le curseur : un point sans anneau, une traînée de petits cubes sur toute la page, et plus aucun effet de destruction sous le curseur
   await scrollTo(page, 0, 900);
+  ok(await page.evaluate(() => !document.querySelector('.cursor__ring') && !document.querySelector('.cursor__label')), 'le curseur n\'a plus d\'anneau autour de lui');
   const r = await page.evaluate(() => { const e = document.querySelector('[data-slot="brain"]').getBoundingClientRect(); return { x: e.left + e.width / 2, y: e.top + e.height / 2 }; });
-  await page.mouse.move(r.x - 40, r.y); await page.mouse.move(r.x, r.y, { steps: 6 });
-  let best = 0;
-  for (let i = 0; i < 70 && best < 0.6; i++) { await sleep(400); s = await state(page); best = Math.max(best, s.disperse); }
-  ok(best > 0.6, 'le curseur sur l\'agent le dissocie (dispersion ' + best.toFixed(2) + ')');
-  await page.mouse.move(8, 780, { steps: 4 });
-  let low = 1;
-  for (let i = 0; i < 70 && low > 0.3; i++) { await sleep(500); s = await state(page); low = Math.min(low, s.disperse); }
-  ok(low < 0.3, 'il se reforme quand le curseur s\'éloigne (dispersion ' + low.toFixed(2) + ')');
+  await page.mouse.move(r.x - 200, r.y + 120);
+  for (let i = 0; i <= 24; i++) { await page.mouse.move(r.x - 200 + i * 16, r.y + 120 - Math.sin(i / 24 * Math.PI) * 160); await sleep(20); }
+  ok(await page.evaluate(() => !!document.querySelector('canvas.trail') && window.__trail && window.__trail.count() > 4), 'le curseur laisse une traînée de petits cubes sur toute la page ' + JSON.stringify(await page.evaluate(() => window.__trail && window.__trail.count())));
+  await sleep(1200);
+  const calm = await page.evaluate(() => { const u = window.__agent.agent.uniforms; return { disperse: u.uDisperse, hit: u.uHit, rad: u.uRad }; });
+  ok(calm.disperse === undefined && calm.hit === undefined && calm.rad === undefined, 'le curseur sur le cerveau ne brise plus rien (plus d\'effet de dispersion dans le moteur)');
+  s = await state(page);
+  ok(s && s.disperse === undefined && s.dis && s.dis[0] === 0, 'le cerveau reste entier sous le curseur ' + JSON.stringify({ dis: s && s.dis }));
   await ctx.close();
 }
 

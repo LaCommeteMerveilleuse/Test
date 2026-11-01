@@ -3,7 +3,6 @@
 // analytique qui se subdivise (1 x 1, 3 x 3, 9 x 9 ... jusqu'à l'ensemble des cubes), puis se referme en sphère.
 // Les formes n'utilisent que M cubes (de gros cubes métalliques) : les autres restent en réserve, invisibles, et ne naissent qu'en vol.
 // Entre deux formes, les cubes partent un à un, filent le long d'une même route courbe (une traînée fine, un trait de cubes) et se posent.
-// Le curseur les disperse, puis ils se rassemblent.
 // Tout se passe dans les shaders : le processeur ne touche qu'à des uniformes. Les cubes sont des boîtes dont le biseau, le léger bombé
 // des faces et le reflet métallique (un petit studio de lumière) sont calculés dans le fragment shader.
 import * as THREE from 'three';
@@ -28,7 +27,7 @@ uniform float uA; uniform float uB; uniform float uMix; uniform float uDust; uni
 uniform mat4 uMA; uniform mat4 uMB; uniform float uSA; uniform float uSB;
 uniform float uCube[6];
 uniform float uLevel; uniform float uBend; uniform float uG; uniform float uL;
-uniform vec3 uHit; uniform float uRad; uniform float uDisperse; uniform float uGlowAll; uniform float uPulseSpeed;
+uniform float uGlowAll; uniform float uPulseSpeed; uniform float uKeep;
 uniform vec3 uPal[20]; uniform float uFlight; uniform float uBulge;
 uniform float uIntro;                                                  // l'ouverture : 0 les cubes sont en poussière, 1 la forme est assemblée
 uniform float uDisA; uniform float uDisB; uniform float uCellS[6];       // le fractionnement : 0 l'objet lisse est entier (pas de cubes), 1 il est tout en cubes
@@ -49,9 +48,6 @@ struct Sh { vec3 p; float edge; mat3 b; float tag; float born; float thick; };
 
 // le même hachage que le maillage lisse (smooth.js) : une case cubique est soit en cubes, soit en lisse, jamais les deux ni aucun
 float hash31(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
-
-// autour du curseur, l'objet lisse se brise localement en cubes : 1 au centre, 0 au-delà d'un rayon et demi
-float hoverDis(vec2 w) { float d = length(w - uHit.xy); return clamp(uDisperse * 1.6, 0.0, 1.0) * (1.0 - smoothstep(0.45 * uRad, 1.5 * uRad, d)); }
 
 bool isRep(vec2 id, float st) { return mod(id.x, st) < 0.5 && mod(id.y, st) < 0.5; }
 
@@ -112,6 +108,10 @@ void main() {
   float dly = mix(aR.x, ord, 0.78 * far) * (1.0 - w);
   float t = clamp((uMix - dly) / w, 0.0, 1.0);
   float te = t * t * (3.0 - 2.0 * t);
+  // l'éclaircie : pendant une transition, seule la fraction uKeep des cubes existe. Les autres se fondent dès le départ et ne reparaissent qu'à l'arrivée,
+  // si bien que la traînée et les deux formes ne sont plus qu'un nuage léger (au repos, uMix vaut 0 ou 1 : tous les cubes sont là)
+  uint hx = uint(gl_InstanceID); hx ^= hx >> 16; hx *= 0x7feb352du; hx ^= hx >> 15; hx *= 0x846ca68bu; hx ^= hx >> 16;
+  float thin = float(hx) * (1.0 / 4294967296.0) < uKeep ? 1.0 : clamp((1.0 - smoothstep(0.0, 0.12, uMix)) + smoothstep(0.88, 1.0, uMix), 0.0, 1.0);
   float mid = sin(PI * t);
   float c = smoothstep(0.0, 0.3, t) * (1.0 - smoothstep(0.7, 1.0, t)) * far;     // 1 : le cube est sur la route
   vec3 rnd = aR.yzw * 2.0 - 1.0;
@@ -143,14 +143,6 @@ void main() {
     relI.xz = vec2(cI * relI.x - sI * relI.z, sI * relI.x + cI * relI.z);
     pos = cA + relI;
   }
-  // le curseur : les cubes proches s'écartent, tournent, puis reviennent
-  vec2 dh = pos.xy - uHit.xy;
-  float r = length(dh);
-  float fh = exp(-(r * r) / (uRad * uRad)) * uDisperse;
-  vec3 dirh = normalize(vec3(dh, (aR.z - 0.5) * uRad * 1.4) + vec3(0.0001));
-  pos += dirh * fh * uRad * (0.25 + 1.05 * aR.x);
-  pos += vec3(sin(aR.y * 50.0 + uTime * 2.0), cos(aR.z * 50.0 + uTime * 2.3), sin(aR.w * 50.0 + uTime * 1.7)) * fh * uRad * 0.3;
-  mat3 rh = rotAxis(normalize(rnd + vec3(0.003)), fh * 5.0 * (aR.w + 0.4));
   mat3 bA = mat3(uMA) / uSA * A.b; mat3 bB = mat3(uMB) / uSB * B.b;
   mat3 bas = mat3(mix(bA[0], bB[0], t), mix(bA[1], bB[1], t), mix(bA[2], bB[2], t));
   // les impulsions cérébrales : un front de lumière part d'une source (ou court le long d'un faisceau) puis s'éteint, et des neurones s'allument au hasard
@@ -170,14 +162,14 @@ void main() {
   // la visibilité : un cube n'existe que si la case de la forme qu'il quitte est brisée (ou s'il est en vol), et plus quand celle qu'il rejoint se reforme
   float hA = hash31(floor(A.p / uCellS[int(uA + 0.5)])) * 0.93;      // jamais au-dessus de 0,93 : à 1, tous les cubes sont là
   float hB = hash31(floor(B.p / uCellS[int(uB + 0.5)])) * 0.93;
-  float visA = smoothstep(hA, hA + 0.07, max(uDisA, hoverDis(wA.xy)));
-  float visB = smoothstep(hB, hB + 0.07, max(uDisB, hoverDis(wB.xy)));
+  float visA = smoothstep(hA, hA + 0.07, uDisA);
+  float visB = smoothstep(hB, hB + 0.07, uDisB);
   float vis = mix(visA, 1.0, smoothstep(0.0, 0.1, t));
   vis = mix(vis, visB, smoothstep(0.9, 1.0, t));
-  float edge = mix(A.edge * uSA, B.edge * uSB, ke) * (0.96 + 0.08 * aR.w) * uFade * vis * smoothstep(0.0, 0.22, tin) * (1.0 + 0.45 * pulse) * mix(1.0, 0.82, c);
+  float edge = mix(A.edge * uSA, B.edge * uSB, ke) * (0.96 + 0.08 * aR.w) * uFade * vis * thin * smoothstep(0.0, 0.22, tin) * (1.0 + 0.45 * pulse) * mix(1.0, 0.82, c);
   float thick = mix(A.thick, B.thick, t);
   vec3 local = position * vec3(edge, edge, edge * thick);
-  mat3 Mx = rd * rh * bas;
+  mat3 Mx = rd * bas;
   vec3 wp = pos + Mx * local;
   // ce que le fragment shader doit savoir pour biseauter et refléter : la position dans le cube, sa normale, sa rotation
   vLocal = position; vNloc = normal; vThick = thick;
@@ -297,7 +289,7 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     uMA: { value: new THREE.Matrix4() }, uMB: { value: new THREE.Matrix4() }, uSA: { value: 1 }, uSB: { value: 1 },
     uCube: { value: cubes },
     uLevel: { value: 0 }, uBend: { value: 0 }, uG: { value: G }, uL: { value: L },
-    uHit: { value: new THREE.Vector3(1e4, 1e4, 0) }, uRad: { value: 1 }, uDisperse: { value: 0 }, uGlowAll: { value: 0 }, uPulseSpeed: { value: 0.24 }, uFlight: { value: 0.16 }, uBulge: { value: 0.12 }, uDisA: { value: 1 }, uDisB: { value: 1 }, uIntro: { value: 1 }, uCellS: { value: cellS },
+    uGlowAll: { value: 0 }, uPulseSpeed: { value: 0.24 }, uKeep: { value: 1 }, uFlight: { value: 0.16 }, uBulge: { value: 0.12 }, uDisA: { value: 1 }, uDisB: { value: 1 }, uIntro: { value: 1 }, uCellS: { value: cellS },
     uPal: { value: PALETTE.map((h) => { const c = new THREE.Color().setStyle(h, THREE.LinearSRGBColorSpace); return new THREE.Vector3(c.r, c.g, c.b); }) },   // sRGB tel quel, sans conversion
   };
   const material = new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG });
@@ -333,7 +325,7 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     return out.compose(tmpP, tmpQ, tmpS);
   }
 
-  /** Règle l'agent. p : { a, b, mix, dust, fade, time, anchorA, anchorB, level, bend, disperse, hit:{x,y}, glow, radius } */
+  /** Règle l'agent. p : { a, b, mix, dust, fade, time, anchorA, anchorB, level, bend, glow, intro, disA, disB, keep } */
   function set(p) {
     uniforms.uA.value = p.a; uniforms.uB.value = p.b; uniforms.uMix.value = p.mix;
     if (p.dust !== undefined) uniforms.uDust.value = p.dust;
@@ -341,6 +333,7 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     if (p.flight !== undefined) uniforms.uFlight.value = p.flight;
     if (p.bulge !== undefined) uniforms.uBulge.value = p.bulge;
     if (p.intro !== undefined) uniforms.uIntro.value = p.intro;
+    if (p.keep !== undefined) uniforms.uKeep.value = p.keep;
     if (p.disA !== undefined) uniforms.uDisA.value = p.disA;
     if (p.disB !== undefined) uniforms.uDisB.value = p.disB;
     geo.instanceCount = (p.a === 5 || p.b === 5) ? n : M;               // la grille a besoin de tous les cubes, les formes seulement des visibles
@@ -349,9 +342,6 @@ export function createAgent({ canvas, n, shapes, alpha = true }) {
     anchorMatrix(p.anchorB || p.anchorA, uniforms.uMB.value); uniforms.uSB.value = (p.anchorB || p.anchorA).scale * pxw;
     if (p.level !== undefined) uniforms.uLevel.value = p.level;
     if (p.bend !== undefined) uniforms.uBend.value = p.bend;
-    uniforms.uDisperse.value = p.disperse || 0;
-    if (p.hit) { const [hx, hy] = toWorld(p.hit.x, p.hit.y); uniforms.uHit.value.set(hx, hy, 0); }
-    uniforms.uRad.value = (p.radius || 120) * pxw;
     uniforms.uGlowAll.value = p.glow || 0;
   }
 

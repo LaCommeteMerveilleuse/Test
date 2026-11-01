@@ -2,11 +2,11 @@
 et assets/data/strings.js (toutes les chaînes, dans les deux langues).
 
 Les textes viennent de tools/content.py (chaque clé existe dans les deux langues). Les légendes des visuels viennent de
-assets/data/culture-*.json. Le script refuse d'écrire si un texte visible contient un tiret long, un point-virgule ou un deux-points.
+assets/data/culture-gallery.json. Le script refuse d'écrire si un texte visible contient un tiret long, un point-virgule ou un deux-points.
 
 Usage : python3 tools/build_site.py
 """
-import json
+import json, math
 import pathlib
 import re
 import sys
@@ -55,29 +55,24 @@ def tx(key, tag='span', cls='', attrs=''):
 
 
 def culture():
-    """Les visuels du carrousel. S'il existe assets/data/culture-gallery.json et les images qu'il décrit (dans assets/img/gallery/), ce sont elles qui
-    s'affichent (photographies en accès libre ou images de synthèse, avec leur mention). Sinon, les illustrations en voxels de assets/img/culture/."""
-    entries = []
+    """Les visuels du carrousel « Where science meets the startup spirit », rangés en rangées (champ « row » de assets/data/culture-gallery.json) :
+    d'un côté des personnages en cubes (pixel 3D) dans divers lieux qui montrent nos valeurs, de l'autre des photographies. Un fichier sans « / » est
+    cherché dans assets/img/gallery/, sinon à partir de assets/img/. Rend une liste de rangées, chacune une liste de (numéro, chemin, mention ?, largeur, hauteur)."""
+    rows = {}
     manifest = ROOT / 'assets/data/culture-gallery.json'
-    if manifest.exists():
-        for c in json.loads(manifest.read_text(encoding='utf-8')):
-            if (ROOT / 'assets/img/gallery' / c['file']).exists():
-                entries.append((c, f'assets/img/gallery/{c["file"]}'))
-    if not entries:
-        for name in ('culture-science.json', 'culture-startup.json'):
-            p = ROOT / 'assets/data' / name
-            if p.exists():
-                for c in json.loads(p.read_text(encoding='utf-8')):
-                    entries.append((c, c['file'] if '/' in c['file'] else f'assets/img/culture/{c["file"]}'))
-    items = []
-    for n, (c, path) in enumerate(entries, 1):
+    n = 0
+    for c in json.loads(manifest.read_text(encoding='utf-8')):
+        path = f'assets/img/{c["file"]}' if '/' in c['file'] else f'assets/img/gallery/{c["file"]}'
+        if not (ROOT / path).exists():
+            continue
+        n += 1
         add_str(f'cu{n}_c', c['caption_fr'], c['caption_en'])
         add_str(f'cu{n}_a', c['alt_fr'], c['alt_en'])
         has_credit = bool(c.get('credit_en'))
         if has_credit:
             add_str(f'cu{n}_cr', c.get('credit_fr', c['credit_en']), c['credit_en'])
-        items.append((n, path, has_credit))
-    return items
+        rows.setdefault(int(c.get('row', 0)), []).append((n, path, has_credit, int(c.get('width', 1200)), int(c.get('height', 800))))
+    return [rows[k] for k in sorted(rows)]
 
 
 # ------------------------------------------------------------------ éléments communs
@@ -200,7 +195,7 @@ def contact_modal():
     <p class="reader__note" data-i18n="art_note">{en('art_note')}</p>
   </article>
 </div>
-<div class="cursor" aria-hidden="true"><i class="cursor__dot"></i><i class="cursor__ring"><span class="cursor__label"></span></i></div>'''
+<div class="cursor" aria-hidden="true"><i class="cursor__dot"></i></div>'''
 
 
 def background():
@@ -239,21 +234,32 @@ def sechead(prefix, eyebrow=True, center=True, extra=''):
 
 # ------------------------------------------------------------------ l'accueil
 def build_index():
-    pics = culture()
-    marquee_items = ''.join(
-        f'<figure class="shot"><img src="{f}" alt="{a(STR["en"][f"cu{n}_a"])}" data-i18n-alt="cu{n}_a" loading="lazy" width="1080" height="720"><figcaption><span data-i18n="cu{n}_c">{en(f"cu{n}_c")}</span>'
-        + (f'<small class="shot__credit" data-i18n="cu{n}_cr">{en(f"cu{n}_cr")}</small>' if cr else '') + '</figcaption></figure>' for n, f, cr in pics)
-    marquee_dup = marquee_items.replace('<figure class="shot">', '<figure class="shot" aria-hidden="true">')
+    rows = culture()
+
+    def shot(n, f, cr, w, h, hidden):
+        return (f'<figure class="shot"{" aria-hidden=" + chr(34) + "true" + chr(34) if hidden else ""}><img src="{f}" alt="{a(STR["en"][f"cu{n}_a"])}" data-i18n-alt="cu{n}_a" loading="lazy" width="{w}" height="{h}">'
+                f'<figcaption><span data-i18n="cu{n}_c">{en(f"cu{n}_c")}</span>'
+                + (f'<small class="shot__credit" data-i18n="cu{n}_cr">{en(f"cu{n}_cr")}</small>' if cr else '') + '</figcaption></figure>')
+
+    def marquee_row(pics, cls):
+        # la boucle : une moitié doit être plus large que le plus grand écran (environ 4 400 px) pour qu'aucun vide n'apparaisse ; la seconde moitié la répète
+        one = sum(w / h * 224 + 20 for _, _, _, w, h in pics) or 1
+        reps = max(1, math.ceil(4400 / one))
+        half = ''.join(shot(n, f, cr, w, h, r > 0) for r in range(reps) for n, f, cr, w, h in pics)
+        dup = ''.join(shot(n, f, cr, w, h, True) for r in range(reps) for n, f, cr, w, h in pics)
+        return f'<div class="marquee {cls}" data-marquee><div class="marquee__track">{half}{dup}</div></div>'
+
+    culture_rows = ''.join(marquee_row(pics, 'marquee--slow' if i % 2 == 0 else 'marquee--alt') for i, pics in enumerate(rows))
     culture_html = (f'''<section class="sec culture" id="culture" data-tone="mist">
   <div class="container"><header class="sec__head center">{tx('culture_title', 'h2', 'h2 reveal')}</header></div>
-  <div class="marquee marquee--slow" data-marquee><div class="marquee__track">{marquee_items}{marquee_dup}</div></div>
-</section>''' if pics else '')
+  {culture_rows}
+</section>''' if rows else '')
     arts = ''
     covers = ['data-wall', 'whiteboard-sprint', 'founders-table', 'pipette-plate', 'lab-bench', 'healthy-years']
     for i, (aud, mins, *_rest) in enumerate(ARTICLES, 1):
         cover = f'assets/img/culture/{covers[i - 1]}.webp'
         cover_html = f'<img src="{cover}" alt="" loading="lazy" width="600" height="400">' if (ROOT / cover).exists() else '<i class="acard__ph"></i>'
-        arts += f'''<button class="acard" type="button" data-article="{i}" data-aud="{aud}" data-min="{mins}" data-cursor-label="cursor_view">
+        arts += f'''<button class="acard" type="button" data-article="{i}" data-aud="{aud}" data-min="{mins}">
           <span class="acard__cover">{cover_html}<span class="acard__badge" data-i18n="art_{aud}">{en(f"art_{aud}")}</span></span>
           <span class="acard__body">
             <h3 data-i18n="a{i}_title">{en(f"a{i}_title")}</h3>
@@ -266,10 +272,8 @@ def build_index():
     feats = ''.join(f'''<li class="feat reveal-wipe" style="--i:{k}"><span class="feat__ico">{ICONS[ic]}</span><div>{tx(f"nova_f{k + 1}", "h3")}{tx(f"nova_f{k + 1}n", "p")}</div></li>''' for k, ic in enumerate(['brain', 'cube', 'loop']))
     nova_chips = ''.join(tx(f'nova_c{k}', 'li', 'chip chip--pop') for k in range(1, 4))
     prog_chips = ''.join(tx(f'prog_{k}', 'li', 'chip') for k in range(1, 8))
-    caps = ''.join(f'<p class="cap{" is-on" if k == 1 else ""}" data-cap="{k}" data-i18n="story_c{k}">{en(f"story_c{k}")}</p>' for k in range(1, 5))
-    dots = ''.join(f'<i class="rail__dot" data-dot="{k}"></i>' for k in range(1, 5))
     main = f'''<section class="hero" id="top" data-tone="haze">
-  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="{a(STR['en']['brain_alt'])}" data-i18n-aria-label="brain_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
+  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="{a(STR['en']['brain_alt'])}" data-i18n-aria-label="brain_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="1120" height="720"></div>
   <div class="container hero__in">
     <h1 class="hero__title" data-split>{tx('hero_t1')} {tx('hero_t2', 'span', 'grad')} {tx('hero_t3')}</h1>
   </div>
@@ -320,8 +324,8 @@ def build_index():
   <div class="story__pin">
     <header class="story__head">{tx('story_eyebrow', 'p', 'eyebrow')}{tx('story_title', 'h2', 'h2')}</header>
     <div class="story__frame" data-slot="story" aria-hidden="true"></div>
-    <div class="story__caps">{caps}</div>
-    <div class="rail" aria-hidden="true"><i class="rail__bar"><b></b></i>{dots}</div>
+    {tx('story_text', 'p', 'story__text')}
+    <div class="rail" aria-hidden="true"><i class="rail__bar"><b></b></i></div>
   </div>
 </section>
 
@@ -333,7 +337,7 @@ def build_index():
 <section class="sec contact" id="contact" data-tone="deep">
   <div class="container contact__in">
     {tx('grid_sub', 'p', 'contact__line reveal')}
-    <button class="contact__btn" type="button" data-open-contact data-magnet data-cursor-label="cursor_contact"><i class="contact__ring" aria-hidden="true"></i><span class="contact__glow" aria-hidden="true"></span><span class="contact__txt" data-i18n="grid_btn">{en('grid_btn')}</span>{ARROW}</button>
+    <button class="contact__btn" type="button" data-open-contact data-magnet><i class="contact__ring" aria-hidden="true"></i><span class="contact__glow" aria-hidden="true"></span><span class="contact__txt" data-i18n="grid_btn">{en('grid_btn')}</span>{ARROW}</button>
   </div>
 </section>'''
     return page('home_title', 'home_desc', True, 'page-home', main)

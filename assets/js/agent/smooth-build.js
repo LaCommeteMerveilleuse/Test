@@ -1,56 +1,35 @@
-// BlackPhage - la fabrique des objets lisses. À partir du champ de distance d'une forme et des cubes de cette même forme, elle sort un ou
-// plusieurs maillages lisses (positions dans le repère de la forme, normales, couleurs, matières, phases d'impulsion). Maths pures :
-// elle tourne dans un worker (mesh.worker.js), jamais sur le fil principal.
-import { meshSDF, smoothMesh, vertexNormals, transferFromCubes, smoothAttr } from './mesher.js';
-import { pickSources, makeFibers } from './brain-fibers.js';
+// BlackPhage - la fabrique des objets lisses. À partir du champ de distance d'une forme (et des cubes de cette même forme pour le repère), elle sort le
+// robot en maillage lisse (positions, normales, couleurs, matières, pièces animées) et le cerveau en réseau de neurones (neurones, connexions, calendrier
+// de l'influx). Maths pures : elle tourne dans un worker (mesh.worker.js), jamais sur le fil principal.
+import { meshSDF, smoothMesh, vertexNormals } from './mesher.js';
 
-const clamp01 = (x) => (x < 0 ? 0 : x > 1 ? 1 : x);
 const hexRgb = (h) => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
-// les teintes du tissu, par lobe (clair sur les crêtes, plus foncé dans les sillons) : discrètes, réalistes
-const BRAIN_TINT = { 6: '#e8ecee', 7: '#cfd3d8', 8: '#d3d9e3', 9: '#aeb9c9', 10: '#e8d9c8', 11: '#c8b199', 12: '#d0ddd3', 13: '#a8bdaf', 14: '#d2e0df', 15: '#a4c0be', 16: '#e8d7b5', 17: '#c4ab82' };
-
-function part(name, pos, index, cubes, pitch, palette, baseTags = null) {
-  const t = transferFromCubes(pos, cubes, pitch, palette, baseTags);
-  const nv = pos.length / 3;
-  smoothAttr(index, t.col, 3, nv, 1, 0.5);                      // les marches de la grille de cubes s'adoucissent sur le maillage
-  smoothAttr(index, t.mat, 3, nv, 1, 0.5);
-  return { name, pos, nrm: vertexNormals(pos, index), index, col: t.col, mat: t.mat, phase: t.phase };
-}
 
 /**
- * kind : 'brain' | 'robot' | 'split'. cubes : { pos, tag, phase?, cube, frame } (les cubes visibles de la forme, dans son repère final).
- * palette : un tableau [r, g, b] (sRGB 0..1) par étiquette. h : le pas du maillage.
+ * kind : 'brain' | 'robot'. cubes : { frame } (le repère final de la forme, le même que celui des cubes). palette : inutilisée (gardée pour le contrat du worker).
+ * h : le pas du maillage (pour le cerveau, un maillage grossier suffit : il ne sert qu'à poser les neurones sous la peau du cortex).
  */
 export async function buildSmooth(kind, cubes, palette, h) {
   if (kind === 'brain') {
     const m = await import('./shape-brain.js');
+    const { makeNeuralNet } = await import('./brain-neurons.js');
     const f = m.field();
-    const weak = h >= 0.019;
+    const weak = h >= 0.02;
     const mesh = meshSDF(f.sdf, f.bbox, h);
-    smoothMesh(mesh.pos, mesh.index, 2, 0.5);
-    const p = mesh.pos; const nv = p.length / 3;
-    const nrm = vertexNormals(p, mesh.index);
-    const col = new Float32Array(nv * 3); const ao = new Float32Array(nv);
-    const ds = [0.02, 0.05, 0.1]; const ws = [0.5, 0.3, 0.2];
-    for (let i = 0; i < nv; i++) {
-      const x = p[i * 3]; const y = p[i * 3 + 1]; const z = p[i * 3 + 2];
-      const c = hexRgb(BRAIN_TINT[f.tagAt(x, y, z)] || '#d8d2d0');
-      col[i * 3] = c[0]; col[i * 3 + 1] = c[1]; col[i * 3 + 2] = c[2];
-      let occ = 0;
-      for (let q = 0; q < 3; q++) occ += ws[q] * clamp01((ds[q] - f.sdf(x + nrm[i * 3] * ds[q], y + nrm[i * 3 + 1] * ds[q], z + nrm[i * 3 + 2] * ds[q])) / ds[q]);
-      ao[i] = 1 - clamp01(occ * 1.15);
-    }
-    const src = pickSources(p);
-    const fibers = makeFibers({ pos: p, nrm, sdf: f.sdf, src }, 5, weak ? 0.5 : 1);
-    // dans le repère final de la forme (le même que celui des cubes)
+    smoothMesh(mesh.pos, mesh.index, 1, 0.5);
+    const nrm = vertexNormals(mesh.pos, mesh.index);
+    const net = makeNeuralNet({ pos: mesh.pos, nrm, sdf: f.sdf, tagAt: f.tagAt, bbox: f.bbox }, { weak });
+    // dans le repère final de la forme (le même que celui des cubes) : positions, longueurs et vitesses suivent le même facteur d'échelle
     const { cx, cy, cz, sc } = cubes.frame;
-    for (let i = 0; i < p.length; i += 3) { p[i] = (p[i] - cx) * sc; p[i + 1] = (p[i + 1] - cy) * sc; p[i + 2] = (p[i + 2] - cz) * sc; }
-    const sg = fibers.seg;
-    for (let k = 0; k < fibers.count; k++) {
+    const np = net.nodes.pos;
+    for (let i = 0; i < np.length; i += 3) { np[i] = (np[i] - cx) * sc; np[i + 1] = (np[i + 1] - cy) * sc; np[i + 2] = (np[i + 2] - cz) * sc; }
+    const sg = net.seg;
+    for (let k = 0; k < net.count; k++) {
       for (const o of [0, 3]) { sg[k * 8 + o] = (sg[k * 8 + o] - cx) * sc; sg[k * 8 + o + 1] = (sg[k * 8 + o + 1] - cy) * sc; sg[k * 8 + o + 2] = (sg[k * 8 + o + 2] - cz) * sc; }
+      net.fib[k * 4 + 1] *= sc; net.fib[k * 4 + 2] *= sc;
     }
-    for (let k = 0; k < 6; k++) { src.pos[k * 3] = (src.pos[k * 3] - cx) * sc; src.pos[k * 3 + 1] = (src.pos[k * 3 + 1] - cy) * sc; src.pos[k * 3 + 2] = (src.pos[k * 3 + 2] - cz) * sc; }
-    return [{ name: 'brain', pos: p, nrm, index: mesh.index, col, ao, fibers, src }];
+    net.sigma = 0.035 * sc;
+    return [{ name: 'brain', net }];
   }
   if (kind === 'robot') {
     const m = await import('./shape-robot.js');

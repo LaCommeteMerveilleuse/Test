@@ -6,6 +6,7 @@ import { initCursor } from './fx/cursor.js';
 import { initBackground } from './fx/background.js';
 import { initFlow } from './fx/flow.js';
 import { initContact } from './fx/contact.js';
+import { initTrail } from './fx/trail.js';
 import { initModals } from './fx/modal.js';
 
 const root = document.documentElement;
@@ -19,9 +20,11 @@ initLanguage();
 initNav();
 initReveal();
 initCursor();
+const trail = initTrail();            // la traînée de petits cubes du curseur, sur toute la page
+window.__trail = trail;
 initBackground();
 initFlow();
-initContact();
+initContact(trail);
 const heroEl = document.querySelector('.hero');
 const showTitle = () => heroEl && heroEl.classList.add('is-in');       // le titre n'apparaît qu'après l'animation 3D d'ouverture
 if (matchMedia('(prefers-reduced-motion: reduce)').matches) showTitle();

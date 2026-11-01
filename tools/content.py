@@ -33,9 +33,6 @@ s('foot_contact', 'Contact', 'Contact')
 s('legal', 'Programmes expérimentaux, non approuvés par la FDA, l\'EMA ni aucune autre autorité. Les articles sont éducatifs et ne remplacent pas un avis médical.',
   'Investigational programs, not approved by the FDA, the EMA or any other regulator. Articles are educational and are not medical advice.')
 s('rights', 'Tous droits réservés', 'All rights reserved')
-s('cursor_view', 'Lire', 'Read')
-s('cursor_open', 'Ouvrir', 'Open')
-s('cursor_drag', 'Survoler', 'Hover')
 
 # ------------------------------------------------------------------ accueil
 s('home_title', 'BlackPhage', 'BlackPhage')
@@ -49,10 +46,10 @@ s('hero_sub', 'Nous concevons des médicaments qui changent la vie des gens, et 
 s('hero_cta1', 'Découvrir NovaDiff', 'Meet NovaDiff')
 s('hero_cta2', 'Lire nos articles', 'Read our articles')
 s('scroll', 'Défiler', 'Scroll')
-s('brain_alt', 'Un cerveau translucide, dont on voit les fibres et les impulsions qui se propagent dans tout le cortex. Passez le curseur dessus et quelques cubes s\'en détachent.',
-  'A translucent brain, with its fibers and the impulses that travel across the whole cortex. Move the cursor over it and a few cubes break away.')
-s('robot_alt', 'NovaDiff, notre agent, un petit robot blanc aux yeux ambrés qui salue d\'une main. Passez le curseur dessus et quelques cubes s\'en détachent.',
-  'NovaDiff, our agent, a small white robot with amber eyes that waves with one hand. Move the cursor over it and a few cubes break away.')
+s('brain_alt', 'Un cerveau entièrement transparent dont on ne voit que les neurones et leurs connexions, où l\'influx nerveux saute de neurone en neurone.',
+  'A fully transparent brain where only the neurons and their connections show, with the nerve impulse jumping from neuron to neuron.')
+s('robot_alt', 'NovaDiff, notre agent, un petit robot blanc aux yeux ambrés qui salue d\'une main. Un clic le fait tourner sur lui-même.',
+  'NovaDiff, our agent, a small white robot with amber eyes that waves with one hand. Click it and it spins around.')
 
 # ------------------------------------------------------------------ ce que nous construisons
 
@@ -75,7 +72,6 @@ for i, (fr, en) in enumerate([
     ('TNF alpha', 'TNF alpha'),
 ], 1):
     s(f'prog_{i}', fr, en)
-s('cursor_contact', 'Écrivez-nous', 'Write to us')
 s('culture_title', 'Là où la science rencontre l\'esprit startup', 'Where science meets the startup spirit')
 
 # ------------------------------------------------------------------ NovaDiff
@@ -98,11 +94,8 @@ s('nova_c3', 'Plus précis', 'More precise')
 # ------------------------------------------------------------------ le récepteur
 s('story_eyebrow', 'Science', 'Science')
 s('story_title', 'De petites structures. De grandes questions.', 'Small structures. Big questions.')
-s('story_c1', 'Un récepteur attend un signal, ancré dans la membrane de la cellule.', 'A receptor waits for a signal, anchored in the cell membrane.')
-s('story_c2', 'Au contact, NovaDiff change de forme. De cubes, il devient une vraie protéine repliée, hélices, brins et boucles, qui épouse la poche.', 'On contact, NovaDiff reshapes itself. From cubes it becomes a folded protein, with helices, strands and loops, that fits the pocket.')
-s('story_c3', 'Le récepteur s\'active. De l\'autre côté de la membrane, une cascade de signalisation démarre.', 'The receptor switches on. On the other side of the membrane, a signaling cascade begins.')
-s('story_c4', 'Le signal poursuit sa route, vers celles et ceux qui construisent et qui soignent.', 'The signal carries on, toward the people who build and the people who care.')
-s('story_step', 'Étape', 'Step')
+s('story_text', 'Notre agent génère la structure par diffusion, puis l\'optimise en temps réel pour qu\'elle soit biophysiquement optimisée et réponde à une question biologique.',
+  'Our agent generates the structure by diffusion, then optimizes it in real time so it is biophysically optimized to answer a biological question.')
 
 # ------------------------------------------------------------------ articles
 s('art_eyebrow', 'Blog', 'Blog')

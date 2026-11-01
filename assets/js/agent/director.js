@@ -50,7 +50,7 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
 
   const el = {
     brain: q('[data-slot="brain"]'), brain2: q('[data-slot="brain2"]'), robot: q('[data-slot="robot"]'), story: q('[data-slot="story"]'), storySec: q('[data-story]'),
-    caps: [...document.querySelectorAll('.cap')], dots: [...document.querySelectorAll('.rail__dot')], rail: q('.rail'),
+    rail: q('.rail'),
   };
 
   function resize() { agent.resize(innerWidth, innerHeight, dpr); }
@@ -67,10 +67,10 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
   const fit = (r, k, f = 0.95) => Math.min((r.width / 2) / ext[k][0], (r.height / 2) / ext[k][1]) * f;
 
   // l'état amorti
-  const S = { disperse: 0, look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
+  const S = { look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
   let last = performance.now();
   let introStart = null; let titleShown = false;
-  const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, disperse: 0, anchor: null, n, intro: 0 };
+  const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, anchor: null, n, intro: 0 };
 
   function frameLoop(now) {
     const raw = (now - last) / 1000; const dt = Math.min(0.05, raw); last = now;
@@ -182,13 +182,10 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
       if (sy > storyEnd) { rec.show = 0; sig.show = 0; }
     }
 
-    // le curseur : un petit rayon autour de lui brise l'objet lisse en cubes qui s'écartent, puis se reforment
+    // le curseur ne brise plus rien. Il sert seulement à savoir s'il est sur le robot (le robot salue) et où l'on clique
     const main = mix < 0.5 ? A : B; const mk = mix < 0.5 ? a : b;
     const reach = Math.max(ext[mk][0], ext[mk][1]) * 0.78 * main.scale;
     const inside = ptr.in && !off && Math.hypot(ptr.x - main.x, ptr.y - main.y) < reach && !reduce && !(a === 3 || (a === 2 && b === 3 && mix > 0.4));
-    window.__agentHot = inside;
-    S.disperse = damp(S.disperse, inside ? 1 : 0, inside ? 9 : 2.6, dt);
-    const hoverR = clamp(main.scale * 0.13, 22, 44);
     // le salut du robot : régulier (quelques secondes toutes les sept secondes), plus franc quand le curseur s'approche, à l'arrivée et après un clic
     if (S.click) { const c = S.click; S.click = null; if (!reduce && !off && mk === 2 && Math.hypot(c.x - main.x, c.y - main.y) < reach) { S.spinT = 0; S.burst = 1; } }
     if (!reduce && Pprev < 1.97 && P >= 1.97) S.burst = 1;
@@ -215,7 +212,9 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
         sm.set(k, { visible: vis, dissolve: dis, time, look: reduce ? null : S.look, wave: k === 2 ? wave : 0 });
       }
     }
-    agent.set({ a, b, mix, dust, fade: 1, time, anchorA: A, anchorB: B, level: 0, bend: 0, disperse: S.disperse, hit: { x: ptr.x, y: ptr.y }, radius: hoverR, glow: 0,
+    // la part des cubes qui existent pendant une transition : très peu entre le cerveau et le robot (là où passe le carrousel), un peu plus dans la scène Science
+    const keep = a === b ? 1 : (a === 0 && b === 2) ? 0.1 : (a === 2 && b === 3) ? 0.4 : 0.5;
+    agent.set({ a, b, mix, dust, fade: 1, time, keep, anchorA: A, anchorB: B, level: 0, bend: 0, glow: 0,
       disA: dA, disB: dB, intro: smooth(0, 2.4, introT) });
 
     // la scène du récepteur : un repère commun (ancre 3) pour la membrane, le récepteur et le signal
@@ -239,12 +238,9 @@ export async function startAgent({ canvas, low = false, frozen = null, onTitle =
 
     // l'habillage HTML de la scène épinglée
     if (secStory) {
-      const idx = u < 0.26 ? 1 : u < 0.52 ? 2 : u < 0.8 ? 3 : 4;
-      el.caps.forEach((c, i) => { c.classList.toggle('is-on', i + 1 === idx); c.classList.toggle('is-past', i + 1 < idx); });
-      el.dots.forEach((d, i) => d.classList.toggle('on', i + 1 <= idx));
       el.rail && el.rail.style.setProperty('--sp', u.toFixed(3));
     }
-    Object.assign(dbg, { a, b, mix, u, P, disperse: S.disperse, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], intro: introT, spin: S.spinT, wave, robot: anchors.robot ? { ry: anchors.robot.ry, rz: anchors.robot.rz } : null });
+    Object.assign(dbg, { a, b, mix, u, P, anchor: main, inside, sy, frame: (dbg.frame || 0) + 1, reveal: [reveal[0], reveal[2]], dis: [dA, dB], intro: introT, spin: S.spinT, wave, robot: anchors.robot ? { ry: anchors.robot.ry, rz: anchors.robot.rz } : null });
   }
 
   requestAnimationFrame(frameLoop);
