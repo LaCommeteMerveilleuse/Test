@@ -255,12 +255,12 @@ def build_index():
   {culture_rows}
 </section>''' if rows else '')
     arts = ''
-    covers = ['data-wall', 'whiteboard-sprint', 'founders-table', 'pipette-plate', 'lab-bench', 'healthy-years']
-    for i, (aud, mins, *_rest) in enumerate(ARTICLES, 1):
+    covers = ['lab-bench', 'pitch-day', 'pipette-plate', 'founders-table', 'data-wall', 'healthy-years']
+    for i, (_tag, mins, *_rest) in enumerate(ARTICLES, 1):
         cover = f'assets/img/culture/{covers[i - 1]}.webp'
         cover_html = f'<img src="{cover}" alt="" loading="lazy" width="600" height="400">' if (ROOT / cover).exists() else '<i class="acard__ph"></i>'
-        arts += f'''<button class="acard" type="button" data-article="{i}" data-aud="{aud}" data-min="{mins}">
-          <span class="acard__cover">{cover_html}<span class="acard__badge" data-i18n="art_{aud}">{en(f"art_{aud}")}</span></span>
+        arts += f'''<button class="acard" type="button" data-article="{i}" data-min="{mins}">
+          <span class="acard__cover">{cover_html}<span class="acard__badge" data-i18n="a{i}_tag">{en(f"a{i}_tag")}</span></span>
           <span class="acard__body">
             <h3 data-i18n="a{i}_title">{en(f"a{i}_title")}</h3>
             <span class="acard__ex" data-i18n="a{i}_ex">{en(f"a{i}_ex")}</span>

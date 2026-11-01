@@ -49,10 +49,10 @@ async function scrollTo(page, y, wait = 700) {
   const txt = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   const h1 = await page.evaluate(() => document.querySelector('h1').textContent.replace(/\s+/g, ' ').trim());
   ok(/Discovering the future of medicine/.test(h1), 'titre central : ' + h1);
-  for (const w of ['Our articles for startups & people', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question', 'right key for the right lock', 'Pick a target', 'Generate by diffusion', 'Optimize in real time', 'Turn the pathway on or off', 'activates the receptor']) {
+  for (const w of ['Our articles', 'Toronto, 1922', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question', 'right key for the right lock', 'Pick a target', 'Generate by diffusion', 'Optimize in real time', 'Turn the pathway on or off', 'activates the receptor']) {
     ok(txt.includes(w) || txt.toLowerCase().includes(w.toLowerCase()), 'le texte contient « ' + w + ' »');
   }
-  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world', 'On contact, NovaDiff reshapes itself', 'The receptor switches on', 'The signal carries on']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
+  for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world', 'for startups & people', 'For startups', 'For people', 'On contact, NovaDiff reshapes itself', 'The receptor switches on', 'The signal carries on']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
   ok(await page.evaluate(() => [...document.querySelectorAll('main > section')].map((x) => x.id).join(',') === 'top,why,culture,novadiff,story,articles,contact'), 'les sections suivent l\'ordre demandé : titre, why, culture, agent, science, blog, contact');
   ok(await page.evaluate(() => { const c = document.getElementById('agent'); const m = document.getElementById('main'); return +getComputedStyle(c).zIndex < +getComputedStyle(m).zIndex; }), 'le canevas 3D est derrière le texte');
   ok(await page.evaluate(() => !document.querySelector('.hero p, .hero a, .hero button') && document.querySelector('.hero h1')), 'le héros ne contient que le titre');
@@ -71,7 +71,7 @@ async function scrollTo(page, y, wait = 700) {
   const txtFr = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   ok(!/[—;:]/.test(txtFr), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (FR)' + (/[—;:]/.test(txtFr) ? ' : ' + (txtFr.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'NovaDiff active']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
-  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'startups', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'par diffusion', 'en temps réel', 'la bonne clé pour la bonne serrure', 'Choisir une cible', 'Générer par diffusion', 'Optimiser en temps réel', 'Activer ou inhiber la voie']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
+  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'Toronto, 1922', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'par diffusion', 'en temps réel', 'la bonne clé pour la bonne serrure', 'Choisir une cible', 'Générer par diffusion', 'Optimiser en temps réel', 'Activer ou inhiber la voie']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
   ok(await page.evaluate(() => localStorage.getItem('bp-lang') === 'fr'), 'la langue est mémorisée');
   await page.reload({ waitUntil: 'load' }); await sleep(1500);
   ok(await page.evaluate(() => document.documentElement.lang === 'fr'), 'la langue survit au rechargement');
@@ -192,7 +192,7 @@ async function scrollTo(page, y, wait = 700) {
   // la lecture d'un article
   geo = await G(); await scrollTo(page, geo.articles, 900);
   await page.evaluate(() => document.querySelector('.acard').click()); await sleep(600);
-  ok(await page.evaluate(() => document.getElementById('reader').classList.contains('is-open') && document.querySelectorAll('#reader-body p').length === 3 && document.getElementById('reader-title').textContent.length > 5), 'un article s\'ouvre dans la fenêtre de lecture');
+  ok(await page.evaluate(() => document.getElementById('reader').classList.contains('is-open') && document.querySelectorAll('#reader-body p').length === 5 && document.getElementById('reader-title').textContent.length > 5), 'un article s\'ouvre dans la fenêtre de lecture');
   await page.keyboard.press('Escape'); await sleep(300);
 
   // le curseur : un point sans anneau, une traînée de petits cubes sur toute la page, et plus aucun effet de destruction sous le curseur

@@ -69,11 +69,11 @@ export function initModals(site) {
   // la lecture d'un article
   document.querySelectorAll('.acard').forEach((c) => c.addEventListener('click', () => {
     const i = c.dataset.article;
-    document.getElementById('reader-tag').textContent = t(`art_${c.dataset.aud}`);
+    document.getElementById('reader-tag').textContent = t(`a${i}_tag`);
     document.getElementById('reader-title').textContent = t(`a${i}_title`);
     document.getElementById('reader-meta').textContent = `${c.dataset.min} ${t('art_min')}`;
     const b = document.getElementById('reader-body'); b.textContent = '';
-    for (let k = 1; k <= 3; k++) { const p = document.createElement('p'); p.textContent = t(`a${i}_p${k}`); b.appendChild(p); }
+    for (let k = 1; k <= 8; k++) { const x = t(`a${i}_p${k}`); if (!x || x === `a${i}_p${k}`) break; const p = document.createElement('p'); p.textContent = x; b.appendChild(p); }
     reader.scrollTop = 0;
     open(reader);
   }));

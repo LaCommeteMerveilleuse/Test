@@ -270,7 +270,6 @@ body.menu-open { overflow: hidden; }
 .acard:hover .acard__cover img { transform: scale(1.06); }
 .acard__ph { position: absolute; inset: 0; background: radial-gradient(60% 80% at 30% 20%, rgba(224, 163, 92, 0.3), transparent), linear-gradient(135deg, var(--haze), #fff); }
 .acard__badge { position: absolute; left: 14px; top: 14px; padding: 6px 11px; border-radius: 99px; background: rgba(255, 255, 255, 0.92); font: 700 0.66rem/1 var(--sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--canyon); backdrop-filter: blur(8px); }
-.acard[data-aud="people"] .acard__badge { color: #a56a1e; }
 .acard__body { display: flex; flex-direction: column; gap: 10px; padding: 20px 22px 22px; flex: 1; }
 .acard h3 { font-size: 1.2rem; }
 .acard__ex { color: var(--text); font-size: 0.95rem; line-height: 1.5; display: block; }
