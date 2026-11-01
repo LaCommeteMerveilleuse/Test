@@ -167,7 +167,7 @@ function makeNeuralNet(THREE, net, shared) {
   const D = (hex) => new THREE.Color().setHex(hex, THREE.LinearSRGBColorSpace);
   Object.assign(shared, {
     uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.7 }, uPx: { value: 2.0 }, uDepthR: { value: 1 }, uSizePx: { value: 300 }, uCycle: { value: net.cycle }, uSigma: { value: net.sigma },
-    uBase: { value: D(0xffd34d) }, uGlow2: { value: D(0xffb800) },
+    uBase: { value: D(0xffd34d) }, uGlow2: { value: D(0xffb800) }, uRest: { value: D(0x8e9aa1) },
   });
   const quad = () => {
     const g = new THREE.InstancedBufferGeometry();
@@ -205,7 +205,7 @@ void main() {
 }`,
     fragmentShader: `precision highp float;
 varying float vU; varying vec4 vF; varying float vDepth;
-uniform float uTime; uniform float uDis; uniform float uCycle; uniform float uSigma; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2;
+uniform float uTime; uniform float uDis; uniform float uCycle; uniform float uSigma; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2; uniform vec3 uRest;
 void main() {
   float len = vF.z; float speed = vF.y;
   float cyc = mod(uTime - vF.x, uCycle);                       // le temps écoulé depuis le départ de l'influx sur cette connexion
@@ -216,9 +216,9 @@ void main() {
   float p = clamp(head + 0.5 * glow, 0.0, 1.0);
   float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
   float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.35, 1.0);    // plus le cerveau est petit, plus ses impulsions se superposent : on les allège
-  float a = p * (0.82 + 0.18 * vF.w) * mix(0.75, 1.0, densK) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
-  if (a < 0.004) discard;                                      // au repos le réseau est transparent : rien n'est dessiné
-  vec3 c = mix(uBase, uGlow2, clamp(head * 1.2, 0.0, 1.0));
+  float rest = mix(0.15, 0.24, vF.w) * densK;                  // au repos, un léger gris laisse deviner la forme du cerveau
+  float a = max(rest, p * (0.82 + 0.18 * vF.w) * mix(0.75, 1.0, densK)) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
+  vec3 c = mix(uRest, mix(uBase, uGlow2, clamp(head * 1.2, 0.0, 1.0)), clamp(p * 2.0, 0.0, 1.0));
   gl_FragColor = vec4(c, a);
 }`,
   }));
@@ -244,7 +244,7 @@ void main() {
   float cyc = mod(uTime - iN.w, uCycle);                       // le temps écoulé depuis que ce neurone s'est allumé
   float flash = exp(-cyc * 1.8);                               // l'éclat dure environ une seconde et demie
   vFlash = flash; vTint = iT.x;
-  float rpx = uPx * iT.y * (0.6 + 2.8 * flash);
+  float rpx = uPx * iT.y * (0.9 + 2.5 * flash);
   vec2 c2 = vec2(corner.x * 2.0 - 1.0, corner.y);
   vC = c2;
   gl_Position = cp + vec4(c2 * rpx * 2.0 / uRes * cp.w, 0.0, 0.0);
@@ -253,7 +253,7 @@ void main() {
 }`,
     fragmentShader: `precision highp float;
 varying vec2 vC; varying float vFlash; varying float vTint; varying float vDepth;
-uniform float uDis; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2;
+uniform float uDis; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2; uniform vec3 uRest;
 void main() {
   float r = length(vC);
   if (r > 1.0) discard;
@@ -261,9 +261,8 @@ void main() {
   float core = 1.0 - smoothstep(0.35, 0.8, r);
   float glow = exp(-r * r * 3.4);
   float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.35, 1.0);
-  float a = k * (glow * 0.85 + core * 0.4) * mix(0.75, 1.0, densK);
-  if (a < 0.004) discard;
-  vec3 c = mix(uBase, uGlow2, clamp(k * 1.3, 0.0, 1.0));
+  float a = mix(core * 0.42 * mix(0.6, 1.0, densK), (glow * 0.85 + core * 0.4) * mix(0.75, 1.0, densK), k);   // un petit point gris au repos, jaune quand il s'allume
+  vec3 c = mix(uRest, mix(uBase, uGlow2, clamp(k * 1.3, 0.0, 1.0)), k);
   float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
   gl_FragColor = vec4(c, clamp(a, 0.0, 1.0) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis)));
 }`,
