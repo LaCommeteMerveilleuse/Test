@@ -211,7 +211,7 @@ async function scrollTo(page, y, wait = 700) {
   await page.evaluate(() => document.querySelector('.acard').click()); await sleep(600);
   ok(await page.evaluate(() => document.getElementById('reader').classList.contains('is-open') && document.querySelectorAll('#reader-body p').length === 5 && document.getElementById('reader-title').textContent.length > 5), 'un article s\'ouvre dans la fenêtre de lecture');
   await page.evaluate(() => document.querySelector('.acard[data-article="4"]').click()); await sleep(500);
-  ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /cloud lab/i.test(document.getElementById('reader-body').textContent) && /pétrole|oil/.test(document.getElementById('reader-body').textContent)), 'article 2027 : données, entreprises d\'IA spécialistes et cloud labs, huit paragraphes');
+  ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /cloud lab/i.test(document.getElementById('reader-body').textContent) && /Adam/.test(document.getElementById('reader-body').textContent) && !/par exemple/.test(document.getElementById('reader-body').textContent) && /2027/.test(document.getElementById('reader-title').textContent)), 'article 2027 : le robot Adam, les modèles spécialisés, la boucle fermée et les cloud labs, huit paragraphes');
   await page.keyboard.press('Escape'); await sleep(300);
 
   // le curseur : un point sans anneau, une traînée de petits cubes sur toute la page, et plus aucun effet de destruction sous le curseur
