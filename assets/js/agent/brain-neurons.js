@@ -3,7 +3,7 @@
 // blanche. Ils sont reliés à leurs voisins (connexions courtes) et par de longs faisceaux courbes : association (d'une circonvolution à l'autre),
 // commissurales (d'un hémisphère à l'autre), de projection (du cortex vers le centre et le tronc) et du cervelet.
 //
-// L'influx nerveux saute de neurone en neurone. Six foyers s'allument à tour de rôle ; depuis chacun, le signal gagne ses voisins par un plus court
+// L'influx nerveux saute de neurone en neurone. Quatorze foyers s'allument à tour de rôle ; depuis chacun, le signal gagne ses voisins par un plus court
 // chemin (Dijkstra) : une connexion courte prend un instant, un long faisceau est bien plus rapide, et chaque neurone ajoute un petit délai de
 // synapse. Chaque neurone s'allume donc une fois par cycle, à l'instant où le signal l'atteint, puis son influx repart sur toutes les connexions
 // vers les neurones encore au repos. Tout est calculé ici, une fois ; le shader n'a qu'à lire l'heure de chaque neurone et de chaque connexion.
@@ -14,13 +14,13 @@
 //   (positions, longueurs et vitesses sont dans le repère du modèle ; le constructeur les ramène dans le repère final avec le même facteur d'échelle)
 import { rng } from './voxel.js';
 
-export const NET_CYCLE = 9.0;                     // secondes : le cycle complet des six foyers
+export const NET_CYCLE = 6.0;                     // secondes : le cycle complet des foyers
 const SYN = 0.06;                                 // le délai de synapse d'un neurone
 const V_SHORT = 0.55; const V_LONG = 2.2;         // vitesse de l'influx, en unités du modèle par seconde
 const norm3 = (v) => { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; };
 
-/** Les foyers : où naît le signal. Quatre sur le cortex visible, un au cervelet, un au coeur du cerveau. */
-const FOCI = [[-0.8, 0.16, 0.5], [0.16, 0.66, 0.3], [0.92, 0.0, 0.2], [0.2, -0.54, 0.5], [0.62, -0.8, 0.3], [0.1, -0.15, 0.0]];
+/** Le premier foyer (au lobe frontal) ; les autres s'en déduisent, voir plus bas. */
+const FOCI = [[-0.8, 0.16, 0.5]];
 
 export function makeNeuralNet({ pos, nrm, sdf, tagAt, bbox }, { weak = false, seed = 11 } = {}) {
   const R = rng(seed);
@@ -216,15 +216,25 @@ export function makeNeuralNet({ pos, nrm, sdf, tagAt, bbox }, { weak = false, se
     adjTo[fill[e.a]] = e.b; adjW[fill[e.a]++] = w; adjTo[fill[e.b]] = e.a; adjW[fill[e.b]++] = w;
   });
   const dist = new Float32Array(N).fill(1e9);
-  const foci = FOCI.map((f, k) => {                                // le neurone le plus proche de chaque foyer (le cortex visible pour les cinq premiers)
-    let best = 1e9; let bi = 0;
-    for (let i = 0; i < N; i++) {
-      if (k < 5 ? (kind[i] !== 0 || P[i * 3 + 2] < 0.04) : kind[i] !== 1) continue;
-      const d = (P[i * 3] - f[0]) ** 2 + (P[i * 3 + 1] - f[1]) ** 2 + (P[i * 3 + 2] - f[2]) ** 2;
-      if (d < best) { best = d; bi = i; }
+  // les foyers : le premier au lobe frontal, chacun des suivants le plus loin possible des précédents (l'activité se promène d'une région à l'autre), et un relais
+  // profond au milieu de la liste.
+  const nFoci = weak ? 6 : 8;
+  const foci = [];
+  {
+    const d2 = (i, j) => (P[i * 3] - P[j * 3]) ** 2 + (P[i * 3 + 1] - P[j * 3 + 1]) ** 2 + (P[i * 3 + 2] - P[j * 3 + 2]) ** 2;
+    let first = 0; let bd = 1e9;
+    for (let i = 0; i < nCortex; i++) { const d = (P[i * 3] - FOCI[0][0]) ** 2 + (P[i * 3 + 1] - FOCI[0][1]) ** 2 + (P[i * 3 + 2] - FOCI[0][2]) ** 2; if (d < bd) { bd = d; first = i; } }
+    foci.push(first);
+    const near = new Float32Array(nCortex).fill(1e9);
+    while (foci.length < nFoci - 1) {
+      const last = foci[foci.length - 1]; let far = -1; let fd = -1;
+      for (let i = 0; i < nCortex; i++) { const d = d2(i, last); if (d < near[i]) near[i] = d; if (near[i] > fd) { fd = near[i]; far = i; } }
+      foci.push(far);
     }
-    return bi;
-  });
+    let deep = nCortex; let dd = 1e9;                              // le relais profond le plus proche du centre
+    for (let i = nCortex; i < N; i++) { const d = (P[i * 3] - 0.1) ** 2 + (P[i * 3 + 1] + 0.15) ** 2 + P[i * 3 + 2] ** 2; if (d < dd) { dd = d; deep = i; } }
+    foci.splice(Math.floor(nFoci / 2), 0, deep);
+  }
   const heapN = []; const heapD = [];
   const push = (n, d) => { let i = heapN.length; heapN.push(n); heapD.push(d); while (i > 0) { const p = (i - 1) >> 1; if (heapD[p] <= heapD[i]) break; [heapN[p], heapN[i]] = [heapN[i], heapN[p]]; [heapD[p], heapD[i]] = [heapD[i], heapD[p]]; i = p; } };
   const pop = () => {
@@ -233,7 +243,7 @@ export function makeNeuralNet({ pos, nrm, sdf, tagAt, bbox }, { weak = false, se
     return [n, d];
   };
   foci.forEach((src, k) => {
-    const t0 = k * (NET_CYCLE / FOCI.length);
+    const t0 = k * 0.35;                                            // les foyers partent presque ensemble : autant de fronts qui s'étendent à la fois
     const D = new Float32Array(N).fill(1e9); D[src] = 0; push(src, 0);
     while (heapN.length) {
       const [u, d] = pop();
@@ -242,15 +252,32 @@ export function makeNeuralNet({ pos, nrm, sdf, tagAt, bbox }, { weak = false, se
     }
     for (let i = 0; i < N; i++) if (t0 + D[i] < dist[i]) dist[i] = t0 + D[i];
   });
-  const fire = (i) => ((dist[i] % NET_CYCLE) + NET_CYCLE) % NET_CYCLE;     // l'instant du cycle où le neurone s'allume
+  // L'égalisation du temps : l'influx met environ deux secondes à gagner tout le cerveau, et la plupart des neurones s'allument au milieu de ce temps ; le
+  // reste du cycle serait vide. On répartit donc les instants de façon uniforme sur tout le cycle par une transformation croissante g (la fonction de
+  // répartition des instants de tir). Elle s'applique à tous les événements, et la vitesse de chaque connexion est recalculée pour que l'influx arrive
+  // juste quand le neurone qui le reçoit s'allume : le calendrier reste exact, seule la vitesse de l'influx varie d'une région du cycle à l'autre.
+  const sorted = Float32Array.from(dist).sort();
+  const g = (t) => {
+    let lo = 0; let hi = N;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (sorted[m] < t) lo = m + 1; else hi = m; }
+    if (lo <= 0) return 0;
+    if (lo >= N) return NET_CYCLE * (N - 0.5) / N;
+    const a0 = sorted[lo - 1]; const a1 = sorted[lo];
+    return NET_CYCLE * (lo - 1 + (a1 > a0 ? (t - a0) / (a1 - a0) : 0.5)) / N;
+  };
+  const fire = (i) => Math.min(NET_CYCLE - 0.001, g(dist[i]));
 
-  // 6. les tableaux pour le dessin : chaque connexion est orientée du neurone qui s'allume le premier vers l'autre, et part un délai de synapse après
+  // 6. les tableaux pour le dessin : chaque connexion est orientée du neurone qui s'allume le premier vers l'autre. L'influx part un délai de synapse après le tir
+  // et arrive à l'instant où le neurone reçoit le signal (jamais en moins de 0,12 s : on veut voir la progression de neurone en neurone).
   const segs = []; const fibs = [];
   edges.forEach((e, k) => {
     const { pts, len } = lines[k];
     let from = e.a; let line = pts;
     if (dist[e.b] < dist[e.a]) { from = e.b; line = pts.slice().reverse(); }
-    const start = fire(from) + SYN; const speed = e.long ? V_LONG : V_SHORT;
+    const w = len / (e.long ? V_LONG : V_SHORT) + SYN;                // la durée physique du trajet et de la synapse
+    const start = fire(from) + SYN;
+    const arrive = Math.min(NET_CYCLE, g(dist[from] + w));          // l'instant (égalisé) où le signal arrive
+    const speed = len / Math.max(0.12, arrive - start);
     let acc = 0;
     for (let s = 0; s < line.length - 1; s++) {
       const d = Math.hypot(line[s + 1][0] - line[s][0], line[s + 1][1] - line[s][1], line[s + 1][2] - line[s][2]);

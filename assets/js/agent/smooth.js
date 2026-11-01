@@ -158,17 +158,16 @@ totalEmissiveRadiance += vColor.rgb * (vMat.z * vEm * 1.1) + uGlow * (vGlow * 0.
 }
 
 /**
- * Le cerveau : entièrement transparent, on n'en voit que le réseau de neurones. Les connexions sont des rubans fins qui s'éclairent quand l'influx les
- * parcourt, les neurones des pastilles qui s'allument quand il les atteint. Le calendrier (qui s'allume quand, dans un cycle) est précalculé dans le worker
- * (brain-neurons.js) : le shader lit seulement l'heure. La lumière est ambrée sur le bleu profond de la marque, plus pâle au fond du cerveau.
+ * Le cerveau : entièrement transparent, le réseau de neurones lui-même est invisible. On ne voit que l'influx électrique, en jaune : une étincelle qui court sur chaque
+ * connexion, la lueur qu'elle laisse derrière elle, et le neurone qui s'allume quand elle l'atteint. Le calendrier (qui s'allume quand, dans un cycle) est précalculé
+ * dans le worker (brain-neurons.js) : le shader lit seulement l'heure. Les impulsions dessinent le cerveau en passant.
  */
 function makeNeuralNet(THREE, net, shared) {
   // des jaunes, écrits tels qu'on les veut à l'écran (le shader écrit directement dans le canevas : pas de conversion de couleur)
   const D = (hex) => new THREE.Color().setHex(hex, THREE.LinearSRGBColorSpace);
-  const tints = [0xd9a000, 0xcf9600, 0xe2ae10, 0xc58f00, 0xbd9a3a, 0xa87c00].map(D);
   Object.assign(shared, {
-    uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.4 }, uPx: { value: 2.0 }, uDepthR: { value: 1 }, uSizePx: { value: 300 }, uCycle: { value: net.cycle }, uSigma: { value: net.sigma },
-    uBase: { value: D(0xdca300) }, uGlow2: { value: D(0xffb800) }, uTints: { value: tints },
+    uRes: { value: new THREE.Vector2(1, 1) }, uWidth: { value: 1.7 }, uPx: { value: 2.0 }, uDepthR: { value: 1 }, uSizePx: { value: 300 }, uCycle: { value: net.cycle }, uSigma: { value: net.sigma },
+    uBase: { value: D(0xffd34d) }, uGlow2: { value: D(0xffb800) },
   });
   const quad = () => {
     const g = new THREE.InstancedBufferGeometry();
@@ -208,18 +207,18 @@ void main() {
 varying float vU; varying vec4 vF; varying float vDepth;
 uniform float uTime; uniform float uDis; uniform float uCycle; uniform float uSigma; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2;
 void main() {
-  float len = vF.z;
+  float len = vF.z; float speed = vF.y;
   float cyc = mod(uTime - vF.x, uCycle);                       // le temps écoulé depuis le départ de l'influx sur cette connexion
-  float head = cyc * vF.y;                                     // où est la tête de l'influx, dans l'unité du modèle
-  float d = vU * len - head;
-  float pulse = exp(-d * d / (2.0 * uSigma * uSigma)) * step(head, len + 3.0 * uSigma);
-  float tail = d < 0.0 ? exp(d / (5.0 * uSigma)) * 0.4 * step(head, len + 8.0 * uSigma) : 0.0;
-  float p = clamp(pulse + tail, 0.0, 1.0);
-  float depthK = mix(0.3, 1.0, smoothstep(-0.9, 0.9, vDepth));
-  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.3, 1.0);       // plus le cerveau est petit, plus ses connexions se superposent : on les allège
-  float base = mix(0.3, 0.44, vF.w) * densK;
-  float a = (base + (0.95 - base) * p) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
-  vec3 c = mix(uBase, uGlow2, clamp(p * 1.3, 0.0, 1.0));
+  float d = vU * len - cyc * speed;                            // la distance à la tête de l'influx, dans l'unité du modèle
+  float head = exp(-d * d / (2.0 * uSigma * uSigma));          // la tête : une brève étincelle
+  float tp = cyc - vU * len / speed;                           // le temps écoulé depuis que la tête est passée ici (négatif : elle n'est pas encore arrivée)
+  float glow = tp > 0.0 ? exp(-tp / 0.8) : 0.0;                // la connexion reste allumée un instant derrière l'influx
+  float p = clamp(head + 0.5 * glow, 0.0, 1.0);
+  float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
+  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.35, 1.0);    // plus le cerveau est petit, plus ses impulsions se superposent : on les allège
+  float a = p * (0.82 + 0.18 * vF.w) * mix(0.75, 1.0, densK) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis));
+  if (a < 0.004) discard;                                      // au repos le réseau est transparent : rien n'est dessiné
+  vec3 c = mix(uBase, uGlow2, clamp(head * 1.2, 0.0, 1.0));
   gl_FragColor = vec4(c, a);
 }`,
   }));
@@ -243,9 +242,9 @@ void main() {
   vec4 mv = modelViewMatrix * vec4(iN.xyz, 1.0);
   vec4 cp = projectionMatrix * mv;
   float cyc = mod(uTime - iN.w, uCycle);                       // le temps écoulé depuis que ce neurone s'est allumé
-  float flash = exp(-cyc * 3.2);
+  float flash = exp(-cyc * 1.8);                               // l'éclat dure environ une seconde et demie
   vFlash = flash; vTint = iT.x;
-  float rpx = uPx * iT.y * (1.0 + 2.6 * flash);
+  float rpx = uPx * iT.y * (0.6 + 2.8 * flash);
   vec2 c2 = vec2(corner.x * 2.0 - 1.0, corner.y);
   vC = c2;
   gl_Position = cp + vec4(c2 * rpx * 2.0 / uRes * cp.w, 0.0, 0.0);
@@ -254,17 +253,17 @@ void main() {
 }`,
     fragmentShader: `precision highp float;
 varying vec2 vC; varying float vFlash; varying float vTint; varying float vDepth;
-uniform float uDis; uniform float uSizePx; uniform vec3 uGlow2; uniform vec3 uTints[6];
+uniform float uDis; uniform float uSizePx; uniform vec3 uBase; uniform vec3 uGlow2;
 void main() {
   float r = length(vC);
   if (r > 1.0) discard;
-  vec3 rest = uTints[int(vTint + 0.5)];
-  float core = 1.0 - smoothstep(0.55, 1.0, r);                 // une pastille nette au repos
-  float glow = exp(-r * r * 3.6);                              // un halo qui s'ouvre quand le neurone s'allume
-  float k = clamp(vFlash * 1.6, 0.0, 1.0);
-  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.3, 1.0);
-  float a = mix(core * 0.8 * mix(0.6, 1.0, densK), glow * 0.95 + core * 0.3, k);
-  vec3 c = mix(rest, uGlow2, k);
+  float k = clamp(vFlash * 1.5, 0.0, 1.0);                     // un neurone n'existe à l'écran que lorsqu'il s'allume
+  float core = 1.0 - smoothstep(0.35, 0.8, r);
+  float glow = exp(-r * r * 3.4);
+  float densK = clamp(pow(uSizePx / 330.0, 1.6), 0.35, 1.0);
+  float a = k * (glow * 0.85 + core * 0.4) * mix(0.75, 1.0, densK);
+  if (a < 0.004) discard;
+  vec3 c = mix(uBase, uGlow2, clamp(k * 1.3, 0.0, 1.0));
   float depthK = mix(0.35, 1.0, smoothstep(-0.9, 0.9, vDepth));
   gl_FragColor = vec4(c, clamp(a, 0.0, 1.0) * depthK * (1.0 - smoothstep(0.0, 0.5, uDis)));
 }`,
@@ -366,7 +365,7 @@ export function createSmooth(THREE, agent, shapes, { palette, weak = false, onRe
     s.group.visible = show;
     if (!show) return;
     if (s.shared) { s.shared.uDis.value = dissolve; s.shared.uTime.value = time; }
-    if (s.net) { agent.renderer.getDrawingBufferSize(size); const px = size.y / Math.max(1, agent.renderer.domElement.clientHeight); s.shared.uRes.value.copy(size); s.shared.uWidth.value = 1.4 * px; s.shared.uPx.value = 2.0 * px; }
+    if (s.net) { agent.renderer.getDrawingBufferSize(size); const px = size.y / Math.max(1, agent.renderer.domElement.clientHeight); s.shared.uRes.value.copy(size); s.shared.uWidth.value = 1.7 * px; s.shared.uPx.value = 2.0 * px; }
     for (const m of s.meshes) { const u = m.material.userData && m.material.userData.u; if (u && u.uDis && m.material.userData.u !== s.shared) { u.uDis.value = dissolve; u.uTime.value = time; if (u.uLook) { u.uLook.value.set(look ? look.x : 0, look ? look.y : 0); u.uAnim.value = 1 - clamp(dissolve * 2.5); u.uWave.value = wave; } } }
   };
 

@@ -66,7 +66,7 @@ export async function startAgent({ canvas, low = false, frozen = null }) {
   const fit = (r, k, f = 0.95) => Math.min((r.width / 2) / ext[k][0], (r.height / 2) / ext[k][1]) * f;
 
   // l'état amorti
-  const S = { step: 1, shownAt: null, brainSeen: false, look: { x: 0, y: 0 }, P: null, u: null, time: 0, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
+  const S = { step: 1, shownAt: null, brainSeen: false, look: { x: 0, y: 0 }, P: null, u: null, time: 2.2, vy: 0, py: null, spinT: 9, burst: 0, hover: 0, click: null };
   let last = performance.now();
   const dbg = { a: 0, b: 0, mix: 0, u: 0, P: 0, anchor: null, n };
 
