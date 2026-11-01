@@ -45,5 +45,20 @@ export default function build(n, seed = 1) {
       tag[o] = t; o++;
     }
   }
-  return { pos, tag, cube: cube * 1.03, extent: [2.5, 0.95, 0.95] };
+  // chaque amas est un peu resserré sur son centre pour tenir dans la carte qui l'accueille
+  const K = 0.76;
+  for (let i = 0; i < n; i++) {
+    const cx = pos[i * 3] < -0.85 ? -1.7 : pos[i * 3] > 0.85 ? 1.7 : 0;
+    pos[i * 3] = cx + (pos[i * 3] - cx) * K; pos[i * 3 + 1] *= K; pos[i * 3 + 2] *= K;
+  }
+  return { pos, tag, cube: cube * K * 1.03, extent: [2.45, 0.72, 0.72], frame: { K, centers: [-1.7, 0, 1.7] } };
+}
+
+/** Les trois champs pour le maillage lisse : { sdf, bbox, cx } avant le resserrement K (le mailleur applique K autour de cx). */
+export function fields() {
+  return [
+    { name: 'orb', sdf: orb, bbox: [-0.85, -0.85, -0.85, 0.85, 0.85, 0.85], cx: -1.7 },
+    { name: 'dumbbell', sdf: dumbbell, bbox: [-0.95, -0.55, -0.55, 0.95, 0.55, 0.55], cx: 0 },
+    { name: 'star', sdf: star, bbox: [-0.8, -0.8, -0.8, 0.8, 0.8, 0.8], cx: 1.7 },
+  ];
 }

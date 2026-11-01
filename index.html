@@ -1,155 +1,297 @@
 <!doctype html>
-<html lang="fr" data-lang="fr">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>BlackPhage</title>
-  <meta name="description" content="NovaDiff active, notre agent autonome, est conçu spécialement pour la construction de Smart Binders. Des protéines dépendantes du pH, plus précises et moins toxiques.">
-  <meta name="theme-color" content="#151a3c">
+  <meta name="description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff active rescues and redesigns drug candidates, from the lab to real-world impact.">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="BlackPhage">
-  <meta property="og:description" content="NovaDiff active, notre agent autonome, est conçu spécialement pour la construction de Smart Binders. Des protéines dépendantes du pH, plus précises et moins toxiques.">
+  <meta property="og:description" content="BlackPhage engineers medicine that changes people&#x27;s lives. Our agent NovaDiff active rescues and redesigns drug candidates, from the lab to real-world impact.">
   <meta property="og:type" content="website">
-  <!-- langue:debut -->
-  <link rel="alternate" hreflang="fr" href="index.html">
-  <link rel="alternate" hreflang="en" href="en/index.html">
-  <link rel="alternate" hreflang="x-default" href="en/index.html">
-  <script>
-(function () { try {
-  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
-  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
-  var want = localStorage.getItem('bp-lang');
-  if (want !== 'fr' && want !== 'en') {
-    if (sessionStorage.getItem('bp-auto')) return;
-    sessionStorage.setItem('bp-auto', '1');
-    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
-    want = /^fr/i.test(l) ? 'fr' : 'en';
-  }
-  if (want === here) return;
-  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
-  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
-} catch (e) {} })();
-</script>
-  <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
   <script type="importmap">{ "imports": { "three": "./assets/vendor/three/three.module.min.js" } }</script>
-  <script>document.documentElement.classList.add('js')</script>
-  <script type="module" src="assets/js/chrome.js"></script>
-  <script type="module" src="assets/js/scene.js"></script>
+  <script>
+    (function () {
+      var d = document.documentElement; d.classList.add('js', 'i18n-pending');
+      var l = 'en';
+      try { l = localStorage.getItem('bp-lang') || ''; } catch (e) {}
+      if (l !== 'fr' && l !== 'en') l = /^fr/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 'fr' : 'en';
+      d.lang = l; d.dataset.lang = l;
+      setTimeout(function () { d.classList.remove('i18n-pending'); }, 2500);
+    })();
+  </script>
+  <script type="module" src="assets/js/main.js"></script>
 </head>
-<body data-page="accueil" class="page-home">
-<a class="skip" href="#main">Aller au contenu</a>
-<canvas id="scene" class="scene" aria-hidden="true"></canvas>
+<body class="page-home" data-title-key="home_title" data-desc-key="home_desc" data-home="1">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<div class="bg" aria-hidden="true">
+  <i class="bg__blob bg__blob--a"></i><i class="bg__blob bg__blob--b"></i><i class="bg__blob bg__blob--c"></i>
+  <i class="bg__grid"></i><i class="bg__beam"></i><canvas class="bg__dust" id="dust"></canvas><i class="bg__spot"></i><i class="bg__grain"></i>
+</div>
+<canvas id="agent" class="agent" aria-hidden="true"></canvas><button class="grid__btn" type="button" data-open-contact data-i18n="grid_btn" data-cursor="">Contact</button>
 <header class="nav" id="nav">
-  <div class="nav__in">
-    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
-    <nav class="nav__pill glass" id="nav-links" aria-label="Navigation principale">
-      <a href="index.html" aria-current="page">Accueil</a>
-      <a href="tech.html">Notre technologie</a>
-      <a href="careers.html">Carrières</a>
-      <a class="btn btn--light nav__cta-m" href="index.html#contact">Devenir partenaire</a>
-    </nav>
-    <div class="nav__end">
-      <a class="langswitch" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a>
-      <a class="btn btn--light nav__cta" href="index.html#contact">Devenir partenaire</a>
-      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
-    </div>
+  <a class="logo" href="#top" aria-label="BlackPhage, home" data-i18n-aria-label="home_aria"><img class="logo__img" src="assets/img/blackphage-logo-noir.svg" alt="BlackPhage" width="170" height="29"></a>
+  <nav class="nav__pill" id="nav-pill" aria-label="Main navigation" data-i18n-aria-label="nav_main">
+    <i class="nav__ind" aria-hidden="true"></i><a href="#engineering" data-i18n="nav_tech">Technology</a><a href="#novadiff" data-i18n="nav_novadiff">NovaDiff</a><a href="#story" data-i18n="nav_science">Science</a><a href="#articles" data-i18n="nav_articles">Articles</a><a href="#why" data-i18n="nav_why">Why</a><a href="careers.html" data-i18n="nav_careers">Careers</a>
+  </nav>
+  <div class="nav__end">
+    <button class="lang" id="lang" type="button" aria-label="Switch to French" data-i18n-aria-label="lang_aria" title="Translate the page" data-i18n-title="lang_hint"><span class="lang__on" data-l="en">EN</span><span data-l="fr">FR</span></button>
+    <button class="btn btn--dark nav__cta" type="button" data-open-contact data-i18n="nav_contact" data-cursor="">Contact</button>
+    <button class="burger" id="burger" type="button" aria-label="Open the menu" data-i18n-aria-label="nav_menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
   </div>
 </header>
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="menu__panel">
+    <p class="menu__title" data-i18n="menu_title">Menu</p>
+    <nav class="menu__list" aria-label="Main navigation" data-i18n-aria-label="nav_main">
+      <a class="menu__item" href="#engineering" style="--i:0"><span class="menu__n">01</span><span class="menu__t" data-i18n="nav_tech">Technology</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#novadiff" style="--i:1"><span class="menu__n">02</span><span class="menu__t" data-i18n="nav_novadiff">NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#story" style="--i:2"><span class="menu__n">03</span><span class="menu__t" data-i18n="nav_science">Science</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#articles" style="--i:3"><span class="menu__n">04</span><span class="menu__t" data-i18n="nav_articles">Articles</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="#why" style="--i:4"><span class="menu__n">05</span><span class="menu__t" data-i18n="nav_why">Why</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="menu__item" href="careers.html" style="--i:5"><span class="menu__n">06</span><span class="menu__t" data-i18n="nav_careers">Careers</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </nav>
+    <div class="menu__foot">
+      <button class="btn btn--dark" type="button" data-open-contact data-i18n="nav_contact">Contact</button>
+      <a class="menu__mail" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a>
+    </div>
+  </div>
+</div>
 <main id="main">
 <section class="hero" id="top">
-  <div class="hero__copy container">
-    <h1 class="hero__title"><span class="hero__line">Repousser la <em class="accent">frontière</em></span> <span class="hero__line">du traitable.</span></h1>
-    <p class="hero__lead">Notre agent <strong class="brandname">NovaDiff active</strong> est conçu spécialement pour la construction de Smart Binders. Des protéines dépendantes du pH, plus précises et moins toxiques.</p>
+  <div class="container hero__in">
+    <span class="badge hero__badge"><i aria-hidden="true"></i><span data-i18n="hero_badge">Drug rescue, powered by NovaDiff</span></span>
+    <h1 class="hero__title" data-split><span data-i18n="hero_t1">Discovering the</span> <span class="grad" data-i18n="hero_t2">future</span> <span data-i18n="hero_t3">of medicine</span></h1>
+    <p class="hero__sub" data-i18n="hero_sub">We engineer medicine that changes people’s lives, transforming discovery into real-world impact.</p>
     <div class="hero__cta">
-      <a class="btn btn--light btn--lg" href="tech.html">Découvrir notre technologie<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      <a class="btn btn--ghost btn--lg" href="index.html#contact">Devenir partenaire</a>
+      <a class="btn btn--dark btn--lg" href="#novadiff"><span data-i18n="hero_cta1">Meet NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="btn btn--light btn--lg" href="#articles" data-i18n="hero_cta2">Read our articles</a>
     </div>
   </div>
-  <p class="sr-only">Un poisson combattant translucide, couvert de vagues de lumière, nage à travers un monde de molécules, avec de l’ADN, des protéines, une membrane et son récepteur. Il avance quand vous descendez la page. Touchez-le et une vague de lumière parcourt son corps.</p>
-  <button class="sr-only sr-only--focus" type="button" data-fish-wave>Toucher le poisson</button>
+  <div class="slot slot--brain" data-slot="brain" role="img" aria-label="Our agent NovaDiff, a cloud of thousands of gray cubes that changes shape as you scroll. Move the cursor over it and it dissolves." data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="900" height="600"></div>
+  <p class="hero__hint" data-i18n="hero_hint">Move your cursor over the agent</p>
 </section>
 
-<section class="sec idea" id="idea" data-station="1">
+<section class="sec sec--haze eng" id="engineering">
   <div class="container">
-    <div class="who" id="who">
-      <h2 class="eyebrow reveal">Qui sommes-nous</h2>
-      <p class="who__p reveal">BlackPhage est une société de biotechnologie privée. Notre agent autonome, <strong class="brandname">NovaDiff active</strong>, est un modèle interne. Il est conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et une durée moyenne de vie en bonne santé au-delà de 100 ans.</p>
-    </div>
-    <h2 class="eyebrow idea__eyebrow reveal">L’idée</h2>
-    <ol class="idea__list pillars"><li class="pillar glass panel reveal" style="--i:0"><span class="idea__n">01</span><h3 class="idea__h">Comprendre le vivant.</h3><p class="idea__p">Notre agent lit la biologie à grande échelle.</p></li><li class="pillar glass panel reveal" style="--i:1"><span class="idea__n">02</span><h3 class="idea__h">Concevoir l’intervention.</h3><p class="idea__p">Il dessine, évalue et affine de nouvelles protéines.</p></li><li class="pillar glass panel reveal" style="--i:2"><span class="idea__n">03</span><h3 class="idea__h">Reprendre le contrôle.</h3><p class="idea__p">Chaque variante agit là où elle le doit, et nulle part ailleurs.</p></li></ol>
+    <header class="sec__head center"><p class="eyebrow reveal" data-i18n="eng_eyebrow">What we build</p><h2 class="h2 reveal" data-i18n="eng_title">Engineering medicines that change lives</h2><p class="lead reveal" data-i18n="eng_lead">One holistic approach, three fronts, one agent.</p></header>
+    <div class="eng__grid" data-slot="split"><article class="card eng__card reveal-fan" style="--i:0;--fx:-60px">
+        <div class="eng__icon" data-split-icon="0" aria-hidden="true"></div>
+        <p class="tag" data-i18n="eng1_tag">Metabolism</p>
+        <h3 data-i18n="eng1_title">Metabolic health</h3>
+        <p class="card__p" data-i18n="eng1_text">Dual incretin signaling through GLP-1R and GIPR, paired with an anti-NCOA1 / SRC-1 action and protection of cells under stress through Bax Inhibitor-1.</p>
+        <ul class="chips"><li class="chip" data-i18n="eng1_c1">GLP-1R / GIPR</li><li class="chip" data-i18n="eng1_c2">Anti-NCOA1 / SRC-1</li><li class="chip" data-i18n="eng1_c3">Bax Inhibitor-1 / TMBIM6</li></ul>
+      </article><article class="card eng__card reveal-fan" style="--i:1;--fx:0px">
+        <div class="eng__icon" data-split-icon="1" aria-hidden="true"></div>
+        <p class="tag" data-i18n="eng2_tag">Muscle</p>
+        <h3 data-i18n="eng2_title">Anti-sarcopenia</h3>
+        <p class="card__p" data-i18n="eng2_text">Myostatin (GDF-8) and Activin A are held back by two complementary designs. The Sweeper clears the circulating ligands. The Latent-Lock keeps them locked in their inactive form.</p>
+        <ul class="chips"><li class="chip" data-i18n="eng2_c1">Myostatin (GDF-8) / Activin A</li><li class="chip" data-i18n="eng2_c2">Sweeper</li><li class="chip" data-i18n="eng2_c3">Latent-Lock</li></ul>
+      </article><article class="card eng__card reveal-fan" style="--i:2;--fx:60px">
+        <div class="eng__icon" data-split-icon="2" aria-hidden="true"></div>
+        <p class="tag" data-i18n="eng3_tag">Inflammation</p>
+        <h3 data-i18n="eng3_title">Chronic inflammation</h3>
+        <p class="card__p" data-i18n="eng3_text">TNF alpha, a master signal of inflammation, is targeted by a pH-dependent Smart Binder to calm it exactly where it matters.</p>
+        <ul class="chips"><li class="chip" data-i18n="eng3_c1">TNF alpha</li><li class="chip" data-i18n="eng3_c2">pH-dependent</li></ul>
+      </article></div>
+    <p class="eng__note reveal" data-i18n="eng_note">Together, a holistic approach to healthy ageing.</p>
   </div>
 </section>
 
-<section class="sec nova" id="nova" data-station="2">
-  <div class="container nova__grid">
-    <div class="nova__copy">
-      <p class="eyebrow reveal">Notre modèle Frontier</p>
-      <h2 class="h2 reveal">NovaDiff active.</h2>
-      <p class="lead reveal">Un agent autonome pour les médicaments biologiques de nouvelle génération. Il permet de repousser les limites du traitable.</p>
-      <ol class="steps"><li class="step reveal"><span class="step__n">1</span><div><h3>Lire</h3><p>Il cartographie la biologie de la maladie et de la cible.</p></div></li><li class="step reveal"><span class="step__n">2</span><div><h3>Concevoir</h3><p>Il dessine des Smart Binders à partir de zéro.</p></div></li><li class="step reveal"><span class="step__n">3</span><div><h3>Juger</h3><p>Il note chaque candidat sur la précision et la sécurité.</p></div></li><li class="step reveal"><span class="step__n">4</span><div><h3>Apprendre</h3><p>Il réinjecte chaque résultat dans le tour suivant.</p></div></li></ol>
+<section class="sec rescue" id="why">
+  <div class="container rescue__in">
+    <div class="rescue__txt">
+      <p class="eyebrow reveal" data-i18n="rescue_eyebrow">Our why</p>
+      <h2 class="h2 reveal" data-i18n="rescue_title">Every shelved drug is a promise waiting to be kept</h2>
+      <p class="rescue__p" data-words data-i18n="rescue_p">BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff active we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.</p>
     </div>
+    <ol class="rescue__steps">
+      <li class="step reveal-line" style="--i:0"><span class="step__n">1</span><span data-i18n="rescue_s1">Understand why it stalled</span></li>
+      <li class="step reveal-line" style="--i:1"><span class="step__n">2</span><span data-i18n="rescue_s2">Redesign it as a Smart Binder</span></li>
+      <li class="step reveal-line" style="--i:2"><span class="step__n">3</span><span data-i18n="rescue_s3">Bring it back to patients</span></li>
+    </ol>
+  </div>
+  <div class="culture">
+      <h3 class="culture__title reveal" data-i18n="culture_title">Where science meets the startup spirit</h3>
+      <div class="marquee marquee--slow" data-marquee><div class="marquee__track"><figure class="shot"><img src="assets/img/culture/lab-bench.webp" alt="Voxel illustration of a researcher in a white coat and goggles holding up a glowing blue flask beside a lab bench with a microscope, test tubes, glassware and a small robot helper." data-i18n-alt="cu1_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu1_c">Careful science at the lab bench</figcaption></figure><figure class="shot"><img src="assets/img/culture/pipette-plate.webp" alt="Voxel illustration of an eight channel pipette hovering over a 96 well plate that fills with glowing blue and amber liquids, next to a rack of test tubes, a box of pipette tips and a small robot." data-i18n-alt="cu2_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu2_c">Precision down to the last drop</figcaption></figure><figure class="shot"><img src="assets/img/culture/data-wall.webp" alt="Voxel illustration of a researcher pointing at a large wall display that shows a rotating molecule made of cubes, with a small robot at her side and a DNA double helix sculpture on a pedestal." data-i18n-alt="cu3_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu3_c">Data and discovery, side by side</figcaption></figure><figure class="shot"><img src="assets/img/culture/healthy-years.webp" alt="Voxel illustration of a grandparent and a grandchild walking hand in hand on a park path, with a small dog, an amber balloon, trees and a wooden bench." data-i18n-alt="cu4_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu4_c">More healthy years to share</figcaption></figure><figure class="shot"><img src="assets/img/culture/whiteboard-sprint.webp" alt="Voxel illustration of four teammates at a whiteboard covered in sticky notes and sketches, one person pointing at a note and another holding a coffee." data-i18n-alt="cu5_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu5_c">Short sprints and bold ideas, shared at the whiteboard</figcaption></figure><figure class="shot"><img src="assets/img/culture/founders-table.webp" alt="Voxel illustration of four founders around a long wooden table in a bright loft, with laptops, plants and coffee cups, talking with energy." data-i18n-alt="cu6_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu6_c">Founders around one long table, building the next step together</figcaption></figure><figure class="shot"><img src="assets/img/culture/pitch-day.webp" alt="Voxel illustration of a presenter pointing at a screen with a rising growth chart made of cubes, while a small audience sits and watches." data-i18n-alt="cu7_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu7_c">Pitch day, where a growing idea meets its first audience</figcaption></figure><figure class="shot"><img src="assets/img/culture/partners-handshake.webp" alt="Voxel illustration of a doctor and a founder shaking hands over a small table with a glowing molecule model, in a warm room with a round window." data-i18n-alt="cu8_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu8_c">Clinicians and founders shaking hands on a shared mission</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/lab-bench.webp" alt="Voxel illustration of a researcher in a white coat and goggles holding up a glowing blue flask beside a lab bench with a microscope, test tubes, glassware and a small robot helper." data-i18n-alt="cu1_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu1_c">Careful science at the lab bench</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/pipette-plate.webp" alt="Voxel illustration of an eight channel pipette hovering over a 96 well plate that fills with glowing blue and amber liquids, next to a rack of test tubes, a box of pipette tips and a small robot." data-i18n-alt="cu2_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu2_c">Precision down to the last drop</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/data-wall.webp" alt="Voxel illustration of a researcher pointing at a large wall display that shows a rotating molecule made of cubes, with a small robot at her side and a DNA double helix sculpture on a pedestal." data-i18n-alt="cu3_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu3_c">Data and discovery, side by side</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/healthy-years.webp" alt="Voxel illustration of a grandparent and a grandchild walking hand in hand on a park path, with a small dog, an amber balloon, trees and a wooden bench." data-i18n-alt="cu4_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu4_c">More healthy years to share</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/whiteboard-sprint.webp" alt="Voxel illustration of four teammates at a whiteboard covered in sticky notes and sketches, one person pointing at a note and another holding a coffee." data-i18n-alt="cu5_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu5_c">Short sprints and bold ideas, shared at the whiteboard</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/founders-table.webp" alt="Voxel illustration of four founders around a long wooden table in a bright loft, with laptops, plants and coffee cups, talking with energy." data-i18n-alt="cu6_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu6_c">Founders around one long table, building the next step together</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/pitch-day.webp" alt="Voxel illustration of a presenter pointing at a screen with a rising growth chart made of cubes, while a small audience sits and watches." data-i18n-alt="cu7_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu7_c">Pitch day, where a growing idea meets its first audience</figcaption></figure><figure class="shot" aria-hidden="true"><img src="assets/img/culture/partners-handshake.webp" alt="Voxel illustration of a doctor and a founder shaking hands over a small table with a glowing molecule model, in a warm room with a round window." data-i18n-alt="cu8_a" loading="lazy" width="600" height="400"><figcaption data-i18n="cu8_c">Clinicians and founders shaking hands on a shared mission</figcaption></figure></div></div>
+    </div>
+</section>
+
+<section class="sec sec--haze nova" id="novadiff">
+  <div class="container nova__in">
+    <div class="nova__txt">
+      <p class="eyebrow reveal" data-i18n="nova_eyebrow">Our agent</p>
+      <h2 class="h2 reveal" data-i18n="nova_title">Meet NovaDiff</h2>
+      <p class="lead reveal" data-i18n="nova_text">NovaDiff active is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.</p>
+      <p class="lead reveal" data-i18n="nova_text2">It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.</p>
+      <ul class="feats"><li class="feat reveal-wipe" style="--i:0"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M10 6a4 4 0 0 0-4 4 3.5 3.5 0 0 0-1.5 6A4 4 0 0 0 10 22a3 3 0 0 0 4-2.5V8.5A2.5 2.5 0 0 0 10 6Zm8 0a4 4 0 0 1 4 4 3.5 3.5 0 0 1 1.5 6A4 4 0 0 1 18 22a3 3 0 0 1-4-2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f1">It reads biology</h3><p data-i18n="nova_f1n">At scale, from the disease down to the target.</p></div></li><li class="feat reveal-wipe" style="--i:1"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="m14 3.5 9 5v11l-9 5-9-5v-11l9-5Zm0 0v11m0 0 9-5.5m-9 5.5-9-5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f2">It designs, step by step</h3><p data-i18n="nova_f2n">Binders that grow ever more precise, round after round.</p></div></li><li class="feat reveal-wipe" style="--i:2"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="nova_f3">It learns from every round</h3><p data-i18n="nova_f3n">Every result feeds the next.</p></div></li></ul>
+      <ul class="chips chips--row"><li class="chip chip--pop" data-i18n="nova_c1">pH-dependent</li><li class="chip chip--pop" data-i18n="nova_c2">Less toxic</li><li class="chip chip--pop" data-i18n="nova_c3">More precise</li></ul>
+    </div>
+    <div class="slot slot--robot" data-slot="robot" role="img" aria-label="Our agent NovaDiff, a cloud of thousands of gray cubes that changes shape as you scroll. Move the cursor over it and it dissolves." data-i18n-aria-label="agent_alt"><img class="slot__poster" src="assets/img/agent-robot.webp" alt="" width="700" height="800"></div>
   </div>
 </section>
 
-<section class="sec binders" id="binders" data-station="3">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Smart Binders</p>
-      <h2 class="h2 reveal">Une nouvelle classe de médicaments.</h2>
-      <p class="lead reveal"><strong class="brandname">NovaDiff active</strong> construit des Smart Binders. Ce sont des protéines dépendantes du pH, qui changent de conformation pour réduire la toxicité.</p>
-    </div>
-    <div class="pillars"><article class="pillar glass panel reveal" style="--i:0"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.5c3.9 4.8 7.2 8.5 7.2 12.3a7.2 7.2 0 0 1-14.4 0c0-3.8 3.3-7.5 7.2-12.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8.6 16.6c1.6-1.3 3.1-1.3 4.7 0s3.1 1.3 4.7 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Dépendant du pH</h3><p>S’active là où le pH local le permet.</p></article><article class="pillar glass panel reveal" style="--i:1"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3>Change de conformation</h3><p>Elle se replie selon son milieu pour agir au bon endroit.</p></article><article class="pillar glass panel reveal" style="--i:2"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3.6 22 6.8v6.2c0 4.8-3.3 8.7-8 10.6-4.7-1.9-8-5.8-8-10.6V6.8l8-3.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 14.2c1.3 1.5 2.5 2.2 4 2.2s2.7-.7 4-2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Moins toxique</h3><p>Pensé dès l’origine pour un profil de toxicité plus bas.</p></article></div>
+<section class="story" id="story" data-story>
+  <div class="story__pin">
+    <header class="story__head"><p class="eyebrow" data-i18n="story_eyebrow">Science</p><h2 class="h2" data-i18n="story_title">Small structures. Big questions.</h2></header>
+    <div class="story__frame" data-slot="story" aria-hidden="true"></div>
+    <div class="story__caps"><p class="cap is-on" data-cap="1" data-i18n="story_c1">A receptor waits for a signal, anchored in the cell membrane.</p><p class="cap" data-cap="2" data-i18n="story_c2">On contact, NovaDiff reshapes itself. From cubes it becomes a ribbon protein that fits the pocket.</p><p class="cap" data-cap="3" data-i18n="story_c3">The receptor switches on. On the other side of the membrane, a signaling cascade begins.</p><p class="cap" data-cap="4" data-i18n="story_c4">The signal carries on, toward the people who build and the people who care.</p></div>
+    <div class="rail" aria-hidden="true"><i class="rail__bar"><b></b></i><i class="rail__dot" data-dot="1"></i><i class="rail__dot" data-dot="2"></i><i class="rail__dot" data-dot="3"></i><i class="rail__dot" data-dot="4"></i></div>
   </div>
 </section>
 
-<section class="sec targets" id="targets" data-station="4">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Nos cibles</p>
-      <h2 class="h2 reveal">Trois cibles. Un seul agent.</h2>
-      <p class="lead reveal">Métabolisme, muscle et cerveau. Trois systèmes qui comptent pour bien vieillir.</p>
-    </div>
-    <div class="targets__grid"><article class="target glass panel reveal" style="--i:0"><p class="target__area">Métabolisme</p><h3 class="target__name">GLP-1R</h3><p class="target__full">Récepteur du peptide-1 de type glucagon</p><p class="target__sub">Applications potentielles</p><ul class="target__apps"><li>Obésité et gestion du poids</li><li>Diabète de type 2</li><li>Santé cardiométabolique</li></ul><a class="target__go" href="tech.html#glp-1r">En savoir plus<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="target glass panel reveal" style="--i:1"><p class="target__area">Muscle</p><h3 class="target__name">Myostatine / GDF-8</h3><p class="target__full">Facteur de croissance et de différenciation 8</p><p class="target__sub">Applications potentielles</p><ul class="target__apps"><li>Préserver le muscle pendant une perte de poids</li><li>Sarcopénie et fragilité liées à l’âge</li><li>Maladies musculaires et cachexie</li></ul><a class="target__go" href="tech.html#gdf-8">En savoir plus<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="target glass panel reveal" style="--i:2"><p class="target__area">Cerveau et oncologie</p><h3 class="target__name">TfR1 / CD71</h3><p class="target__full">Récepteur 1 de la transferrine</p><p class="target__sub">Applications potentielles</p><ul class="target__apps"><li>Acheminer des médicaments biologiques dans le cerveau</li><li>Maladies neurologiques</li><li>Cancers qui surexpriment TfR1</li></ul><a class="target__go" href="tech.html#tfr1">En savoir plus<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article></div>
-    <div class="targets__cta reveal"><a class="btn btn--light btn--lg" href="tech.html">Découvrir notre technologie<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-  </div>
+<section class="sec articles" id="articles">
+  <div class="container"><header class="sec__head center"><p class="eyebrow reveal" data-i18n="art_eyebrow">Blog</p><h2 class="h2 reveal" data-i18n="art_title">Our articles for startups &amp; people</h2><p class="lead reveal" data-i18n="art_lead">Short reads on drug rescue, science and building in biotech.</p></header></div>
+  <div class="marquee" data-marquee data-tilt><div class="marquee__track"><button class="acard" type="button" data-article="1" data-aud="startups" data-min="4" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/data-wall.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a1_title">Why great drugs get shelved, and how to rescue them</h3>
+            <span class="acard__ex" data-i18n="a1_ex">Toxicity, dosing and timing sink more candidates than a lack of efficacy. Here is how rescue works.</span>
+            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" type="button" data-article="2" data-aud="startups" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/whiteboard-sprint.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a2_title">From idea to lab bench in 90 days</h3>
+            <span class="acard__ex" data-i18n="a2_ex">A practical rhythm for founders who need first data fast.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" type="button" data-article="3" data-aud="startups" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/founders-table.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a3_title">Building a scientific culture inside a fast startup</h3>
+            <span class="acard__ex" data-i18n="a3_ex">Rigor and urgency are not opposites. The best teams refuse to choose.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" type="button" data-article="4" data-aud="people" data-min="4" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/pipette-plate.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a4_title">What is a receptor, and why does it matter?</h3>
+            <span class="acard__ex" data-i18n="a4_ex">Every cell wears thousands of tiny antennas. Here is what they do.</span>
+            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" type="button" data-article="5" data-aud="people" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/lab-bench.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a5_title">Why some medicines come with side effects</h3>
+            <span class="acard__ex" data-i18n="a5_ex">A medicine travels through the whole body, not only where it is needed.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" type="button" data-article="6" data-aud="people" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/healthy-years.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a6_title">Healthy years, not just more years</h3>
+            <span class="acard__ex" data-i18n="a6_ex">Living longer is only half of the story.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="1" data-aud="startups" data-min="4" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/data-wall.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a1_title">Why great drugs get shelved, and how to rescue them</h3>
+            <span class="acard__ex" data-i18n="a1_ex">Toxicity, dosing and timing sink more candidates than a lack of efficacy. Here is how rescue works.</span>
+            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="2" data-aud="startups" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/whiteboard-sprint.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a2_title">From idea to lab bench in 90 days</h3>
+            <span class="acard__ex" data-i18n="a2_ex">A practical rhythm for founders who need first data fast.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="3" data-aud="startups" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/founders-table.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_startups">For startups</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a3_title">Building a scientific culture inside a fast startup</h3>
+            <span class="acard__ex" data-i18n="a3_ex">Rigor and urgency are not opposites. The best teams refuse to choose.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="4" data-aud="people" data-min="4" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/pipette-plate.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a4_title">What is a receptor, and why does it matter?</h3>
+            <span class="acard__ex" data-i18n="a4_ex">Every cell wears thousands of tiny antennas. Here is what they do.</span>
+            <span class="acard__meta"><span>4 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="5" data-aud="people" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/lab-bench.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a5_title">Why some medicines come with side effects</h3>
+            <span class="acard__ex" data-i18n="a5_ex">A medicine travels through the whole body, not only where it is needed.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button><button class="acard" tabindex="-1" aria-hidden="true" type="button" data-article="6" data-aud="people" data-min="3" data-cursor-label="cursor_view">
+          <span class="acard__cover"><img src="assets/img/culture/healthy-years.webp" alt="" loading="lazy" width="600" height="400"><span class="acard__badge" data-i18n="art_people">For people</span></span>
+          <span class="acard__body">
+            <h3 data-i18n="a6_title">Healthy years, not just more years</h3>
+            <span class="acard__ex" data-i18n="a6_ex">Living longer is only half of the story.</span>
+            <span class="acard__meta"><span>3 <span data-i18n="art_min">min read</span></span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </span>
+        </button></div></div>
 </section>
 
-<section class="sec sec--tight about" id="about">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Ce qui nous porte</p>
-      <h2 class="h2 reveal">Trois principes.</h2>
+<section class="grid" id="contact" data-grid>
+  <div class="grid__pin">
+    <header class="grid__head"><p class="eyebrow" data-i18n="grid_eyebrow">Contact</p><h2 class="h2" data-i18n="grid_title">From one cube to a whole world</h2><p class="lead" data-i18n="grid_sub">Let’s rescue the next drug together.</p></header>
+    <div class="grid__frame" data-slot="grid">
+      <p class="grid__count" aria-hidden="true"><b class="grid__lv">1 × 1</b><span class="grid__n"></span></p>
     </div>
-    <div class="cards3"><article class="card glass panel reveal" style="--i:0"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m18.6 9.4-2.3 6.9-6.9 2.3 2.3-6.9Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><h3>La frontière d’abord</h3><p>Nous allons là où les outils actuels s’arrêtent.</p></article><article class="card glass panel reveal" style="--i:1"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="14" r="2.2" fill="currentColor"/><path d="M14 2.5v5M14 20.5v5M2.5 14h5M20.5 14h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>La précision avant le volume</h3><p>Une molécule précise vaut mieux que mille molécules grossières.</p></article><article class="card glass panel reveal" style="--i:2"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.2s-8.4-5-8.4-11.3a4.7 4.7 0 0 1 8.4-2.9 4.7 4.7 0 0 1 8.4 2.9c0 6.3-8.4 11.3-8.4 11.3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span><h3>Les patients fixent la barre</h3><p>Chaque choix de conception répond à quelqu’un qui attend mieux.</p></article></div>
-  </div>
-</section>
-
-<section class="sec" id="contact">
-  <div class="container">
-    <div class="contact glass reveal">
-      <div class="contact__copy">
-        <p class="eyebrow">Contact</p>
-        <h2 class="h2">Devenir partenaire.</h2>
-        <p class="lead">Dites-nous ce que vous construisez. Nous répondons aux partenaires pharmaceutiques, aux investisseurs et à la presse, partout dans le monde.</p>
-      </div>
-      <ul class="contact__list"><li><span class="contact__k">Partenaires et investisseurs</span><a class="contact__v" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a><button class="copy" type="button" data-copy="partners@blackphage.com" data-mailkey="email"></button></li><li><span class="contact__k">Recrutement</span><a class="contact__v" data-mail="careersEmail" href="mailto:careers@blackphage.com">careers@blackphage.com</a><button class="copy" type="button" data-copy="careers@blackphage.com" data-mailkey="careersEmail"></button></li></ul>
-    </div>
+    <p class="grid__hint" data-i18n="grid_hint">Keep scrolling</p>
   </div>
 </section>
 </main>
 <footer class="foot">
   <div class="container foot__in">
     <div class="foot__brand">
-      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
-      <p class="foot__tag">Repousser la frontière du traitable.</p>
+      <a class="logo" href="#top"><img class="logo__img" src="assets/img/blackphage-logo-noir.svg" alt="BlackPhage" width="150" height="26"></a>
+      <p data-i18n="foot_tagline">Discovering the future of medicine.</p>
     </div>
-    <div><h4>Société</h4><ul><li><a href="index.html#who">Qui sommes-nous</a></li><li><a href="careers.html">Carrières</a></li></ul></div>
-    <div><h4>Technologie</h4><ul data-programs-list><li><a href="tech.html">Notre technologie</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
-    <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="en/index.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a></li></ul></div>
+    <div><h4 data-i18n="foot_explore">Explore</h4><ul>
+      <li><a href="#engineering" data-i18n="nav_tech">Technology</a></li>
+      <li><a href="#novadiff" data-i18n="nav_novadiff">NovaDiff</a></li>
+      <li><a href="#articles" data-i18n="nav_articles">Articles</a></li>
+      <li><a href="#why" data-i18n="nav_why">Why</a></li></ul></div>
+    <div><h4 data-i18n="foot_company">Company</h4><ul>
+      <li><a href="careers.html" data-i18n="nav_careers">Careers</a></li>
+      <li><button class="foot__link" type="button" data-open-contact data-i18n="nav_contact">Contact</button></li></ul></div>
+    <div><h4 data-i18n="foot_contact">Contact</h4><ul>
+      <li class="mailrow"><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a><button class="copy" type="button" data-copy="partners@blackphage.com" data-mailkey="email"></button></li></ul></div>
   </div>
-  <div class="container foot__legal"><p>Programmes expérimentaux, non approuvés par la FDA, l’EMA ni aucune autre autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
+  <div class="container foot__legal"><p data-i18n="legal">Investigational programs, not approved by the FDA, the EMA or any other regulator. Articles are educational and are not medical advice.</p><p>© 2026 BlackPhage. <span data-i18n="rights">All rights reserved</span>.</p></div>
 </footer>
+<div class="modal" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="form-title" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__box">
+    <button class="modal__x" type="button" data-close aria-label="Close" data-i18n-aria-label="form_close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <div class="modal__form" id="form-wrap">
+      <h2 id="form-title" data-i18n="form_title">Say hello</h2>
+      <p class="modal__lead" data-i18n="form_lead">Tell us what you are building or what is on your mind. We answer everyone.</p>
+      <form id="contact-form" novalidate>
+        <div class="field"><label for="f-last" data-i18n="form_last">Last name</label><input id="f-last" name="last" type="text" autocomplete="family-name" required><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field"><label for="f-first" data-i18n="form_first">First name</label><input id="f-first" name="first" type="text" autocomplete="given-name" required><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field field--wide"><label for="f-act" data-i18n="form_activity">Activity</label><select id="f-act" name="activity" required><option value="" data-i18n="form_pick">Select</option><option value="1" data-i18n="form_a1">Startup or founder</option><option value="2" data-i18n="form_a2">Pharma or biotech</option><option value="3" data-i18n="form_a3">Investor</option><option value="4" data-i18n="form_a4">Research or academia</option><option value="5" data-i18n="form_a5">Clinician</option><option value="6" data-i18n="form_a6">Press</option><option value="7" data-i18n="form_a7">Patient or caregiver</option><option value="8" data-i18n="form_a8">Other</option></select><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field field--wide"><label for="f-msg" data-i18n="form_msg">Message</label><textarea id="f-msg" name="message" rows="5" required></textarea><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <button class="btn btn--dark btn--lg field--wide" type="submit"><span data-i18n="form_send">Send message</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </form>
+    </div>
+    <div class="modal__ok" id="form-ok" hidden>
+      <h2 data-i18n="form_ok_title">Thank you, your message is ready</h2>
+      <p class="modal__lead" data-i18n="form_ok_text">Your mail app should open. If it does not, copy the message below and send it to the address shown.</p>
+      <p class="modal__addr"><span data-i18n="form_mail_label">Address</span> <a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></p>
+      <textarea id="form-copy" readonly rows="6" aria-label="Copy the message" data-i18n-aria-label="form_copy"></textarea>
+      <button class="btn btn--light" type="button" id="form-copy-btn" data-i18n="form_copy">Copy the message</button>
+    </div>
+  </div>
+</div>
+<div class="modal reader" id="reader" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="reader-title">
+  <div class="modal__scrim" data-close></div>
+  <article class="modal__box reader__box">
+    <button class="modal__x" type="button" data-close aria-label="Close the article" data-i18n-aria-label="art_close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <p class="reader__tag" id="reader-tag"></p>
+    <h2 id="reader-title"></h2>
+    <p class="reader__meta" id="reader-meta"></p>
+    <div class="reader__body" id="reader-body"></div>
+    <p class="reader__note" data-i18n="art_note">Educational content, not medical advice.</p>
+  </article>
+</div>
+<div class="cursor" aria-hidden="true"><i class="cursor__dot"></i><i class="cursor__ring"><span class="cursor__label"></span></i></div>
 </body>
 </html>

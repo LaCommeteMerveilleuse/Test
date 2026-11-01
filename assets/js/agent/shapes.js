@@ -23,22 +23,41 @@ export function placeholder(n, seed = 1, k = 0) {
   return { pos, tag, cube: Math.sqrt((4 * Math.PI * 0.81) / n) * 1.1, extent: [1, 1, 1] };
 }
 
+/** Complète une forme de M cubes jusqu'à n entrées. Les cubes en réserve (au centre de la forme, invisibles) ne naissent qu'en vol. */
+export function padShape(sh, n, seed = 1) {
+  const M = sh.tag.length;
+  if (M >= n) return { ...sh, count: n };
+  const pos = new Float32Array(3 * n); pos.set(sh.pos);
+  const tag = new Uint8Array(n); tag.set(sh.tag);
+  let cx = 0; let cy = 0; let cz = 0;
+  for (let i = 0; i < M; i++) { cx += sh.pos[i * 3]; cy += sh.pos[i * 3 + 1]; cz += sh.pos[i * 3 + 2]; }
+  cx /= M; cy /= M; cz /= M;
+  const r = rng(seed * 7 + 3);
+  for (let i = M; i < n; i++) { pos[i * 3] = cx + (r() - 0.5) * 0.2; pos[i * 3 + 1] = cy + (r() - 0.5) * 0.2; pos[i * 3 + 2] = cz + (r() - 0.5) * 0.2; }
+  let phase;
+  if (sh.phase) { phase = new Float32Array(n).fill(-1); phase.set(sh.phase); }
+  return { ...sh, pos, tag, phase, count: M };
+}
+
 /**
  * Charge les cinq formes. Une forme qui manque ou qui échoue est remplacée par la forme de secours.
+ * n : le nombre total de cubes du moteur ; M : combien en montrent les formes (de gros cubes), les autres restent en réserve.
  * overrides : { 0: '/chemin/vers/un-autre-module.js', ... } pour essayer une variante (labo).
  */
-export async function loadShapes(n, seed = 1, overrides = {}) {
+export async function loadShapes(n, seed = 1, overrides = {}, M = n) {
   const out = [];
   for (let k = 0; k < SHAPE_FILES.length; k++) {
+    const Mk = Math.min(Array.isArray(M) ? M[k] : M, n);        // M peut être un tableau : un nombre de cubes visibles par forme
+    let sh;
     try {
       const m = await import(overrides[k] || `./${SHAPE_FILES[k]}`);
-      const sh = m.default(n, seed + k);
-      if (!sh || sh.pos.length !== 3 * n || sh.tag.length !== n) throw new Error('forme invalide');
-      out.push(sh);
+      sh = m.default(Mk, seed + k);
+      if (!sh || sh.pos.length !== 3 * Mk || sh.tag.length !== Mk) throw new Error('forme invalide');
     } catch (e) {
       console.warn('forme de secours pour', SHAPE_NAMES[k], e && e.message);
-      out.push(placeholder(n, seed, k));
+      sh = placeholder(Mk, seed, k);
     }
+    out.push(padShape(sh, n, seed + k));
   }
   return out;
 }

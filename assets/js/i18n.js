@@ -1,56 +1,64 @@
-// BlackPhage - langue de la page (fr ou en) et textes produits par le JavaScript.
-// Les textes des pages statiques sont dans tools/content.py. Ici, seulement ce que le JavaScript écrit lui-même.
-// Les pages anglaises vivent dans en/ et déclarent data-base="../" sur <html>.
-export const LANG = (document.documentElement.dataset.lang || document.documentElement.lang) === 'en' ? 'en' : 'fr';
-export const BASE = document.documentElement.dataset.base || '';
+// BlackPhage - le bouton FR / EN. Le texte est écrit en anglais dans la page. Le dictionnaire (assets/data/strings.js,
+// généré par tools/build_site.py) contient les deux langues, et le bouton échange tout le texte sans recharger.
+import STRINGS from '../data/strings.js';
 
-const D = {
-  fr: {
-    h_program: 'Programme', h_area: 'Domaine', h_stage: 'Phase', h_status: 'Statut',
-    back_tech: 'Notre technologie',
-    not_found: 'Programme introuvable', not_found_p: 'Ce programme n’existe pas ou n’est pas public.',
-    problem_eyebrow: 'Le problème', problem_h2: 'Ce que les traitements actuels laissent sur la table.',
-    answer_eyebrow: 'Notre réponse', answer_h2: 'Un autre type de binder.',
-    where_eyebrow: 'Où nous en sommes', where_h2: 'Les repères du programme.',
-    cta_h2: 'Écrivons la suite ensemble.', cta_p: 'Nous parlons de {name} avec des partenaires du monde entier. Dites-nous ce que vous construisez.',
-    cta_btn: 'Parlons partenariat', cta_all: 'Voir notre technologie',
-    copy_mail: 'Copier', copied: 'Copié', copy_label: 'Copier l’adresse {mail}', undisclosed: 'Confidentiel',
-    loading: 'Chargement', error: 'Les données ne se sont pas chargées. Réessayez dans un instant.',
-    mail_subject: 'Programme {name}',
-  },
-  en: {
-    h_program: 'Program', h_area: 'Area', h_stage: 'Stage', h_status: 'Status',
-    back_tech: 'Our tech',
-    not_found: 'Program not found', not_found_p: 'This program does not exist or is not public.',
-    problem_eyebrow: 'The problem', problem_h2: 'What today’s drugs leave on the table.',
-    answer_eyebrow: 'Our answer', answer_h2: 'A different kind of binder.',
-    where_eyebrow: 'Where we are', where_h2: 'Program markers.',
-    cta_h2: 'Build the next chapter with us.', cta_p: 'We are speaking with partners around the world about {name}. Tell us what you are building.',
-    cta_btn: 'Talk partnership', cta_all: 'See our tech',
-    copy_mail: 'Copy', copied: 'Copied', copy_label: 'Copy the address {mail}', undisclosed: 'Undisclosed',
-    loading: 'Loading', error: 'The data did not load. Try again in a moment.',
-    mail_subject: '{name} program',
-  },
-};
+const root = document.documentElement;
+export let LANG = root.dataset.lang === 'fr' ? 'fr' : 'en';
+const subs = new Set();
 
-export function t(key, vars = {}) {
-  const s = (D[LANG][key] ?? D.fr[key] ?? key);
-  return s.replace(/\{(\w+)\}/g, (_, k) => (k in vars ? vars[k] : ''));
+export const t = (key, lang = LANG) => (STRINGS[lang] && STRINGS[lang][key]) || (STRINGS.en && STRINGS.en[key]) || key;
+export const onLang = (fn) => { subs.add(fn); return () => subs.delete(fn); };
+export const number = (n) => new Intl.NumberFormat(LANG === 'fr' ? 'fr-FR' : 'en-US').format(n);
+
+/** Coupe un texte en mots, chacun dans deux boîtes, pour les animations. */
+export function splitWords(el) {
+  let w = 0;
+  el.querySelectorAll('[data-i18n]').forEach((part) => {
+    const words = part.textContent.trim().split(/\s+/);
+    part.textContent = '';
+    words.forEach((word, i) => {
+      const o = document.createElement('span'); o.className = 'word'; o.style.setProperty('--w', w++);
+      const n = document.createElement('span'); n.className = 'word__i'; n.textContent = word;
+      o.appendChild(n); part.appendChild(o);
+      if (i < words.length - 1) part.appendChild(document.createTextNode(' '));
+    });
+  });
 }
 
-/** Choisit la langue d'un champ {fr, en} des fichiers de données. */
-export const L = (o) => (o && typeof o === 'object' ? (o[LANG] ?? o.fr ?? '') : (o ?? ''));
-
-const FILES = { accueil: 'index.html', tech: 'tech.html', programme: 'program.html', carrieres: 'careers.html' };
-
-/** Adresse de la même page dans l'autre langue (l'ancre est conservée). */
-export function otherLangHref() {
-  const fromPath = location.pathname.split('/').pop();
-  const file = FILES[document.body.dataset.page] || (/\.html$/.test(fromPath) ? fromPath : 'index.html');
-  return (LANG === 'en' ? `../${file}` : `en/${file}`) + location.search + location.hash;
+/** Coupe un paragraphe en mots allumés un à un par le défilement. */
+export function wordsOf(el) {
+  const words = el.textContent.trim().split(/\s+/);
+  el.textContent = '';
+  words.forEach((word, i) => {
+    const s = document.createElement('span'); s.className = 'wd'; s.textContent = word;
+    el.appendChild(s);
+    if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+  });
+  return [...el.querySelectorAll('.wd')];
 }
 
-/** Mémorise le choix de langue de la personne. La redirection automatique ne le contredit plus. */
-export function rememberLang(lang) {
-  try { localStorage.setItem('bp-lang', lang); } catch { /* stockage indisponible */ }
+export function apply(lang) {
+  LANG = lang === 'fr' ? 'fr' : 'en';
+  root.lang = LANG; root.dataset.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('*').forEach((el) => {
+    if (!el.attributes || !el.hasAttributes()) return;
+    for (const a of el.getAttributeNames()) {
+      if (a.startsWith('data-i18n-') && a !== 'data-i18n-html') el.setAttribute(a.slice(10), t(el.getAttribute(a)));
+    }
+  });
+  const tk = document.body.dataset.titleKey;
+  if (tk) document.title = document.body.dataset.home === '1' ? t(tk) : `${t(tk)} · BlackPhage`;
+  const dk = document.body.dataset.descKey; const meta = document.querySelector('meta[name="description"]');
+  if (dk && meta) meta.setAttribute('content', t(dk));
+  document.querySelectorAll('[data-split]').forEach(splitWords);
+  document.querySelectorAll('[data-words]').forEach((el) => { el.dataset.ready = '1'; });
+  try { localStorage.setItem('bp-lang', LANG); } catch (e) { /* stockage indisponible */ }
+  subs.forEach((fn) => fn(LANG));
+}
+
+export function initLanguage() {
+  apply(LANG);
+  root.classList.remove('i18n-pending');
+  document.getElementById('lang')?.addEventListener('click', () => apply(LANG === 'fr' ? 'en' : 'fr'));
 }

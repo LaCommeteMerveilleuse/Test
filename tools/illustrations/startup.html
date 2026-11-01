@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Startup culture, voxel dioramas</title>
+<!-- Four voxel dioramas for the culture section. ?scene=whiteboard-sprint | founders-table | pitch-day | partners-handshake
+     Options: w, h (canvas size, default 1200x800), ss (supersampling, 1 or 2), az, el, fov (camera), zoom, fx, fy (framing). -->
+<script type="importmap">{ "imports": { "three": "../../assets/vendor/three/three.module.min.js" } }</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
+  body { display: grid; place-items: center; }
+  canvas { display: block; width: min(100vw, 150vh); height: min(66.667vw, 100vh); }
+</style>
+</head><body>
+<canvas id="c" aria-label="Voxel illustration"></canvas>
+<script type="module" src="./startup.js"></script>
+</body></html>

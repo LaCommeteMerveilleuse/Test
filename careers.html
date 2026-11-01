@@ -1,135 +1,141 @@
 <!doctype html>
-<html lang="fr" data-lang="fr">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Carrières · BlackPhage</title>
-  <meta name="description" content="Rejoignez BlackPhage et aidez à concevoir une nouvelle classe de médicaments protéiques.">
-  <meta name="theme-color" content="#151a3c">
-  <meta property="og:title" content="Carrières · BlackPhage">
-  <meta property="og:description" content="Rejoignez BlackPhage et aidez à concevoir une nouvelle classe de médicaments protéiques.">
+  <title>Careers · BlackPhage</title>
+  <meta name="description" content="Join BlackPhage and help design a new class of protein medicines.">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="BlackPhage">
+  <meta property="og:description" content="Join BlackPhage and help design a new class of protein medicines.">
   <meta property="og:type" content="website">
-  <!-- langue:debut -->
-  <link rel="alternate" hreflang="fr" href="careers.html">
-  <link rel="alternate" hreflang="en" href="en/careers.html">
-  <link rel="alternate" hreflang="x-default" href="en/careers.html">
-  <script>
-(function () { try {
-  var d = document.documentElement, here = (d.dataset.lang || d.lang) === 'en' ? 'en' : 'fr';
-  try { localStorage.setItem('bp-t', '1'); localStorage.removeItem('bp-t'); } catch (e) { return; }
-  var want = localStorage.getItem('bp-lang');
-  if (want !== 'fr' && want !== 'en') {
-    if (sessionStorage.getItem('bp-auto')) return;
-    sessionStorage.setItem('bp-auto', '1');
-    var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
-    want = /^fr/i.test(l) ? 'fr' : 'en';
-  }
-  if (want === here) return;
-  var f = location.pathname.split('/').pop(); if (!/\.html$/.test(f)) f = 'index.html';
-  location.replace((here === 'en' ? '../' : 'en/') + f + location.search + location.hash);
-} catch (e) {} })();
-</script>
-  <!-- langue:fin -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/site.css">
-  <script>document.documentElement.classList.add('js')</script>
-  <script type="module" src="assets/js/chrome.js"></script>
+  <script type="importmap">{ "imports": { "three": "./assets/vendor/three/three.module.min.js" } }</script>
+  <script>
+    (function () {
+      var d = document.documentElement; d.classList.add('js', 'i18n-pending');
+      var l = 'en';
+      try { l = localStorage.getItem('bp-lang') || ''; } catch (e) {}
+      if (l !== 'fr' && l !== 'en') l = /^fr/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 'fr' : 'en';
+      d.lang = l; d.dataset.lang = l;
+      setTimeout(function () { d.classList.remove('i18n-pending'); }, 2500);
+    })();
+  </script>
+  <script type="module" src="assets/js/main.js"></script>
 </head>
-<body data-page="carrieres" class="page-inner">
-<a class="skip" href="#main">Aller au contenu</a>
+<body class="page-careers" data-title-key="car_title" data-desc-key="car_desc" data-home="0">
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<div class="bg" aria-hidden="true">
+  <i class="bg__blob bg__blob--a"></i><i class="bg__blob bg__blob--b"></i><i class="bg__blob bg__blob--c"></i>
+  <i class="bg__grid"></i><i class="bg__beam"></i><canvas class="bg__dust" id="dust"></canvas><i class="bg__spot"></i><i class="bg__grain"></i>
+</div>
+
 <header class="nav" id="nav">
-  <div class="nav__in">
-    <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
-    <nav class="nav__pill glass" id="nav-links" aria-label="Navigation principale">
-      <a href="index.html">Accueil</a>
-      <a href="tech.html">Notre technologie</a>
-      <a href="careers.html" aria-current="page">Carrières</a>
-      <a class="btn btn--light nav__cta-m" href="index.html#contact">Devenir partenaire</a>
-    </nav>
-    <div class="nav__end">
-      <a class="langswitch" href="en/careers.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a>
-      <a class="btn btn--light nav__cta" href="index.html#contact">Devenir partenaire</a>
-      <button class="nav__burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav-links"><span></span></button>
-    </div>
+  <a class="logo" href="index.html" aria-label="BlackPhage, home" data-i18n-aria-label="home_aria"><img class="logo__img" src="assets/img/blackphage-logo-noir.svg" alt="BlackPhage" width="170" height="29"></a>
+  <nav class="nav__pill" id="nav-pill" aria-label="Main navigation" data-i18n-aria-label="nav_main">
+    <i class="nav__ind" aria-hidden="true"></i><a href="index.html#engineering" data-i18n="nav_tech">Technology</a><a href="index.html#novadiff" data-i18n="nav_novadiff">NovaDiff</a><a href="index.html#story" data-i18n="nav_science">Science</a><a href="index.html#articles" data-i18n="nav_articles">Articles</a><a href="index.html#why" data-i18n="nav_why">Why</a><a href="careers.html" aria-current="page" data-i18n="nav_careers">Careers</a>
+  </nav>
+  <div class="nav__end">
+    <button class="lang" id="lang" type="button" aria-label="Switch to French" data-i18n-aria-label="lang_aria" title="Translate the page" data-i18n-title="lang_hint"><span class="lang__on" data-l="en">EN</span><span data-l="fr">FR</span></button>
+    <button class="btn btn--dark nav__cta" type="button" data-open-contact data-i18n="nav_contact" data-cursor="">Contact</button>
+    <button class="burger" id="burger" type="button" aria-label="Open the menu" data-i18n-aria-label="nav_menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
   </div>
 </header>
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="menu__panel">
+    <p class="menu__title" data-i18n="menu_title">Menu</p>
+    <nav class="menu__list" aria-label="Main navigation" data-i18n-aria-label="nav_main">
+      <a class="menu__item" href="index.html#engineering" style="--i:0"><span class="menu__n">01</span><span class="menu__t" data-i18n="nav_tech">Technology</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="index.html#novadiff" style="--i:1"><span class="menu__n">02</span><span class="menu__t" data-i18n="nav_novadiff">NovaDiff</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="index.html#story" style="--i:2"><span class="menu__n">03</span><span class="menu__t" data-i18n="nav_science">Science</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="index.html#articles" style="--i:3"><span class="menu__n">04</span><span class="menu__t" data-i18n="nav_articles">Articles</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="menu__item" href="index.html#why" style="--i:4"><span class="menu__n">05</span><span class="menu__t" data-i18n="nav_why">Why</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a class="menu__item" href="careers.html" style="--i:5"><span class="menu__n">06</span><span class="menu__t" data-i18n="nav_careers">Careers</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M7.5 6H14v6.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </nav>
+    <div class="menu__foot">
+      <button class="btn btn--dark" type="button" data-open-contact data-i18n="nav_contact">Contact</button>
+      <a class="menu__mail" data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a>
+    </div>
+  </div>
+</div>
 <main id="main">
 <section class="pagehead">
   <div class="container">
-    <p class="eyebrow">Carrières</p>
-    <h1 class="h1 h1--wide">Un impact qui change le monde naît d’une culture pensée pour l’innovation.</h1>
-    <p class="lead">Chez BlackPhage, nous construisons NovaDiff active, un agent autonome qui conçoit de nouveaux médicaments. Notre équipe réunit biologie, apprentissage automatique et ingénierie, avec une même envie de repousser la frontière du traitable.</p>
+    <a class="back" href="index.html"><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="c_back">Back to home</span></a>
+    <p class="eyebrow" data-i18n="car_eyebrow">Careers</p>
+    <h1 class="h1" data-i18n="car_h1">World-changing impact starts with a culture built for innovation.</h1>
+    <p class="lead" data-i18n="car_lead">At BlackPhage, we build NovaDiff active, an autonomous agent that designs new medicines. Our team brings together biology, machine learning and engineering, with one shared drive to move the frontier of the treatable.</p>
   </div>
 </section>
-
-<section class="sec sec--tight">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Pourquoi nous rejoindre</p>
-      <h2 class="h2 reveal">Un endroit où vos idées comptent.</h2>
-    </div>
-    <div class="cards3"><article class="card glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="10.5" cy="10.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="19.5" cy="11.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.8 22.5c.5-4 3-6 6.7-6s6.2 2 6.7 6M17.5 16.6c3.2-.5 6 .9 6.7 5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Une équipe petite et affûtée</h3><p>Des décisions rapides, peu d’intermédiaires et des idées qui deviennent des programmes.</p></article><article class="card glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="9.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 14h19M14 4.5c-4 4.4-4 14.6 0 19M14 4.5c4 4.4 4 14.6 0 19" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span><h3>Un impact concret</h3><p>Votre travail s’attaque à des maladies qui n’ont pas encore de bonne réponse.</p></article><article class="card glass reveal"><span class="pillar__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 23.5V8.5M8.2 14.2 14 8.4l5.8 5.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 23.5h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span><h3>Un cadre qui vous fait grandir</h3><p>Vous apprenez chaque semaine, aux côtés de collègues qui aiment transmettre.</p></article></div>
-  </div>
-</section>
-
-<section class="sec sec--tight">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Le profil que nous recherchons</p>
-      <h2 class="h2 reveal">Cinq qualités que nous valorisons.</h2>
-    </div>
-    <ol class="quals"><li class="qual reveal"><span class="qual__w">Réflexion</span><span class="qual__p">Vous prenez le temps de comprendre un problème avant d’y répondre.</span></li><li class="qual reveal"><span class="qual__w">Curiosité</span><span class="qual__p">Vous posez des questions, explorez d’autres disciplines et aimez apprendre.</span></li><li class="qual reveal"><span class="qual__w">Créativité</span><span class="qual__p">Vous imaginez des solutions que personne n’a encore essayées.</span></li><li class="qual reveal"><span class="qual__w">Détermination</span><span class="qual__p">Face à un obstacle, vous cherchez une autre voie jusqu’à ce que cela fonctionne.</span></li><li class="qual reveal"><span class="qual__w">Esprit d’équipe</span><span class="qual__p">Vous donnez le meilleur de vous-même à plusieurs et vous partagez ce que vous savez.</span></li></ol>
-  </div>
-</section>
-
-<section class="sec sec--tight">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Les compétences</p>
-      <h2 class="h2 reveal">Des savoir-faire variés, une même exigence.</h2>
-      <p class="lead reveal">Nous recrutons des personnes qui allient rigueur scientifique et esprit de bâtisseur. Selon les postes, nous recherchons ces compétences.</p>
-    </div>
-    <ul class="chips"><li class="chip reveal">Conception de protéines</li><li class="chip reveal">Apprentissage automatique et agents IA</li><li class="chip reveal">Biologie computationnelle</li><li class="chip reveal">Biochimie et biologie moléculaire</li><li class="chip reveal">Ingénierie logicielle</li><li class="chip reveal">Propriété intellectuelle et affaires réglementaires</li><li class="chip reveal">Partenariats et développement commercial</li><li class="chip reveal">Communication claire</li></ul>
-  </div>
-</section>
-
-<section class="sec sec--tight" id="jobs">
-  <div class="container">
-    <div class="sec__head">
-      <p class="eyebrow reveal">Postes ouverts</p>
-      <h2 class="h2 reveal">Nous recrutons.</h2>
-      <p class="lead reveal">Écrivez-nous à cette adresse. Joignez un CV et quelques lignes sur ce qui vous motive.</p>
-      <p class="mailrow"><a data-mail="careersEmail" href="mailto:careers@blackphage.com">careers@blackphage.com</a><button class="copy" type="button" data-copy="careers@blackphage.com" data-mailkey="careersEmail"></button></p>
-    </div>
-    <div class="jobs"><article class="job glass reveal"><div class="job__main"><p class="job__tag">Équipe agent · Temps plein</p><h3>Ingénierie des agents IA</h3><p>Construire les boucles qui permettent à notre agent de planifier, concevoir et apprendre seul.</p></div><a class="btn btn--ghost" data-mail="careersEmail" data-subject="Candidature%20Ing%C3%A9nierie%20des%20agents%20IA" href="mailto:careers@blackphage.com?subject=Candidature%20Ing%C3%A9nierie%20des%20agents%20IA">Postuler<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job glass reveal"><div class="job__main"><p class="job__tag">Conception · Temps plein</p><h3>Recherche en conception de protéines</h3><p>Transformer les propositions de l’agent en binders qui fonctionnent au laboratoire.</p></div><a class="btn btn--ghost" data-mail="careersEmail" data-subject="Candidature%20Recherche%20en%20conception%20de%20prot%C3%A9ines" href="mailto:careers@blackphage.com?subject=Candidature%20Recherche%20en%20conception%20de%20prot%C3%A9ines">Postuler<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job glass reveal"><div class="job__main"><p class="job__tag">Biologie · Temps plein</p><h3>Biologie computationnelle</h3><p>Cartographier la biologie des maladies et choisir les cibles qui valent la peine.</p></div><a class="btn btn--ghost" data-mail="careersEmail" data-subject="Candidature%20Biologie%20computationnelle" href="mailto:careers@blackphage.com?subject=Candidature%20Biologie%20computationnelle">Postuler<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job glass reveal"><div class="job__main"><p class="job__tag">Partenariats · Temps plein</p><h3>Développement commercial, international</h3><p>Ouvrir les portes des partenaires pharmaceutiques et des investisseurs, partout dans le monde.</p></div><a class="btn btn--ghost" data-mail="careersEmail" data-subject="Candidature%20D%C3%A9veloppement%20commercial%2C%20international" href="mailto:careers@blackphage.com?subject=Candidature%20D%C3%A9veloppement%20commercial%2C%20international">Postuler<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article></div>
-  </div>
-</section>
-
-<section class="sec end">
-  <div class="container">
-    <div class="end__in glass reveal">
-      <h2 class="end__h end__h--sm">Postulez maintenant pour résoudre l’un des problèmes les plus urgents de la découverte de médicaments.</h2>
-      <p class="lead">Aucun poste ne vous correspond ? Écrivez-nous quand même et dites-nous ce qui vous donne envie.</p>
-      <div class="hero__cta">
-        <a class="btn btn--light btn--lg" data-mail="careersEmail" data-subject="Candidature" href="mailto:careers@blackphage.com?subject=Candidature">Postuler maintenant<svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-      <p class="mailrow"><a data-mail="careersEmail" href="mailto:careers@blackphage.com">careers@blackphage.com</a><button class="copy" type="button" data-copy="careers@blackphage.com" data-mailkey="careersEmail"></button></p>
-    </div>
-  </div>
-</section>
+<section class="sec sec--tight"><div class="container"><p class="eyebrow reveal" data-i18n="why_eyebrow">Why join us</p><h2 class="h2 reveal" data-i18n="why_h2">A place where your ideas count.</h2><div class="cards3"><article class="card"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M10 6a4 4 0 0 0-4 4 3.5 3.5 0 0 0-1.5 6A4 4 0 0 0 10 22a3 3 0 0 0 4-2.5V8.5A2.5 2.5 0 0 0 10 6Zm8 0a4 4 0 0 1 4 4 3.5 3.5 0 0 1 1.5 6A4 4 0 0 1 18 22a3 3 0 0 1-4-2.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><h3 data-i18n="why_1">A small, sharp team</h3><p class="card__p" data-i18n="why_1n">Fast decisions, few layers, and ideas that turn into programs.</p></article><article class="card"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="m14 3.5 9 5v11l-9 5-9-5v-11l9-5Zm0 0v11m0 0 9-5.5m-9 5.5-9-5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><h3 data-i18n="why_2">Real impact</h3><p class="card__p" data-i18n="why_2n">Your work goes after diseases that still lack a good answer.</p></article><article class="card"><span class="feat__ico"><svg viewBox="0 0 28 28" aria-hidden="true"><path d="M6.4 11.6A8.2 8.2 0 0 1 20.6 8.6M21.6 16.4A8.2 8.2 0 0 1 7.4 19.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M21.6 4v5.2h-5.2M6.4 24v-5.2h5.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 data-i18n="why_3">A place to grow</h3><p class="card__p" data-i18n="why_3n">You learn every week, alongside colleagues who love to share what they know.</p></article></div></div></section>
+<section class="sec sec--tight"><div class="container"><p class="eyebrow reveal" data-i18n="prof_eyebrow">Who we are looking for</p><h2 class="h2 reveal" data-i18n="prof_h2">Five qualities we value.</h2><ol class="quals"><li class="qual reveal-line" style="--i:0"><span class="qual__w" data-i18n="q_1">Thoughtful</span><span class="qual__p" data-i18n="q_1n">You take the time to understand a problem before answering it.</span></li><li class="qual reveal-line" style="--i:1"><span class="qual__w" data-i18n="q_2">Curious</span><span class="qual__p" data-i18n="q_2n">You ask questions, explore other disciplines and love to learn.</span></li><li class="qual reveal-line" style="--i:2"><span class="qual__w" data-i18n="q_3">Creative</span><span class="qual__p" data-i18n="q_3n">You imagine solutions nobody has tried yet.</span></li><li class="qual reveal-line" style="--i:3"><span class="qual__w" data-i18n="q_4">Determined</span><span class="qual__p" data-i18n="q_4n">When you hit an obstacle, you find another way until it works.</span></li><li class="qual reveal-line" style="--i:4"><span class="qual__w" data-i18n="q_5">Collaborative</span><span class="qual__p" data-i18n="q_5n">You do your best work with others and share what you know.</span></li></ol></div></section>
+<section class="sec sec--tight"><div class="container"><p class="eyebrow reveal" data-i18n="skill_eyebrow">Skills</p><h2 class="h2 reveal" data-i18n="skill_h2">Varied expertise, one shared standard.</h2><p class="lead reveal" data-i18n="skill_lead">We hire people who combine scientific rigor with a builder’s mindset. Depending on the role, we look for these skills.</p><ul class="chips chips--row"><li class="chip" data-i18n="sk_1">Protein design</li><li class="chip" data-i18n="sk_2">Machine learning and AI agents</li><li class="chip" data-i18n="sk_3">Computational biology</li><li class="chip" data-i18n="sk_4">Biochemistry and molecular biology</li><li class="chip" data-i18n="sk_5">Software engineering</li><li class="chip" data-i18n="sk_6">IP and regulatory affairs</li><li class="chip" data-i18n="sk_7">Partnerships and business development</li><li class="chip" data-i18n="sk_8">Clear communication</li></ul></div></section>
+<section class="sec sec--tight" id="jobs"><div class="container"><p class="eyebrow reveal" data-i18n="jobs_eyebrow">Open positions</p><h2 class="h2 reveal" data-i18n="jobs_h2">We are hiring.</h2><p class="lead reveal" data-i18n="jobs_lead">Write to us at this address. Attach a CV and a few lines on what drives you.</p>
+  <p class="mailrow"><a data-mail="careersEmail" href="mailto:careers@blackphage.com">careers@blackphage.com</a><button class="copy" type="button" data-copy="careers@blackphage.com" data-mailkey="careersEmail"></button></p>
+  <article class="jobx reveal" id="serial-biotech-builder">
+    <p class="tag">Featured role · Scientific leadership · Full time</p>
+    <h3 class="jobx__title" data-i18n="sbb_title">Serial Biotech Builder</h3>
+    <p class="jobx__lead" data-i18n="sbb_lead">We are looking for an accomplished Serial Biotech Builder to be the scientific guarantor of BlackPhage and to maximize the value of every license we sign. You have built biotech companies before, taken assets through in vivo proof of concept and into a deal, and you know exactly what a buyer asks for next. You will work hand in hand with our founders, our scientists and NovaDiff active, and you will stand behind our science in front of pharma partners and investors.</p>
+    <dl class="jobx__meta"><div><dt data-i18n="sbb_m1_k">Company</dt><dd data-i18n="sbb_m1_v">BlackPhage, private company</dd></div><div><dt data-i18n="sbb_m2_k">Location</dt><dd data-i18n="sbb_m2_v">France or remote, with periodic international travel</dd></div><div><dt data-i18n="sbb_m3_k">Languages</dt><dd data-i18n="sbb_m3_v">Fluent French and English</dd></div><div><dt data-i18n="sbb_m4_k">Focus</dt><dd data-i18n="sbb_m4_v">Scientific credibility, licensing strategy, drug rescue, company building</dd></div></dl>
+    <div class="jobx__cols"><section class="jobx__sec"><h4 data-i18n="sbb_s1_h">Scientific guarantor</h4><ul><li data-i18n="sbb_s1_1">Challenge and validate every design, dataset and claim before it leaves the company, so our science stays rigorous and never over-promises.</li><li data-i18n="sbb_s1_2">Review the scientific road map of each drug rescue program, from target choice to in vivo studies, and decide with the team what to test next.</li><li data-i18n="sbb_s1_3">Be the credible scientific voice of BlackPhage with academic collaborators, partners and investors.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s2_h">Licensing and value</h4><ul><li data-i18n="sbb_s2_1">Build the licensing strategy of each asset, from the right partner and the right moment to the structure of the deal.</li><li data-i18n="sbb_s2_2">Prepare the data room and the story that goes with it, then lead the negotiation to maximize upfront payments, milestones and royalties.</li><li data-i18n="sbb_s2_3">Work with the founders on financing rounds and on strategic partnerships that raise the value of the portfolio.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s3_h">Ready for a sale after in vivo</h4><ul><li data-i18n="sbb_s3_1">Know and apply the requirements of a sale or license once in vivo proof of concept is in hand, such as reproducible efficacy in relevant models, dose response, exposure and tolerability, a credible manufacturing path, clear ownership of the asset and a defined regulatory route.</li><li data-i18n="sbb_s3_2">Turn these requirements into a plan of studies and milestones that the team can execute, and keep that plan honest about gaps.</li><li data-i18n="sbb_s3_3">Defend the asset in due diligence and answer the hardest questions from pharma business development, scientific and legal teams.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s4_h">Company building and partnerships</h4><ul><li data-i18n="sbb_s4_1">Help shape new ventures around rescued drugs, with narrative, business strategy, team building and early operations.</li><li data-i18n="sbb_s4_2">Mentor scientists and founders as they move from research to company formation.</li><li data-i18n="sbb_s4_3">Build lasting relationships with pharma teams, academic institutions, CROs and investors, and represent BlackPhage at conferences and partner meetings.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s5_h">Qualifications</h4><ul><li data-i18n="sbb_s5_1">PhD in a relevant field such as molecular biology, protein engineering, pharmacology, immunology or bioengineering.</li><li data-i18n="sbb_s5_2">Strong technical depth combined with a broad understanding of translational science and drug development.</li><li data-i18n="sbb_s5_3">Serial biotech entrepreneur with a record of founding, building and funding companies.</li><li data-i18n="sbb_s5_4">Demonstrated success taking programs from concept through in vivo studies to a license or a sale.</li><li data-i18n="sbb_s5_5">Hands-on knowledge of what buyers, licensees and investors require after in vivo proof of concept, and the ability to defend it under due diligence.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s6_h">Partnership and network strength</h4><ul><li data-i18n="sbb_s6_1">Extensive relationships across pharma, biotech, academia and the global venture community.</li><li data-i18n="sbb_s6_2">Demonstrated ability to establish and grow high-value scientific and commercial partnerships.</li></ul></section><section class="jobx__sec"><h4 data-i18n="sbb_s7_h">What we offer</h4><ul><li data-i18n="sbb_s7_1">A leadership role at the heart of a drug rescue company powered by an autonomous design agent.</li><li data-i18n="sbb_s7_2">Direct influence on the licensing strategy and on the scientific credibility of every program.</li><li data-i18n="sbb_s7_3">Access to a global network of partners and advisors, and the rare chance to build at the earliest stage.</li><li data-i18n="sbb_s7_4">A package that combines a salary and an equity stake, to be discussed together.</li></ul></section></div>
+    <div class="jobx__cta"><a class="btn btn--dark btn--lg" data-mail="careersEmail" data-subject="Application Serial Biotech Builder" href="mailto:careers@blackphage.com?subject=Application Serial Biotech Builder"><span data-i18n="job_apply">Apply</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+  </article>
+  <div class="jobs"><article class="job reveal-line" style="--i:0"><div><p class="tag">Agent team · Full time</p><h3 data-i18n="job_1">AI agent engineer</h3><p class="card__p" data-i18n="job_1n">Build the loops that let our agent plan, design and learn on its own.</p></div><a class="btn btn--light" data-mail="careersEmail" data-subject="Application AI agent engineer" href="mailto:careers@blackphage.com?subject=Application AI agent engineer"><span data-i18n="job_apply">Apply</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job reveal-line" style="--i:1"><div><p class="tag">Design · Full time</p><h3 data-i18n="job_2">Protein design scientist</h3><p class="card__p" data-i18n="job_2n">Turn the agent’s proposals into binders that work in the lab.</p></div><a class="btn btn--light" data-mail="careersEmail" data-subject="Application Protein design scientist" href="mailto:careers@blackphage.com?subject=Application Protein design scientist"><span data-i18n="job_apply">Apply</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job reveal-line" style="--i:2"><div><p class="tag">Biology · Full time</p><h3 data-i18n="job_3">Computational biologist</h3><p class="card__p" data-i18n="job_3n">Map disease biology and choose the targets worth pursuing.</p></div><a class="btn btn--light" data-mail="careersEmail" data-subject="Application Computational biologist" href="mailto:careers@blackphage.com?subject=Application Computational biologist"><span data-i18n="job_apply">Apply</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="job reveal-line" style="--i:3"><div><p class="tag">Partnerships · Full time</p><h3 data-i18n="job_4">Business development lead, international</h3><p class="card__p" data-i18n="job_4n">Open doors with pharma partners and investors around the world.</p></div><a class="btn btn--light" data-mail="careersEmail" data-subject="Application Business development lead, international" href="mailto:careers@blackphage.com?subject=Application Business development lead, international"><span data-i18n="job_apply">Apply</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article></div></div></section>
+<section class="sec end"><div class="container"><div class="endcard reveal"><h2 class="h2" data-i18n="car_end_h2">Apply now to solve one of the most urgent real-world problems in drug discovery.</h2><p class="lead" data-i18n="car_end_p">No role fits? Write to us anyway and tell us what excites you.</p>
+  <div class="hero__cta"><a class="btn btn--dark btn--lg" data-mail="careersEmail" data-subject="Application" href="mailto:careers@blackphage.com?subject=Application"><span data-i18n="car_end_cta">Apply now</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div></div></section>
 </main>
 <footer class="foot">
   <div class="container foot__in">
     <div class="foot__brand">
-      <a class="logo" href="index.html" aria-label="BlackPhage, accueil"><img class="logo__img" src="assets/img/blackphage-logo-blanc.svg" alt="BlackPhage" width="170" height="29"></a>
-      <p class="foot__tag">Repousser la frontière du traitable.</p>
+      <a class="logo" href="index.html"><img class="logo__img" src="assets/img/blackphage-logo-noir.svg" alt="BlackPhage" width="150" height="26"></a>
+      <p data-i18n="foot_tagline">Discovering the future of medicine.</p>
     </div>
-    <div><h4>Société</h4><ul><li><a href="index.html#who">Qui sommes-nous</a></li><li><a href="careers.html">Carrières</a></li></ul></div>
-    <div><h4>Technologie</h4><ul data-programs-list><li><a href="tech.html">Notre technologie</a></li><li><a href="program.html#glp-1r">GLP-1R</a></li></ul></div>
-    <div><h4>Contact</h4><ul><li><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></li><li><a class="langswitch" href="en/careers.html" hreflang="en" lang="en" aria-label="Switch to English"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-3.2 3.4-3.2 11.6 0 15M10 2.5c3.2 3.4 3.2 11.6 0 15" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span class="is-on">FR</span><span class="">EN</span></a></li></ul></div>
+    <div><h4 data-i18n="foot_explore">Explore</h4><ul>
+      <li><a href="index.html#engineering" data-i18n="nav_tech">Technology</a></li>
+      <li><a href="index.html#novadiff" data-i18n="nav_novadiff">NovaDiff</a></li>
+      <li><a href="index.html#articles" data-i18n="nav_articles">Articles</a></li>
+      <li><a href="index.html#why" data-i18n="nav_why">Why</a></li></ul></div>
+    <div><h4 data-i18n="foot_company">Company</h4><ul>
+      <li><a href="careers.html" data-i18n="nav_careers">Careers</a></li>
+      <li><button class="foot__link" type="button" data-open-contact data-i18n="nav_contact">Contact</button></li></ul></div>
+    <div><h4 data-i18n="foot_contact">Contact</h4><ul>
+      <li class="mailrow"><a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a><button class="copy" type="button" data-copy="partners@blackphage.com" data-mailkey="email"></button></li></ul></div>
   </div>
-  <div class="container foot__legal"><p>Programmes expérimentaux, non approuvés par la FDA, l’EMA ni aucune autre autorité.</p><p>© 2026 BlackPhage. Tous droits réservés.</p></div>
+  <div class="container foot__legal"><p data-i18n="legal">Investigational programs, not approved by the FDA, the EMA or any other regulator. Articles are educational and are not medical advice.</p><p>© 2026 BlackPhage. <span data-i18n="rights">All rights reserved</span>.</p></div>
 </footer>
+<div class="modal" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="form-title" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__box">
+    <button class="modal__x" type="button" data-close aria-label="Close" data-i18n-aria-label="form_close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <div class="modal__form" id="form-wrap">
+      <h2 id="form-title" data-i18n="form_title">Say hello</h2>
+      <p class="modal__lead" data-i18n="form_lead">Tell us what you are building or what is on your mind. We answer everyone.</p>
+      <form id="contact-form" novalidate>
+        <div class="field"><label for="f-last" data-i18n="form_last">Last name</label><input id="f-last" name="last" type="text" autocomplete="family-name" required><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field"><label for="f-first" data-i18n="form_first">First name</label><input id="f-first" name="first" type="text" autocomplete="given-name" required><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field field--wide"><label for="f-act" data-i18n="form_activity">Activity</label><select id="f-act" name="activity" required><option value="" data-i18n="form_pick">Select</option><option value="1" data-i18n="form_a1">Startup or founder</option><option value="2" data-i18n="form_a2">Pharma or biotech</option><option value="3" data-i18n="form_a3">Investor</option><option value="4" data-i18n="form_a4">Research or academia</option><option value="5" data-i18n="form_a5">Clinician</option><option value="6" data-i18n="form_a6">Press</option><option value="7" data-i18n="form_a7">Patient or caregiver</option><option value="8" data-i18n="form_a8">Other</option></select><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <div class="field field--wide"><label for="f-msg" data-i18n="form_msg">Message</label><textarea id="f-msg" name="message" rows="5" required></textarea><span class="field__err" data-i18n="form_required">Please fill in this field</span></div>
+        <button class="btn btn--dark btn--lg field--wide" type="submit"><span data-i18n="form_send">Send message</span><svg class="arr" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </form>
+    </div>
+    <div class="modal__ok" id="form-ok" hidden>
+      <h2 data-i18n="form_ok_title">Thank you, your message is ready</h2>
+      <p class="modal__lead" data-i18n="form_ok_text">Your mail app should open. If it does not, copy the message below and send it to the address shown.</p>
+      <p class="modal__addr"><span data-i18n="form_mail_label">Address</span> <a data-mail="email" href="mailto:partners@blackphage.com">partners@blackphage.com</a></p>
+      <textarea id="form-copy" readonly rows="6" aria-label="Copy the message" data-i18n-aria-label="form_copy"></textarea>
+      <button class="btn btn--light" type="button" id="form-copy-btn" data-i18n="form_copy">Copy the message</button>
+    </div>
+  </div>
+</div>
+<div class="modal reader" id="reader" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="reader-title">
+  <div class="modal__scrim" data-close></div>
+  <article class="modal__box reader__box">
+    <button class="modal__x" type="button" data-close aria-label="Close the article" data-i18n-aria-label="art_close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <p class="reader__tag" id="reader-tag"></p>
+    <h2 id="reader-title"></h2>
+    <p class="reader__meta" id="reader-meta"></p>
+    <div class="reader__body" id="reader-body"></div>
+    <p class="reader__note" data-i18n="art_note">Educational content, not medical advice.</p>
+  </article>
+</div>
+<div class="cursor" aria-hidden="true"><i class="cursor__dot"></i><i class="cursor__ring"><span class="cursor__label"></span></i></div>
 </body>
 </html>
