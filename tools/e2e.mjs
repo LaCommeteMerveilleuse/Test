@@ -192,10 +192,11 @@ async function scrollTo(page, y, wait = 700) {
   // les articles : une flèche de chaque côté, défilement manuel d'une carte à la fois, rien ne bouge seul
   geo = await G(); await scrollTo(page, geo.articles, 900);
   const ar0 = await page.evaluate(() => { const sc = document.querySelector('.arts__scroll'); const p = document.querySelector('.arts__nav--prev'); const n = document.querySelector('.arts__nav--next'); const b = sc.getBoundingClientRect(); return { cards: document.querySelectorAll('.arts .acard').length, l: sc.scrollLeft, pd: p.disabled, nd: n.disabled, pl: p.getBoundingClientRect().left - b.left, nr: b.right - n.getBoundingClientRect().right, anim: getComputedStyle(document.querySelector('.arts__track')).animationName }; });
-  ok(ar0.cards === 8 && ar0.anim === 'none', 'articles : huit cartes, aucun défilement automatique');
+  ok(ar0.cards === 10 && ar0.anim === 'none', 'articles : dix cartes, aucun défilement automatique');
   ok(ar0.l === 0 && ar0.pd && !ar0.nd, 'articles : au départ la flèche de gauche est grisée, celle de droite active');
   ok(ar0.pl < 60 && ar0.nr < 60, 'articles : une flèche de chaque côté de la rangée');
-  await page.click('.arts__nav--next'); await sleep(900);
+  await page.click('.arts__nav--next');
+  for (let k = 0, last = -1; k < 20; k++) { await sleep(400); const cur = await page.evaluate(() => document.querySelector('.arts__scroll').scrollLeft); if (Math.abs(cur - last) < 1) break; last = cur; }
   const ar1 = await page.evaluate(() => ({ l: document.querySelector('.arts__scroll').scrollLeft, pd: document.querySelector('.arts__nav--prev').disabled }));
   ok(ar1.l > 150 && !ar1.pd, 'articles : la flèche de droite fait défiler et réveille celle de gauche');
   await sleep(1200);
@@ -212,6 +213,10 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate(() => document.getElementById('reader').classList.contains('is-open') && document.querySelectorAll('#reader-body p').length === 5 && document.getElementById('reader-title').textContent.length > 5), 'un article s\'ouvre dans la fenêtre de lecture');
   await page.evaluate(() => document.querySelector('.acard[data-article="8"]').click()); await sleep(500);
   ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /CRISPR/.test(document.getElementById('reader-body').textContent) && /Lulu/.test(document.getElementById('reader-title').textContent)), 'article bébés OGM : huit paragraphes, CRISPR');
+  await page.evaluate(() => document.querySelector('.acard[data-article="9"]').click()); await sleep(500);
+  ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /guidance cellulaire|cell guidance/.test(document.getElementById('reader-body').textContent) && /Print|Imprimer/.test(document.getElementById('reader-title').textContent)), 'article bioimpression : huit paragraphes, l\'outil de guidance cellulaire');
+  await page.evaluate(() => document.querySelector('.acard[data-article="10"]').click()); await sleep(500);
+  ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /Emily/.test(document.getElementById('reader-body').textContent) && /2026/.test(document.getElementById('reader-title').textContent)), 'article thérapies cellulaires : huit paragraphes, Emily, 2026');
   await page.evaluate(() => document.querySelector('.acard[data-article="4"]').click()); await sleep(500);
   ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /cloud lab/i.test(document.getElementById('reader-body').textContent) && /Adam/.test(document.getElementById('reader-body').textContent) && !/par exemple/.test(document.getElementById('reader-body').textContent) && /2027/.test(document.getElementById('reader-title').textContent)), 'article 2027 : le robot Adam, puis le cloud lab, la boucle fermée et les modèles spécialisés, huit paragraphes');
   await page.keyboard.press('Escape'); await sleep(300);
