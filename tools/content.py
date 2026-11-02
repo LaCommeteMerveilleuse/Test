@@ -80,8 +80,8 @@ s('culture_title', 'Là où la science rencontre l\'esprit startup', 'Where scie
 # ------------------------------------------------------------------ NovaDiff
 s('nova_eyebrow', 'Notre agent', 'Our agent')
 s('nova_title', 'Découvrez NovaDiff', 'Meet NovaDiff')
-s('nova_text', 'NovaDiff est notre agent autonome, un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et une durée moyenne de vie en bonne santé au-delà de 100 ans.',
-  'NovaDiff is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and an average healthy lifespan beyond 100 years.')
+s('nova_text', 'NovaDiff est notre agent autonome, un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et l\'allongement de l\'espérance de vie en bonne santé.',
+  'NovaDiff is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and extending healthy life expectancy.')
 s('nova_text2', 'Il construit des Smart Binders, des protéines dépendantes du pH qui changent de conformation pour réduire la toxicité.',
   'It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.')
 s('nova_f1', 'Il lit la biologie', 'It reads biology')
