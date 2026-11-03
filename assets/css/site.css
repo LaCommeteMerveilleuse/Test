@@ -196,7 +196,7 @@ body.menu-open { overflow: hidden; }
 
 /* notre raison d'être */
 .rescue__in { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: center; }
-.rescue__lead { color: var(--pine); font-weight: 600; max-width: 34ch; }
+.rescue__lead { margin-top: 18px; font: 500 clamp(1.1rem, 1.7vw, 1.42rem)/1.55 var(--sans); letter-spacing: -0.01em; color: var(--pine); max-width: 40em; }
 .rescue__side { display: flex; flex-direction: column; gap: 10px; }
 .slot--brain2 { height: clamp(300px, 50vh, 500px); }
 .rescue__p { margin-top: 22px; font: 500 clamp(1.1rem, 1.7vw, 1.42rem)/1.55 var(--sans); letter-spacing: -0.01em; color: var(--pine); max-width: 40em; }
@@ -217,8 +217,10 @@ body.menu-open { overflow: hidden; }
 
 /* le carrousel infini */
 .marquee { position: relative; overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); padding-block: 14px; }
-.marquee__track { display: flex; width: max-content; gap: 20px; padding-inline: 10px; animation: marquee 56s linear infinite; will-change: transform; }
-.marquee--slow .marquee__track { animation-duration: 96s; animation-direction: reverse; }
+.marquee__track { display: flex; width: max-content; gap: 20px; padding-inline: 10px; }
+.marquee[data-ready] .marquee__track { animation: marquee 56s linear infinite; will-change: transform; }
+.marquee:not([data-ready]) { overflow-x: auto; scrollbar-width: none; }
+.marquee--slow[data-ready] .marquee__track { animation-duration: 96s; animation-direction: reverse; }
 .marquee:hover .marquee__track, .marquee:focus-within .marquee__track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translate3d(calc(-50% - 10px), 0, 0); } }
 /* les cartes gardent la proportion de chaque image : même hauteur, largeur selon l'image, aucune partie rognée */

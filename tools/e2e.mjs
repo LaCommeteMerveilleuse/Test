@@ -51,7 +51,7 @@ async function scrollTo(page, y, wait = 700) {
   const txt = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   const h1 = await page.evaluate(() => document.querySelector('h1').textContent.replace(/\s+/g, ' ').trim());
   ok(/Discovering the future of medicine/.test(h1), 'titre central : ' + h1);
-  for (const w of ['Our articles', 'Toronto, 1922', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'NCOA1', 'SRC-1', 'Bax Inhibitor-1', 'TMBIM6', 'GDF-8', 'Activin A', 'Sweeper', 'Latent-Lock', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question', 'right key for the right lock', 'Pick a target', 'Generate by diffusion', 'Optimize in real time', 'Turn the pathway on or off', 'activates the receptor']) {
+  for (const w of ['Our articles', 'Toronto, 1922', 'drug rescue', 'engineer medicine that changes people', 'transforming discovery into real-world impact', 'TNF alpha', 'GLP-1R', 'GIPR', 'Myostatin / Activin A', 'Oncology, intracellular targets (proprietary programs)', 'Meet NovaDiff', 'Where science meets the startup spirit', 'Our why', 'Current programs', 'Small structures. Big questions.', 'by diffusion', 'in real time', 'biological question', 'right key for the right lock', 'Pick a target', 'Generate by diffusion', 'Optimize in real time', 'Turn the pathway on or off', 'activates it', 'sensitive to the biological microenvironment', 'A target protein commands a biological pathway']) {
     ok(txt.includes(w) || txt.toLowerCase().includes(w.toLowerCase()), 'le texte contient « ' + w + ' »');
   }
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'Patents pending', 'What we build', 'NovaDiff active', 'From one cube to a whole world', 'for startups & people', 'For startups', 'For people', 'On contact, NovaDiff reshapes itself', 'The receptor switches on', 'The signal carries on']) ok(!txt.includes(w), 'le texte ne contient pas « ' + w + ' »');
@@ -73,7 +73,7 @@ async function scrollTo(page, y, wait = 700) {
   const txtFr = await page.evaluate(() => document.body.textContent.replace(/\s+/g, ' '));
   ok(!/[—;:]/.test(txtFr), 'ni tiret long, ni point-virgule, ni deux-points dans le texte (FR)' + (/[—;:]/.test(txtFr) ? ' : ' + (txtFr.match(/.{0,30}[—;:].{0,30}/) || [''])[0] : ''));
   for (const w of ["Penser à l'échelle moléculaire", "Imaginer à l'échelle humaine", 'Animation', 'TfR1', 'CD71', 'NovaDiff active']) ok(!txtFr.includes(w), 'FR : pas « ' + w + ' »');
-  for (const w of ['TNF alpha', 'GLP-1R', 'TMBIM6', 'Latent-Lock', "Notre raison d'être", 'Nos articles', 'Toronto, 1922', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'par diffusion', 'en temps réel', 'la bonne clé pour la bonne serrure', 'Choisir une cible', 'Générer par diffusion', 'Optimiser en temps réel', 'Activer ou inhiber la voie']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
+  for (const w of ['TNF alpha', 'GLP-1R', 'Myostatine / Activine A', 'Oncologie, cibles intracellulaires (programmes propriétaires)', "Notre raison d'être", 'Nos articles', 'Toronto, 1922', 'Programmes actuels', 'Une science rigoureuse à la paillasse', 'Des sprints courts', 'par diffusion', 'en temps réel', 'la bonne clé pour la bonne serrure', 'Choisir une cible', 'Générer par diffusion', 'Optimiser en temps réel', 'Activer ou inhiber la voie']) ok(txtFr.replace(/’/g, "'").includes(w), 'FR : le texte contient « ' + w + ' »');
   ok(await page.evaluate(() => localStorage.getItem('bp-lang') === 'fr'), 'la langue est mémorisée');
   await page.reload({ waitUntil: 'load' }); await sleep(1500);
   ok(await page.evaluate(() => document.documentElement.lang === 'fr'), 'la langue survit au rechargement');
@@ -104,6 +104,18 @@ async function scrollTo(page, y, wait = 700) {
   const mq = await page.evaluate(() => { const t = document.querySelector('.culture .marquee__track'); const k = [...t.children]; return { n: k.length, hidden: k.filter((x) => x.getAttribute('aria-hidden') === 'true').length, anim: getComputedStyle(t).animationName }; });
   ok(mq.n >= 10 && mq.n % 2 === 0 && mq.hidden >= mq.n / 2, 'carrousel : éléments dupliqués pour la boucle ' + JSON.stringify(mq));
   ok(mq.anim && mq.anim !== 'none', 'carrousel : animation de défilement active');
+  // secret industriel : aucune cible sensible ni aucun mécanisme dans le HTML, les textes (français et anglais) et le code
+  const leaks = await page.evaluate(async () => {
+    const files = ['index.html', 'careers.html', 'assets/data/strings.js', 'assets/js/i18n.js', 'assets/js/main.js'];
+    const bad = new RegExp(['NCO' + 'A1', 'SRC' + '-1', 'Bax Inhib' + 'itor', 'TMB' + 'IM6', 'GDF' + '-8', 'Swee' + 'per', 'Latent' + '-Lock', 'conform' + 'ation', 'pH-dep' + 'endent', 'd[ée]pendant du ' + 'pH'].join('|'), 'i');   // termes de la liste de confidentialité, coupés pour ne pas figurer en clair dans ce fichier
+    const out = [];
+    for (const f of files) { const t = await (await fetch(f)).text(); const m = t.match(bad); if (m) out.push(f + ' : ' + m[0]); }
+    const raw = await (await fetch('index.html')).text();
+    return { out, figures: (raw.match(/<figure/g) || []).length, spaced: raw.includes('</b> <div>') && raw.includes('</span> <span data-i18n="rescue_s1"') };
+  });
+  ok(leaks.out.length === 0, 'secret industriel : aucune cible ni mécanisme sensible dans le site ' + JSON.stringify(leaks.out));
+  ok(leaks.figures === 8, 'carrousel : une seule série d\'images dans le HTML (' + leaks.figures + ' figures), le script la répète');
+  ok(leaks.spaced, 'HTML : un espace sépare les numéros des étapes et leurs titres');
   const gal = await page.evaluate(async () => {
     const imgs = [...document.querySelectorAll('.culture .shot img')];
     imgs.forEach((i) => { i.loading = 'eager'; });
@@ -192,10 +204,13 @@ async function scrollTo(page, y, wait = 700) {
   await page.keyboard.press('Escape'); await sleep(400);
   ok(await page.evaluate(() => !document.getElementById('contact-modal').classList.contains('is-open')), 'Échap ferme le contact');
 
+  // la raison d'être : le texte d'introduction et le paragraphe ont la même taille, et le texte est recentré sur nous
+  ok(await page.evaluate(() => { const a = getComputedStyle(document.querySelector('.rescue__lead')); const b = getComputedStyle(document.querySelector('.rescue__p')); return a.fontSize === b.fontSize && a.fontWeight === b.fontWeight && a.lineHeight === b.lineHeight; }), 'raison d\'être : le texte d\'introduction et le paragraphe ont la même taille');
+  ok(await page.evaluate(() => /for us, who dare to pick them back up|pour nous, qui osons les reprendre/.test(document.querySelector('.rescue__p').textContent.replace(/\s+/g, ' ')) && !/startups qui osent|startups that dare/.test(document.body.textContent)), 'raison d\'être : plus de « startups qui osent les reprendre », recentré sur nous');
   // les articles : une flèche de chaque côté, défilement manuel d'une carte à la fois, rien ne bouge seul
   geo = await G(); await scrollTo(page, geo.articles, 900);
   const ar0 = await page.evaluate(() => { const sc = document.querySelector('.arts__scroll'); const p = document.querySelector('.arts__nav--prev'); const n = document.querySelector('.arts__nav--next'); const b = sc.getBoundingClientRect(); return { cards: document.querySelectorAll('.arts .acard').length, l: sc.scrollLeft, pd: p.disabled, nd: n.disabled, pl: p.getBoundingClientRect().left - b.left, nr: b.right - n.getBoundingClientRect().right, anim: getComputedStyle(document.querySelector('.arts__track')).animationName }; });
-  ok(ar0.cards === 10 && ar0.anim === 'none', 'articles : dix cartes, aucun défilement automatique');
+  ok(ar0.cards === 11 && ar0.anim === 'none', 'articles : onze cartes, aucun défilement automatique');
   ok(ar0.l === 0 && ar0.pd && !ar0.nd, 'articles : au départ la flèche de gauche est grisée, celle de droite active');
   ok(ar0.pl < 60 && ar0.nr < 60, 'articles : une flèche de chaque côté de la rangée');
   await page.click('.arts__nav--next');
@@ -206,7 +221,8 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate((l) => Math.abs(document.querySelector('.arts__scroll').scrollLeft - l) < 2, ar1.l), 'articles : la rangée reste immobile entre deux clics');
   for (let k = 0; k < 8; k++) { await sleep(900); if (await page.evaluate(() => document.querySelector('.arts__nav--next').disabled)) break; await page.evaluate(() => document.querySelector('.arts__nav--next').click()); }
   ok(await page.evaluate(() => document.querySelector('.arts__nav--next').disabled), 'articles : au bout de la rangée la flèche de droite se grise');
-  await page.click('.arts__nav--prev'); await sleep(800);
+  await page.click('.arts__nav--prev');
+  for (let k = 0, last = -1; k < 20; k++) { await sleep(400); const cur = await page.evaluate(() => document.querySelector('.arts__scroll').scrollLeft); if (Math.abs(cur - last) < 1) break; last = cur; }
   ok(await page.evaluate(() => !document.querySelector('.arts__nav--next').disabled), 'articles : la flèche de gauche ramène en arrière');
   await page.evaluate(() => { document.querySelector('.arts__scroll').scrollLeft = 0; }); await sleep(300);
 
@@ -220,6 +236,8 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /guidance cellulaire|cell guidance/.test(document.getElementById('reader-body').textContent) && /Print|Imprimer/.test(document.getElementById('reader-title').textContent)), 'article bioimpression : huit paragraphes, l\'outil de guidance cellulaire');
   await page.evaluate(() => document.querySelector('.acard[data-article="10"]').click()); await sleep(500);
   ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /Emily/.test(document.getElementById('reader-body').textContent) && /2026/.test(document.getElementById('reader-title').textContent)), 'article thérapies cellulaires : huit paragraphes, Emily, 2026');
+  await page.evaluate(() => document.querySelector('.acard[data-article="11"]').click()); await sleep(500);
+  ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /Rapa Nui/.test(document.getElementById('reader-body').textContent) && /rapamycin/i.test(document.getElementById('reader-title').textContent)), 'article longévité (rapamycine) : huit paragraphes');
   await page.evaluate(() => document.querySelector('.acard[data-article="4"]').click()); await sleep(500);
   ok(await page.evaluate(() => document.querySelectorAll('#reader-body p').length === 8 && /cloud lab/i.test(document.getElementById('reader-body').textContent) && /Adam/.test(document.getElementById('reader-body').textContent) && !/par exemple/.test(document.getElementById('reader-body').textContent) && /2027/.test(document.getElementById('reader-title').textContent)), 'article 2027 : le robot Adam, puis le cloud lab, la boucle fermée et les modèles spécialisés, huit paragraphes');
   await page.keyboard.press('Escape'); await sleep(300);

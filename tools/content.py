@@ -59,20 +59,17 @@ s('robot_alt', 'NovaDiff, notre agent, un petit robot blanc aux yeux ambrés qui
 # ------------------------------------------------------------------ notre raison d'être
 s('rescue_eyebrow', 'Notre raison d\'être', 'Our why')
 s('rescue_title', 'Chaque médicament abandonné est une promesse qui attend d\'être tenue', 'Every shelved drug is a promise waiting to be kept')
-s('rescue_p', 'BlackPhage est spécialisé en drug rescue. Trop de molécules prometteuses sont mises de côté, non parce qu\'elles ne fonctionnent pas, mais parce qu\'elles sont trop toxiques, trop brutes ou trop difficiles à doser. Nous croyons qu\'elles méritent une seconde chance. Avec NovaDiff, nous comprenons pourquoi un candidat a calé, puis nous le reconcevons en Smart Binder plus fin, qui agit là où il le doit et épargne le reste. Pour les patients, pour les scientifiques qui ont consacré des années à ces idées, et pour les startups qui osent les reprendre.',
-  'BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for the startups that dare to pick them back up.')
+s('rescue_p', 'BlackPhage est spécialisé en drug rescue. Trop de molécules prometteuses sont mises de côté, non parce qu\'elles ne fonctionnent pas, mais parce qu\'elles sont trop toxiques, trop brutes ou trop difficiles à doser. Nous croyons qu\'elles méritent une seconde chance. Avec NovaDiff, nous comprenons pourquoi un candidat a calé, puis nous le reconcevons en Smart Binder plus fin, qui agit là où il le doit et épargne le reste. Pour les patients, pour les scientifiques qui ont consacré des années à ces idées, et pour nous, qui osons les reprendre.',
+  'BlackPhage specializes in drug rescue. Too many promising molecules are set aside, not because they fail to work, but because they are too toxic, too blunt or too hard to dose. We believe they deserve a second chance. With NovaDiff we study why a candidate stalled, then redesign it into a sharper Smart Binder that acts where it should and spares the rest. For patients, for the scientists who spent years on these ideas, and for us, who dare to pick them back up.')
 s('rescue_s1', 'Comprendre pourquoi il a calé', 'Understand why it stalled')
 s('rescue_s2', 'Le reconcevoir en Smart Binder', 'Redesign it as a Smart Binder')
 s('rescue_s3', 'Le ramener aux patients', 'Bring it back to patients')
 s('prog_title', 'Programmes actuels', 'Current programs')
 for i, (fr, en) in enumerate([
     ('GLP-1R / GIPR', 'GLP-1R / GIPR'),
-    ('Anti-NCOA1 / SRC-1', 'Anti-NCOA1 / SRC-1'),
-    ('Bax Inhibitor-1 / TMBIM6', 'Bax Inhibitor-1 / TMBIM6'),
-    ('Myostatine (GDF-8) / Activine A', 'Myostatin (GDF-8) / Activin A'),
-    ('Sweeper', 'Sweeper'),
-    ('Latent-Lock', 'Latent-Lock'),
+    ('Myostatine / Activine A', 'Myostatin / Activin A'),
     ('TNF alpha', 'TNF alpha'),
+    ('Oncologie, cibles intracellulaires (programmes propriétaires)', 'Oncology, intracellular targets (proprietary programs)'),
 ], 1):
     s(f'prog_{i}', fr, en)
 s('culture_title', 'Là où la science rencontre l\'esprit startup', 'Where science meets the startup spirit')
@@ -82,15 +79,15 @@ s('nova_eyebrow', 'Notre agent', 'Our agent')
 s('nova_title', 'Découvrez NovaDiff', 'Meet NovaDiff')
 s('nova_text', 'NovaDiff est notre agent autonome, un modèle interne conçu spécialement pour repousser les frontières actuelles de la conception de médicaments. Ses objectifs sont la médecine personnalisée et l\'allongement de l\'espérance de vie en bonne santé.',
   'NovaDiff is our in-house autonomous agent, a model designed specifically to push the current frontiers of drug design. Its goals are personalized medicine and extending healthy life expectancy.')
-s('nova_text2', 'Il construit des Smart Binders, des protéines dépendantes du pH qui changent de conformation pour réduire la toxicité.',
-  'It builds Smart Binders, pH-dependent proteins that change conformation to reduce toxicity.')
+s('nova_text2', 'Il construit des Smart Binders, des protéines sensibles au micro-environnement biologique, conçues pour agir uniquement là où la maladie est active et épargner les tissus sains.',
+  'It builds Smart Binders, proteins sensitive to the biological microenvironment, designed to act only where the disease is active and spare healthy tissue.')
 s('nova_f1', 'Il lit la biologie', 'It reads biology')
 s('nova_f1n', 'À grande échelle, de la maladie jusqu\'à la cible.', 'At scale, from the disease down to the target.')
 s('nova_f2', 'Il dessine, pas après pas', 'It designs, step by step')
 s('nova_f2n', 'Des binders de plus en plus précis, tour après tour.', 'Binders that grow ever more precise, round after round.')
 s('nova_f3', 'Il apprend de chaque tour', 'It learns from every round')
 s('nova_f3n', 'Chaque résultat nourrit le suivant.', 'Every result feeds the next.')
-s('nova_c1', 'Dépendant du pH', 'pH-dependent')
+s('nova_c1', 'Sensible au micro-environnement', 'Microenvironment-aware')
 s('nova_c2', 'Moins toxique', 'Less toxic')
 s('nova_c3', 'Plus précis', 'More precise')
 
@@ -100,8 +97,8 @@ s('story_title', 'De petites structures. De grandes questions.', 'Small structur
 s('story_lead', 'Concevoir une protéine pour une cible, c\'est fabriquer la bonne clé pour la bonne serrure et répondre à une question biologique.',
   'Designing a protein for a target means building the right key for the right lock, to answer a biological question.')
 s('story_s1t', 'Choisir une cible', 'Pick a target')
-s('story_s1', 'Un récepteur à la surface de la cellule commande une voie biologique, une chaîne de signaux qui dit à la cellule quoi faire.',
-  'A receptor on the cell surface commands a biological pathway, a chain of signals that tells the cell what to do.')
+s('story_s1', 'Une protéine cible commande une voie biologique, une chaîne de signaux qui dit à la cellule quoi faire.',
+  'A target protein commands a biological pathway, a chain of signals that tells the cell what to do.')
 s('story_s2t', 'Générer par diffusion', 'Generate by diffusion')
 s('story_s2', 'Notre agent part du bruit et façonne une protéine en 3D pas à pas, comme un sculpteur qui révèle une forme, jusqu\'à épouser la cible.',
   'Our agent starts from noise and shapes a 3D protein step by step, like a sculptor revealing a form, until it fits the target.')
@@ -109,8 +106,8 @@ s('story_s3t', 'Optimiser en temps réel', 'Optimize in real time')
 s('story_s3', 'Il affine la structure en continu et vérifie qu\'elle se replie, reste stable et se fixe fermement, jusqu\'à être biophysiquement optimisée.',
   'It keeps refining the structure and checks that it folds, stays stable and binds tightly, until it is biophysically optimized.')
 s('story_s4t', 'Activer ou inhiber la voie', 'Turn the pathway on or off')
-s('story_s4', 'Fixée à sa cible, la protéine active le récepteur, comme une clé qui tourne, ou le bloque. La voie s\'accélère ou s\'arrête, comme voulu.',
-  'Bound to its target, the protein either activates the receptor, like a key turning, or blocks it. The pathway speeds up or stops, as designed.')
+s('story_s4', 'Fixée à sa cible, la protéine l\'active, comme une clé qui tourne, ou la bloque. La voie s\'accélère ou s\'arrête, comme voulu.',
+  'Bound to its target, the protein either activates it, like a key turning, or blocks it. The pathway speeds up or stops, as designed.')
 
 # ------------------------------------------------------------------ articles
 s('art_eyebrow', 'Blog', 'Blog')
@@ -291,6 +288,26 @@ ARTICLES = [
       'Second front, making the therapy inside the body. Rather than collecting, modifying and re-injecting cells, a vector is injected that reprograms the lymphocytes directly in the patient. No more individual factory, far lower costs and delays, and that is what led several large pharmaceutical groups to buy young specialist companies in 2025.',
       'Third front, replacing what is missing rather than destroying what harms. Insulin-producing cells, made from stem cells by the company Vertex, allowed ten of the first twelve patients with type 1 diabetes to do without insulin a year later, according to results published in 2025. Neurons derived from stem cells have been grafted into patients with Parkinson\'s disease, with first results published the same year. The medicine is no longer a molecule, it is a piece of tissue.',
       'One thread ties these three fronts together, proteins. A CAR receptor is a designed protein, and making cells safer, more precise and easier to produce depends on better proteins, which are now drawn by computer. That is also the idea behind our cell guidance tool, telling a cell what to do through a protein designed to order. In 2012 Emily\'s medicine was made by hand for a single child. In 2026 the challenge is no longer to prove that a cell can heal, it is to make it safe and simple enough that every patient has access.']),
+    (('Longévité', 'Longevity'), 5,
+     'L\'étrange carrière de la rapamycine, née sous les statues de l\'île de Pâques', 'The strange career of rapamycin, born under the statues of Easter Island',
+     'Une bactérie du sol, un antifongique oublié, un médicament de greffe, et peut-être un frein au vieillissement. La longévité est d\'abord une affaire d\'années en bonne santé.',
+     'A soil bacterium, a forgotten antifungal, a transplant drug, and perhaps a brake on aging. Longevity is first of all a matter of healthy years.',
+     ['En 1997, à Arles, Jeanne Calment s\'éteint à 122 ans et 164 jours. Presque trente ans plus tard, personne n\'a fait mieux. Pendant ce temps, l\'espérance de vie moyenne dans le monde a gagné plus de vingt ans depuis 1950. Nous ne repoussons donc pas le plafond de la vie humaine, nous faisons arriver bien plus de monde jusqu\'à un grand âge.',
+      'Or ces années gagnées ne sont pas toutes des années en bonne santé. Selon l\'Organisation mondiale de la santé, il s\'écoule en moyenne près de dix ans entre l\'espérance de vie et l\'espérance de vie en bonne santé, dix ans passés avec une maladie chronique, une perte d\'autonomie ou une douleur. La vraie question de la longévité n\'est pas de vivre jusqu\'à 120 ans. C\'est de vivre bien plus longtemps en bonne santé. C\'est le but que nous fixons à notre travail.',
+      'Les chercheurs en gérontologie ont une intuition qui change la perspective. Le vieillissement n\'est pas une maladie, mais c\'est le premier facteur de risque de presque toutes, du cancer au diabète, de la maladie d\'Alzheimer aux maladies du coeur. Si l\'on ralentit le vieillissement lui-même, on retarde en même temps toutes ces maladies. Reste à trouver comment.',
+      'Une piste est venue d\'un endroit improbable. En 1964, une expédition médicale canadienne se rend sur l\'île de Pâques, que ses habitants appellent Rapa Nui, et rapporte des échantillons de sol. Dans un laboratoire de Montréal, une bactérie de ce sol produit une substance qui arrête la croissance de champignons. On la baptise rapamycine, du nom de l\'île, et on pense avoir trouvé un antifongique.',
+      'La molécule est presque oubliée, avant de connaître trois vies successives. On découvre qu\'elle freine le système immunitaire, et elle est approuvée en 1999 pour éviter le rejet des greffes de rein. On comprend ensuite comment elle agit, en se fixant sur une protéine de la cellule baptisée mTOR, d\'après son nom. Cette protéine joue le rôle d\'un chef de gare, elle dit à la cellule quand croître et quand économiser ses ressources.',
+      'La troisième vie commence en 2009. Dans un programme américain qui teste des substances sur des souris dans plusieurs laboratoires à la fois, la rapamycine allonge la durée de vie des animaux, de l\'ordre de dix à quinze pour cent selon le sexe, même quand le traitement commence tard, à un âge équivalent à une soixantaine d\'années chez l\'humain. C\'est l\'un des résultats les plus solides du domaine. Chez l\'humain, en revanche, la preuve n\'existe pas encore.',
+      'Car la rapamycine est une molécule brute. Elle freine le système immunitaire, elle provoque des aphtes, elle perturbe le sucre et les graisses du sang. Convenable pour un greffé, difficile à justifier pour une personne en bonne santé qui voudrait seulement vieillir mieux. C\'est exactement le profil d\'une molécule prometteuse mise de côté, trop brute et trop difficile à doser, et c\'est le terrain du drug rescue. Notre objectif de recherche est de concevoir, avec NovaDiff, des binders plus fins, qui agissent là où ils le doivent et épargnent le reste.',
+      'La longévité ne sera pas un exploit spectaculaire. Elle sera une succession de molécules reprises, affinées et mesurées, avec l\'honnêteté de dire ce qui marche et ce qui ne marche pas. Notre ambition n\'est pas de battre le record de Jeanne Calment. C\'est d\'allonger l\'espérance de vie en bonne santé, une année à la fois.'],
+     ['In 1997, in Arles, Jeanne Calment dies at 122 years and 164 days. Almost thirty years later, no one has done better. Meanwhile, average life expectancy worldwide has gained more than twenty years since 1950. We are not pushing back the ceiling of human life, we are bringing far more people to old age.',
+      'Yet those extra years are not all healthy ones. According to the World Health Organization, there is on average a gap of nearly ten years between life expectancy and healthy life expectancy, ten years spent with a chronic disease, a loss of independence or pain. The real question of longevity is not living to 120. It is living much longer in good health. That is the goal we set for our work.',
+      'Researchers in gerontology share an intuition that changes the perspective. Aging is not a disease, but it is the leading risk factor for almost all of them, from cancer to diabetes, from Alzheimer\'s disease to heart disease. If you slow aging itself, you delay all those diseases at once. What remains is finding how.',
+      'One lead came from an unlikely place. In 1964, a Canadian medical expedition travels to Easter Island, which its inhabitants call Rapa Nui, and brings back soil samples. In a laboratory in Montreal, a bacterium from that soil produces a substance that stops the growth of fungi. It is named rapamycin, after the island, and is thought to be an antifungal.',
+      'The molecule is nearly forgotten, before living three successive lives. It is found to slow the immune system, and is approved in 1999 to prevent rejection of kidney transplants. Then researchers work out how it acts, by binding a cell protein named mTOR, after the molecule. That protein plays the role of a station master, telling the cell when to grow and when to save its resources.',
+      'The third life begins in 2009. In a US program that tests substances on mice in several laboratories at once, rapamycin lengthens the animals\' lives, by roughly ten to fifteen percent depending on sex, even when treatment starts late, at an age equivalent to about sixty in humans. It is one of the most solid results in the field. In humans, however, the proof does not yet exist.',
+      'Because rapamycin is a blunt molecule. It slows the immune system, it causes mouth ulcers, it disturbs blood sugar and fats. Acceptable for a transplant patient, hard to justify for a healthy person who simply wants to age better. That is exactly the profile of a promising molecule set aside, too blunt and too hard to dose, and it is the ground of drug rescue. Our research goal is to design, with NovaDiff, sharper binders that act where they should and spare the rest.',
+      'Longevity will not be a spectacular feat. It will be a succession of molecules taken up again, refined and measured, with the honesty to say what works and what does not. Our ambition is not to beat Jeanne Calment\'s record. It is to extend healthy life expectancy, one year at a time.']),
 ]
 for _i, (_tag, _min, _tfr, _ten, _xfr, _xen, _bfr, _ben) in enumerate(ARTICLES, 1):
     s(f'a{_i}_tag', _tag[0], _tag[1])

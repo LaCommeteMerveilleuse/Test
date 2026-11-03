@@ -246,12 +246,10 @@ def build_index():
                 + (f'<small class="shot__credit" data-i18n="cu{n}_cr">{en(f"cu{n}_cr")}</small>' if cr else '') + '</figcaption></figure>')
 
     def marquee_row(pics, cls):
-        # la boucle : une moitié doit être plus large que le plus grand écran (environ 4 400 px) pour qu'aucun vide n'apparaisse ; la seconde moitié la répète
-        one = sum(w / h * 224 + 20 for _, _, _, w, h in pics) or 1
-        reps = max(1, math.ceil(4400 / one))
-        half = ''.join(shot(n, f, cr, w, h, r > 0) for r in range(reps) for n, f, cr, w, h in pics)
-        dup = ''.join(shot(n, f, cr, w, h, True) for r in range(reps) for n, f, cr, w, h in pics)
-        return f'<div class="marquee {cls}" data-marquee><div class="marquee__track">{half}{dup}</div></div>'
+        # une seule série d'images dans le HTML (le texte n'apparaît qu'une fois pour les moteurs de recherche et les aperçus de liens) ;
+        # fx/marquee.js la répète au chargement pour que la boucle remplisse tout écran
+        half = ''.join(shot(n, f, cr, w, h, False) for n, f, cr, w, h in pics)
+        return f'<div class="marquee {cls}" data-marquee><div class="marquee__track">{half}</div></div>'
 
     culture_rows = ''.join(marquee_row(pics, 'marquee--slow' if i % 2 == 0 else 'marquee--alt') for i, pics in enumerate(rows))
     culture_html = (f'''<section class="sec culture" id="culture" data-tone="mist">
@@ -259,19 +257,19 @@ def build_index():
   {culture_rows}
 </section>''' if rows else '')
     arts = ''
-    covers = ['lab-bench', 'pitch-day', 'pipette-plate', 'founders-table', 'data-wall', 'healthy-years', 'whiteboard-sprint', 'partners-handshake', 'lab-bench', 'pipette-plate']
+    covers = ['lab-bench', 'pitch-day', 'pipette-plate', 'founders-table', 'data-wall', 'healthy-years', 'whiteboard-sprint', 'partners-handshake', 'lab-bench', 'pipette-plate', 'healthy-years']
     for i, (_tag, mins, *_rest) in enumerate(ARTICLES, 1):
         cover = f'assets/img/culture/{covers[i - 1]}.webp'
         cover_html = f'<img src="{cover}" alt="" loading="lazy" width="600" height="400">' if (ROOT / cover).exists() else '<i class="acard__ph"></i>'
         arts += f'''<button class="acard" type="button" data-article="{i}" data-min="{mins}">
-          <span class="acard__cover">{cover_html}<span class="acard__badge" data-i18n="a{i}_tag">{en(f"a{i}_tag")}</span></span>
+          <span class="acard__cover">{cover_html}<span class="acard__badge" data-i18n="a{i}_tag">{en(f"a{i}_tag")}</span> </span>
           <span class="acard__body">
             <h3 data-i18n="a{i}_title">{en(f"a{i}_title")}</h3>
             <span class="acard__ex" data-i18n="a{i}_ex">{en(f"a{i}_ex")}</span>
             <span class="acard__meta"><span>{mins} <span data-i18n="art_min">{en("art_min")}</span></span>{NORTH}</span>
           </span>
         </button>'''
-    steps = ''.join(f'<li class="sstep{" is-on" if k == 1 else ""}" data-step="{k}"><b class="sstep__n">{k}</b><div>{tx(f"story_s{k}t", "h3")}{tx(f"story_s{k}", "p")}</div></li>' for k in range(1, 5))
+    steps = ''.join(f'<li class="sstep{" is-on" if k == 1 else ""}" data-step="{k}"><b class="sstep__n">{k}</b> <div>{tx(f"story_s{k}t", "h3")}{tx(f"story_s{k}", "p")}</div></li>' for k in range(1, 5))
     cards_row = f'''<div class="arts" data-arts>
     <button class="arts__nav arts__nav--prev" type="button" data-dir="-1" aria-label="{a(STR['en']['art_prev'])}" data-i18n-aria-label="art_prev" disabled>{CHEV_L}</button>
     <div class="arts__scroll" tabindex="0" role="region" aria-label="{a(STR['en']['art_list'])}" data-i18n-aria-label="art_list"><div class="arts__track">{arts}</div></div>
@@ -279,7 +277,7 @@ def build_index():
   </div>'''
     feats = ''.join(f'''<li class="feat reveal-wipe" style="--i:{k}"><span class="feat__ico">{ICONS[ic]}</span><div>{tx(f"nova_f{k + 1}", "h3")}{tx(f"nova_f{k + 1}n", "p")}</div></li>''' for k, ic in enumerate(['brain', 'cube', 'loop']))
     nova_chips = ''.join(tx(f'nova_c{k}', 'li', 'chip chip--pop') for k in range(1, 4))
-    prog_chips = ''.join(tx(f'prog_{k}', 'li', 'chip') for k in range(1, 8))
+    prog_chips = ''.join(tx(f'prog_{k}', 'li', 'chip') for k in range(1, 5))
     main = f'''<section class="hero" id="top" data-tone="haze">
   <div class="slot slot--brain" data-slot="brain" role="img" aria-label="{a(STR['en']['brain_alt'])}" data-i18n-aria-label="brain_alt"><img class="slot__poster" src="assets/img/agent-brain.webp" alt="" width="1120" height="720"></div>
   <div class="container hero__in">
@@ -303,9 +301,9 @@ def build_index():
     <div class="rescue__side">
       <div class="slot slot--brain2" data-slot="brain2" aria-hidden="true"></div>
       <ol class="rescue__steps">
-        <li class="step reveal-line" style="--i:0"><span class="step__n">1</span>{tx('rescue_s1', 'span')}</li>
-        <li class="step reveal-line" style="--i:1"><span class="step__n">2</span>{tx('rescue_s2', 'span')}</li>
-        <li class="step reveal-line" style="--i:2"><span class="step__n">3</span>{tx('rescue_s3', 'span')}</li>
+        <li class="step reveal-line" style="--i:0"><span class="step__n">1</span> {tx('rescue_s1', 'span')}</li>
+        <li class="step reveal-line" style="--i:1"><span class="step__n">2</span> {tx('rescue_s2', 'span')}</li>
+        <li class="step reveal-line" style="--i:2"><span class="step__n">3</span> {tx('rescue_s3', 'span')}</li>
       </ol>
     </div>
   </div>
