@@ -172,8 +172,10 @@ def contact_modal():
       <form id="contact-form" novalidate>
         <div class="field"><label for="f-last" data-i18n="form_last">{en('form_last')}</label><input id="f-last" name="last" type="text" autocomplete="family-name" required><span class="field__err" data-i18n="form_required">{en('form_required')}</span></div>
         <div class="field"><label for="f-first" data-i18n="form_first">{en('form_first')}</label><input id="f-first" name="first" type="text" autocomplete="given-name" required><span class="field__err" data-i18n="form_required">{en('form_required')}</span></div>
+        <div class="field field--wide"><label for="f-email" data-i18n="form_email">{en('form_email')}</label><input id="f-email" name="email" type="email" autocomplete="email" required><span class="field__err" data-i18n="form_required">{en('form_required')}</span></div>
         <div class="field field--wide"><label for="f-act" data-i18n="form_activity">{en('form_activity')}</label><select id="f-act" name="activity" required><option value="" data-i18n="form_pick">{en('form_pick')}</option>{opts}</select><span class="field__err" data-i18n="form_required">{en('form_required')}</span></div>
         <div class="field field--wide"><label for="f-msg" data-i18n="form_msg">{en('form_msg')}</label><textarea id="f-msg" name="message" rows="5" required></textarea><span class="field__err" data-i18n="form_required">{en('form_required')}</span></div>
+        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn btn--dark btn--lg field--wide" type="submit"><span data-i18n="form_send">{en('form_send')}</span>{ARROW}</button>
       </form>
     </div>

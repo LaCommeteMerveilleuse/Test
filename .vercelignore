@@ -1,0 +1,8 @@
+# fichiers de travail, inutiles en ligne
+tools
+README.md
+node_modules
+__pycache__
+*.pyc
+*.mjs
+.git

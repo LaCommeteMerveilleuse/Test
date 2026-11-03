@@ -344,6 +344,9 @@ body.menu-open { overflow: hidden; }
 .field input, .field select, .field textarea { width: 100%; padding: 13px 14px; border-radius: 14px; border: 1.5px solid var(--line-strong); background: #fff; font: 500 1rem/1.4 var(--sans); color: var(--pine); transition: border-color 0.2s, box-shadow 0.2s; }
 .field textarea { resize: vertical; min-height: 120px; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--canyon); box-shadow: 0 0 0 4px rgba(42, 95, 134, 0.14); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.modal__ok[data-mode="sent"] .modal__addr, .modal__ok[data-mode="sent"] textarea, .modal__ok[data-mode="sent"] #form-copy-btn { display: none; }
+#contact-form button[type="submit"][disabled] { opacity: 0.7; cursor: progress; }
 .field__err { display: none; font: 600 0.78rem/1 var(--sans); color: #b3541e; }
 .field.is-bad input, .field.is-bad select, .field.is-bad textarea { border-color: #d27a3c; }
 .field.is-bad .field__err { display: block; }

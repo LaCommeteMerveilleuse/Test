@@ -1,5 +1,6 @@
 {
-  "_note": "Informations du site, utilisées partout. L'adresse careersEmail est un exemple à remplacer.",
+  "_note": "Informations du site, utilisées partout. formEndpoint est l'adresse du formulaire Formspree (https://formspree.io/f/xxxxxxxx) qui transmet les messages à contact@blackphage.com, vide tant qu'elle n'est pas créée. L'adresse careersEmail est un exemple à remplacer.",
   "email": "contact@blackphage.com",
+  "formEndpoint": "",
   "careersEmail": "careers@blackphage.com"
 }

@@ -182,8 +182,8 @@ async function scrollTo(page, y, wait = 700) {
   await page.evaluate(() => document.querySelector('[data-open-contact]').click()); await sleep(700);
   // le formulaire
   await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(300);
-  ok(await page.evaluate(() => document.querySelectorAll('#contact-form .field.is-bad').length === 4), 'formulaire vide : quatre champs en erreur');
-  await page.fill('#f-last', 'Curie'); await page.fill('#f-first', 'Marie'); await page.selectOption('#f-act', { index: 1 }); await page.fill('#f-msg', 'Bonjour, parlons de drug rescue.');
+  ok(await page.evaluate(() => document.querySelectorAll('#contact-form .field.is-bad').length === 5), 'formulaire vide : cinq champs en erreur');
+  await page.fill('#f-last', 'Curie'); await page.fill('#f-first', 'Marie'); await page.fill('#f-email', 'marie@exemple.org'); await page.selectOption('#f-act', { index: 1 }); await page.fill('#f-msg', 'Bonjour, parlons de drug rescue.');
   await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(900);
   ok(await page.evaluate(() => !document.getElementById('form-ok').hidden && /@/.test(document.querySelector('#form-ok [data-mail]').textContent)), 'envoi : l\'adresse et le texte à copier restent à l\'écran');
   ok(await page.evaluate(() => [...document.querySelectorAll('[data-mail="email"]')].length > 0 && [...document.querySelectorAll('[data-mail="email"]')].every((a) => a.getAttribute('href').startsWith('mailto:contact@blackphage.com') && /contact@blackphage\.com/.test(a.textContent))), 'contact : toutes les adresses de contact pointent vers contact@blackphage.com');
@@ -274,6 +274,30 @@ async function scrollTo(page, y, wait = 700) {
   ok(await page.evaluate(() => /garant scientifique/i.test(document.body.textContent) && /preuve de concept in vivo/.test(document.body.textContent)), 'carrières : l\'offre existe en français');
   ok(await page.evaluate(() => !/[—;:]/.test(document.body.textContent.replace(/\s+/g, ' '))), 'carrières : pas de caractère interdit (FR)');
   ok(bag.errors.length === 0, 'carrières : aucune erreur ' + JSON.stringify(bag.errors.slice(0, 3)));
+  await ctx.close();
+}
+
+// ------------------------------------------------------------------ formulaire de contact avec Formspree (service simulé)
+{
+  const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, locale: 'en-US' });
+  const sent = []; let mode = 'ok';
+  await ctx.route('**/assets/data/site.json', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ email: 'contact@blackphage.com', careersEmail: 'careers@blackphage.com', formEndpoint: 'https://formspree.test/f/abc123' }) }));
+  await ctx.route('https://formspree.test/**', (r) => { sent.push({ method: r.request().method(), body: r.request().postData() }); return mode === 'ok' ? r.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }) : r.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"x"}' }); });
+  const page = await ctx.newPage(); const bag = newBag();
+  await page.goto(BASE + '?nogl=1', { waitUntil: 'load' }); await sleep(1500);
+  const fill = async () => { await page.evaluate(() => document.querySelector('[data-open-contact]').click()); await sleep(500); await page.fill('#f-last', 'Curie'); await page.fill('#f-first', 'Marie'); await page.fill('#f-email', 'marie@exemple.org'); await page.selectOption('#f-act', { index: 2 }); await page.fill('#f-msg', 'Bonjour, parlons de drug rescue.'); };
+  await fill();
+  await page.evaluate(() => { document.getElementById('f-email').value = 'pas-une-adresse'; document.querySelector('#contact-form button[type="submit"]').click(); }); await sleep(300);
+  ok(await page.evaluate(() => document.getElementById('f-email').closest('.field').classList.contains('is-bad')) && sent.length === 0, 'formulaire : une adresse e-mail invalide est refusée');
+  await page.fill('#f-email', 'marie@exemple.org');
+  await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(900);
+  const body = sent[0] && JSON.parse(sent[0].body || '{}');
+  ok(sent.length === 1 && sent[0].method === 'POST' && body.email === 'marie@exemple.org' && /Curie/.test(body.name) && /drug rescue/.test(body.message), 'formulaire : le message part en POST vers Formspree avec le nom, l\'e-mail et le texte');
+  ok(await page.evaluate(() => { const o = document.getElementById('form-ok'); return !o.hidden && o.dataset.mode === 'sent' && getComputedStyle(document.getElementById('form-copy')).display === 'none' && /sent/i.test(o.querySelector('h2').textContent); }), 'formulaire : confirmation d\'envoi, sans texte à copier');
+  await page.keyboard.press('Escape'); await sleep(300);
+  mode = 'fail'; await fill();
+  await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(900);
+  ok(await page.evaluate(() => { const o = document.getElementById('form-ok'); return !o.hidden && o.dataset.mode === 'manual' && document.getElementById('form-copy').value.includes('marie@exemple.org') && /contact@blackphage\.com/.test(o.textContent); }), 'formulaire : si l\'envoi échoue, repli sur la messagerie et le texte à copier');
   await ctx.close();
 }
 

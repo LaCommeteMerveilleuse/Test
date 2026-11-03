@@ -38,24 +38,45 @@ export function initModals(site) {
     if (wrap) { wrap.hidden = false; ok.hidden = true; }
     open(contact);
   }));
-  form?.addEventListener('submit', (e) => {
+  // l'envoi : si une adresse de formulaire Formspree est configurée (site.json, formEndpoint), le message part directement vers contact@blackphage.com.
+  // Sans elle, ou si l'envoi échoue, on retombe sur la messagerie de la personne (mailto) avec le texte à copier.
+  const manual = (text, why) => {
+    const addr = site.email;
+    document.getElementById('form-copy').value = text;
+    ok.dataset.mode = 'manual';
+    const ti = ok.querySelector('h2'); ti.dataset.i18n = 'form_ok_title'; ti.textContent = t('form_ok_title');
+    const tx = ok.querySelector('.modal__lead'); tx.dataset.i18n = why === 'fail' ? 'form_fail_text' : 'form_ok_text'; tx.textContent = t(tx.dataset.i18n);
+    wrap.hidden = true; ok.hidden = false;
+    document.querySelectorAll('#form-ok [data-mail]').forEach((a) => { a.href = `mailto:${addr}`; a.textContent = addr; });
+    // le lien mailto: ne s'ouvre pas partout : l'adresse et le texte à copier restent à l'écran
+    try { location.href = `mailto:${addr}?subject=${encodeURIComponent(t('form_subject'))}&body=${encodeURIComponent(text)}`; } catch (err) { /* sans application de messagerie */ }
+  };
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     let bad = 0;
     form.querySelectorAll('.field').forEach((f) => {
       const i = f.querySelector('input, select, textarea');
-      const miss = !i.value.trim();
+      const miss = !i.value.trim() || (i.type === 'email' && !i.checkValidity());
       f.classList.toggle('is-bad', miss); if (miss) bad++;
     });
     if (bad) { form.querySelector('.is-bad input, .is-bad select, .is-bad textarea')?.focus(); return; }
     const d = Object.fromEntries(new FormData(form));
     const act = form.querySelector('#f-act'); const actText = act.options[act.selectedIndex].textContent;
-    const text = `${t('form_last')} / ${t('form_first')}\n${d.last.trim()} ${d.first.trim()}\n\n${t('form_activity')}\n${actText}\n\n${t('form_msg')}\n${d.message.trim()}\n`;
-    const addr = site.email;
-    document.getElementById('form-copy').value = text;
-    wrap.hidden = true; ok.hidden = false;
-    document.querySelectorAll('#form-ok [data-mail]').forEach((a) => { a.href = `mailto:${addr}`; a.textContent = addr; });
-    // le lien mailto: ne s'ouvre pas partout : l'adresse et le texte à copier restent à l'écran
-    try { location.href = `mailto:${addr}?subject=${encodeURIComponent(t('form_subject'))}&body=${encodeURIComponent(text)}`; } catch (err) { /* sans application de messagerie */ }
+    const text = `${t('form_last')} / ${t('form_first')}\n${d.last.trim()} ${d.first.trim()}\n\n${t('form_email')}\n${d.email.trim()}\n\n${t('form_activity')}\n${actText}\n\n${t('form_msg')}\n${d.message.trim()}\n`;
+    if (!site.formEndpoint) { manual(text, 'none'); return; }
+    const btn = form.querySelector('button[type="submit"]'); const label = btn.querySelector('span'); const old = label.textContent;
+    btn.disabled = true; label.textContent = `${t('form_sending')}...`;
+    try {
+      const r = await fetch(site.formEndpoint, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ _subject: t('form_subject'), name: `${d.first.trim()} ${d.last.trim()}`, email: d.email.trim(), activity: actText, message: d.message.trim(), _gotcha: d._gotcha || '' }),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      ok.dataset.mode = 'sent';
+      const ti = ok.querySelector('h2'); ti.dataset.i18n = 'form_sent_title'; ti.textContent = t('form_sent_title');
+      const tx = ok.querySelector('.modal__lead'); tx.dataset.i18n = 'form_sent_text'; tx.textContent = t('form_sent_text');
+      wrap.hidden = true; ok.hidden = false; form.reset();
+    } catch (err) { manual(text, 'fail'); } finally { btn.disabled = false; label.textContent = old; }
   });
   form?.addEventListener('input', (e) => e.target.closest('.field')?.classList.remove('is-bad'));
   document.getElementById('form-copy-btn')?.addEventListener('click', async (e) => {
