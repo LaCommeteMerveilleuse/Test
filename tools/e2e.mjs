@@ -28,6 +28,8 @@ async function scrollTo(page, y, wait = 700) {
 // ------------------------------------------------------------------ accueil, bureau
 {
   const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, locale: 'en-US' });
+  // les tests ne doivent jamais envoyer de vrai message : on retire l'adresse Formspree de la configuration pour cette page (le repli par mailto est testé ici)
+  await ctx.route('**/assets/data/site.json', async (r) => { const res = await r.fetch(); const j = await res.json(); await r.fulfill({ response: res, json: { ...j, formEndpoint: '' } }); });
   const page = await ctx.newPage(); const bag = newBag(); watch(page, bag);
   await page.goto(BASE + 'index.html?n=low', { waitUntil: 'load' });
   await ready(page);
