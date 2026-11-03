@@ -14,7 +14,7 @@ const root = document.documentElement;
 const q = new URLSearchParams(location.search);
 
 async function site() {
-  try { return await (await fetch('assets/data/site.json')).json(); } catch (e) { return { email: 'partners@blackphage.com', careersEmail: 'careers@blackphage.com' }; }
+  try { return await (await fetch('assets/data/site.json')).json(); } catch (e) { return { email: 'contact@blackphage.com', careersEmail: 'careers@blackphage.com' }; }
 }
 
 initLanguage();

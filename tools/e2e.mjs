@@ -186,6 +186,7 @@ async function scrollTo(page, y, wait = 700) {
   await page.fill('#f-last', 'Curie'); await page.fill('#f-first', 'Marie'); await page.selectOption('#f-act', { index: 1 }); await page.fill('#f-msg', 'Bonjour, parlons de drug rescue.');
   await page.evaluate(() => document.querySelector('#contact-form button[type="submit"]').click()); await sleep(900);
   ok(await page.evaluate(() => !document.getElementById('form-ok').hidden && /@/.test(document.querySelector('#form-ok [data-mail]').textContent)), 'envoi : l\'adresse et le texte à copier restent à l\'écran');
+  ok(await page.evaluate(() => [...document.querySelectorAll('[data-mail="email"]')].length > 0 && [...document.querySelectorAll('[data-mail="email"]')].every((a) => a.getAttribute('href').startsWith('mailto:contact@blackphage.com') && /contact@blackphage\.com/.test(a.textContent))), 'contact : toutes les adresses de contact pointent vers contact@blackphage.com');
   await page.keyboard.press('Escape'); await sleep(400);
   ok(await page.evaluate(() => !document.getElementById('contact-modal').classList.contains('is-open')), 'Échap ferme le contact');
 
